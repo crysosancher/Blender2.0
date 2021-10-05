@@ -158,6 +158,11 @@ const adminHelp = (prefix, groupName) => {
     _show crypto price_
     eg:/price btc
 
+*${prefix}stocks*
+    _show stocks price_
+    eg:/stocks zomato.bo
+    for _BSI_ use *bo* as suffix
+    for _NSI_ use *ns* as suffix
 *${prefix}mmi*
   _show MMi status_
   with advice      
@@ -168,6 +173,10 @@ const adminHelp = (prefix, groupName) => {
 
 *${prefix}tagall*
     _For attendance alert_(Testing phase)
+
+*${prefix}tts*
+    _Changes Text to Sticker_
+    eg:- /tts we Love Dev
         
 *${prefix}ud*
     _Show Meaning of your name_
@@ -463,6 +472,19 @@ const cric=async(Mid)=>{
     })
     return ms;
 }
+//const yahooStockPrices = require("yahoo-stock-prices");
+const daaa = async (sto) => {
+	var s='';
+ await yahooStockPrices.getCurrentData(`${sto}`).then((res)=>{
+		console.log(res);
+	 s = `*STOCK* :- _${sto}_
+*Currency* :- _${res.currency}_                   
+*Price*:- _${res.price}_`;
+	}).catch((err)=>{
+		s='Not Found';
+	});
+	return s;
+}; 
 
 
 
@@ -682,7 +704,7 @@ async function main() {
                             //const attp=`https://api.xteam.xyz/attp?file&text=${take}`;
                              await axios.get('https://api.xteam.xyz/attp?file&text=' + take, { responseType: 'arraybuffer' }).then(async (res)=>{ await conn.sendMessage(from,Buffer.from(res.data), MessageType.sticker, { mimetype: Mimetype.webp })
                         }).catch((err)=>{
-                            reply("Phir try kar..buffer ka issue hai....")
+                            reply("Icons are not supported")
                         })
                            
                            
@@ -1330,19 +1352,12 @@ break
                         });
 
                         break
-                        case 'stock':
-                            const daaa =async()=>{
-                                const ganu=await yahooStockPrices.getCurrentData(`${args[0]}`);
-                                console.log(ganu);
-                                return ganu; 
-                            } // { currency: 'USD', price: 132.05 }
-                            daaa().then((res)=>{
-                                const asd=JSON.stringify(res)
-                                reply(`${asd}`)
-                            }).catch((err)=>{
-                                reply("Wrong name")
-                            })
-                            break
+                        case 'stocks':
+                        case 'stock' :  {
+                            const s3=await daaa(args[0].toUpperCase());
+                            reply(`${s3}`)
+                            break;
+                        }        
                         case 'mmi':
                                 await conn.sendMessage(
                                     from, 
