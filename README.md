@@ -70,7 +70,8 @@
 | `/yts <YOutube Link>` |       -                      | Download youtube audios|
 | `/idp <InstaHandle>`  |       -                      | Download Insta profile picture of your crush 😜 |
 |`/insta <InstapostUrl>`|       -                      | Download Insta media |
-
+|`/song <song name>`    |       -                      | Download song by just name! |
+|`/stock <stock name>`  |       -                      | Get latest stock price |
 Explore more by using it eg:Get to know your Horoscope,news and a lot more fun.
 # Note:-
    Since heroku uses:- Dyno sleeping in which if an app has a free web dyno, and that dyno receives no web traffic in a 30-minute period, it will sleep. In addition to the web dyno sleeping, the worker dyno (if present) will also sleep. and if a sleeping web dyno receives web traffic, it will become active again after a short delay (assuming your account has free dyno hours available)
