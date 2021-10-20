@@ -187,6 +187,10 @@ const adminHelp = (prefix, groupName) => {
 
 *${prefix}removebot*
     _Remove bot from group!_
+    
+    
+*${prefix}source*
+    _Get the source code!_
 
 Made with love,use with love ♥️`
 }
