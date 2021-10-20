@@ -79,8 +79,8 @@ Explore more by using it eg:Get to know your Horoscope,news and a lot more fun.
    You can use (http://kaffeine.herokuapp.com) to ping the heroku app every 30 minutes to prevent it from sleeping.
    
 ## 🤝 Contributers
-<a href="https://github.com/Harsh4999/Blender/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=Harsh4999/Blender" />
+<a href="https://github.com/crysosancher/Blender2.0/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=crysosancher/Blender2.0" />
 </a>
 
 
