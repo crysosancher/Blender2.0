@@ -1,5 +1,10 @@
 
-## Simple Whatsapp Bot - Node Js - Heroku - Baileys
+<div align=center>
+ 
+![Me](https://media1.tenor.com/images/5c4a3ccf067bb81cbee83e4eb8f723f4/tenor.gif?itemid=22829192)
+### Blender ⬆</div>    
+
+## Blender-Whatsapp Bot - Node Js - Heroku - Baileys
 
 **_Requirements :_**
 
@@ -27,8 +32,8 @@
 1. After downloading and installing Heroku CLI in your system login to heroku cli using `heroku login` in command prompt or powershell.
 2. Add ffmpeg (*for sticker support*) in your heroku app using `heroku buildpacks:add https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git -a <your-app-name>`
 3. After adding ffmpeg now add 'Heroku Buildpack for Node.js' using  `heroku buildpacks:add https://github.com/heroku/heroku-buildpack-nodejs.git -a <your-app-name>`
-4. Now download or clone the `simple-whatsapp-bot` repo from (https://github.com/karmaisgreat/simple-whatsapp-bot) 
-5. Now enter in `simple-whatsapp-bot` directory using `cd simple-whatsapp-bot` in command prompt or terminal.
+4. Now download or clone the `Blender` repo from (https://github.com/Harsh4999/Blender) 
+5. Now enter in `Blender` directory using `cd Blender` in command prompt or terminal.
 6. Now init the git using `git init`
 7. Create the remote region using `heroku git:remote -a <your-app-name>`
 8. Now deploy the repo in your heroku app using :
@@ -48,6 +53,8 @@
 
 |  Commands             |       Alias                  |       Description        |
 | :--------:            |       :----:                 | :----------------------: |
+|   `/blend`            |                              |   Shows buttons          |
+|     `/list`           |                              |  Open whole pannel of commands|
 |   `/help`             |       `/acmd`                |  Display help message    |
 |    `/add`             |       -                      |    Add member to group    |
 |   `/kick`             |       `/ban, /remove`        |   Remove member from group    |
@@ -58,16 +65,26 @@
 |   `/link`             |       `/getlink, /grouplink` |  Get invite link of group |
 |   `/sticker`          |       -                      |  Create a sticker from different media types |
 | `/removebot`          |       -                      | Remove bot from group |
-| `/source`          |       -                      | Get the bot source |
+| `/source`             |       -                      | Get the bot source |
+| `/yt <YOutube Link>`  |       -                      | Download youtube videos|
+| `/yts <YOutube Link>` |       -                      | Download youtube audios|
+| `/idp <InstaHandle>`  |       -                      | Download Insta profile picture of your crush 😜 |
+|`/insta <InstapostUrl>`|       -                      | Download Insta media |
 
-
+Explore more by using it eg:Get to know your Horoscope,news and a lot more fun.
 # Note:-
    Since heroku uses:- Dyno sleeping in which if an app has a free web dyno, and that dyno receives no web traffic in a 30-minute period, it will sleep. In addition to the web dyno sleeping, the worker dyno (if present) will also sleep. and if a sleeping web dyno receives web traffic, it will become active again after a short delay (assuming your account has free dyno hours available)
    You can use (http://kaffeine.herokuapp.com) to ping the heroku app every 30 minutes to prevent it from sleeping.
    
+## 🤝 Contributers
+<a href="https://github.com/Harsh4999/Blender/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=Harsh4999/Blender" />
+</a>
 
 
-# References:-
+# Tech stacks:-
+## Baileys :-  
+Based on library which is stands out from all other open source libraries
+## nodeJs:-
+No need to explain :)
 
-- [@Baileys](https://github.com/adiwajshing/Baileys)
-- [@WA-STICKER-FORMATTER](https://github.com/Alensaito1/wa-sticker-formatter)
