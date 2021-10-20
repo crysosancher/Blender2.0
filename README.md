@@ -85,8 +85,7 @@ Explore more by using it eg:Get to know your Horoscope,news and a lot more fun.
 
 
 # Tech stacks:-
-## Baileys :-  
-Based on library which is stands out from all other open source libraries
-## nodeJs:-
-No need to explain :)
+- ## [Baileys](https://github.com/adiwajshing/Baileys)
+- ## [Node js](https://github.com/nodejs/node)
+
 
