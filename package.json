@@ -1,7 +1,7 @@
 {
-  "name": "simple-whatsapp-bot",
+  "name": "blender",
   "version": "0.1.0",
-  "description": "Simple Whatsapp Bot - Node Js - Heroku - Baileys",
+  "description": "well...Unique and intresting project",
   "main": "index.js",
   "directories": {
     "lib": "lib"
@@ -10,7 +10,7 @@
     "start": "node index.js"
   },
   "keywords": [],
-  "author": "Karma",
+  "author": "harsh and virat",
   "license": "ISC",
   "dependencies": {
     "@adiwajshing/baileys": "github:adiwajshing/baileys",
@@ -28,15 +28,15 @@
     "yt-search": "^2.10.1",
     "yahoo-stock-prices": "^1.1.0"
   },
-  "homepage": "https://github.com/karmaisgreat/simple-whatsapp-bot#readme",
+  "homepage": "https://github.com/crysosancher/Blender2.0/blob/main/README.md",
   "devDependencies": {
   
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/karmaisgreat/simple-whatsapp-bot.git"
+    "url": "https://github.com/crysosancher/Blender2.0.git"
   },
   "bugs": {
-    "url": "https://github.com/karmaisgreat/simple-whatsapp-bot/issues"
+    "url": "https://github.com/crysosancher/Blender2.0/issues"
   }
 }

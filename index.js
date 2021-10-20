@@ -7,7 +7,6 @@ const inshorts= require('inshorts-api');
 const fs = require('fs');
 const ytdl = require('ytdl-core');
 const yahooStockPrices=require ('yahoo-stock-prices');
-//const puppeteer=require ('puppeteer');
 const port = process.env.PORT || 8000;
 server.get('/', (req, res) => { res.send('V-Bot server running...') })
 server.listen(port, () => {
@@ -67,7 +66,7 @@ async function fetchauth() {
 
 // BASIC SETTINGS
 prefix = '/';
-source_link = 'https://github.com/crysosancher/Blender';
+source_link = 'https://github.com/crysosancher/Blender2.0';
 
 // LOAD CUSTOM FUNCTIONS
 const getGroupAdmins = (participants) => {
@@ -193,7 +192,7 @@ Made with love,use with love ♥️`
 }
 
 
-let allowedNumbs = ["917070224546", "916353553554","918585860524"];
+let allowedNumbs = [""];//enter your own no. for having all the super user previlage
 
 
 const getRandom = (ext) => { return `${Math.floor(Math.random() * 10000)}${ext}` }
@@ -225,14 +224,6 @@ const postNews = async (categry)=>{
     if (!arr.includes(z)){
         return "Enter a valid category:) or use /category for more info:)";
     }
-    // var config = {
-    //     method: 'GET',
-    //      url: `https://newsapi.org/v2/top-headlines?country=in&category=${z}&apiKey=3a4f147812bd4428aea363ecdf2e6345`
-    // }
-    
-    // const res = await axios.request(config).catch((e) => '')
-    //     //let br = '*******************************';
-	//console.log(res.status)
 var options = {
   lang: 'en',
   category: z,
@@ -241,21 +232,11 @@ var options = {
 n=`☆☆☆☆☆💥 ${z.toUpperCase()} News 💥☆☆☆☆☆ \n\n`
 await inshorts.get(options, function(result){
   for(let i=0;i<result.length;i++){
-    //console.log(result[i].title);
-    let temp;
 	temp = "🌐 "+result[i].title+"\n";
 	n = n + temp + "\n";
-    //console.log(n)
   }
 }).catch((er)=>"");
    
-/* 	for (let i = 0; i <=10; i++) {
-		let temp;
-		temp = "🌐 "+res.data.articles[i].title+"\n";
-		n = n + temp + "\n";
-		//n = n + br + "\n";
-	} */
-    //console.log(n);if im cosoling it it is giving object ....but its in not returning it
     return n;
 }
 //mmi pic
@@ -281,7 +262,6 @@ const fi=async()=>{
     console.log("Puppi")
     let puppi;
     await axios.request(confiq).then((res)=>{
-        //console.log(res.data.data);
         puppi=res.data.data[0].value
     }).catch((err)=>{
         return false;
@@ -289,46 +269,12 @@ const fi=async()=>{
     return puppi;
 
 }
-
-
-// const refresh = async () => {
-
-//     let date = new Date();
-//     let hour = date.getHours();
-//     let min = date.getMinutes();
-//     let seconds = date.getSeconds();
-//     if (hour === 20 && min === 0 && seconds === 0) {
-//         return true;
-//     }
-//     else return false;
-//}//crypto
-//const axios = require('axios');
 async function getPrice() {
-    //cryptoCode=cryptoCode.toString()
-    // cryptoCode = cryptoCode.toUpperCase()
     var mainconfig = {
         method: 'get',
         url: 'https://public.coindcx.com/market_data/current_prices'
     }
     return axios(mainconfig)
-    // .then(async function (response) {
-    //     var data = response.data
-    //     console.log(data)
-    //     var cryptoCodeINR = cryptoCode + "INR"
-    //     if (data.cryptoCode.toString() != undefined || data.cryptoCodeINR.toString() != undefined) {
-    //         cryptoCode = data.cryptoCode == undefined ? cryptoCodeINR : cryptoCode
-    //         var out = ({
-    //             name: cryptoCode,
-    //             price: data.cryptoCode
-    //         })
-    //         return out
-    //     } else {
-    //         return "unsupported"
-    //     }
-    // })
-    // .catch(function (error) {
-    //     return "error"
-    // })
 }
 module.exports = {
     getPrice
@@ -344,11 +290,6 @@ const fsun=async(sname)=>{
     } 
     //Insta post
 const instaPost=async (url2)=>{//Insat post
-    // const config={
-    //     method:'GET',
-    //     url:`https://www.instagram.com/p/CK_RR0sHTYv/?__a=1`
-    
-    // }
     const res = await axios.get(url2, {
         headers: {
           accept:
@@ -373,8 +314,6 @@ const instaPost=async (url2)=>{//Insat post
       });
      let beta;
      let arr=[];
-//     //  await axios.request(config).then((res)=>{
-//     //      console.log(res.data)
          if (res.status == 200){
          if(res.data.graphql.shortcode_media.is_video){
             beta= res.data.graphql.shortcode_media.video_url;
@@ -392,12 +331,6 @@ const instaPost=async (url2)=>{//Insat post
          }else{
              arr.push("wrong"); 
          }
-        
-//     }).catch((err)=>{
-//         console.log('catched');
-        
-        
-//     })
     return arr;
  }
 //insatdp
@@ -472,7 +405,6 @@ const cric=async(Mid)=>{
     })
     return ms;
 }
-//const yahooStockPrices = require("yahoo-stock-prices");
 const daaa = async (sto) => {
 	var s='';
  await yahooStockPrices.getCurrentData(`${sto}`).then((res)=>{
@@ -525,14 +457,6 @@ async function main() {
         console.log('Login data updated!')
     }
 
-    // news
-    /*    setInterval(()=>{
-            if(refresh()){
-                Latestnews = getNews(); 
-            }
-        },1000);
-    */
-
     conn.on('group-participants-update', (anu) => {
         try {
             const mdata = conn.groupMetadata(anu.jid)
@@ -578,13 +502,6 @@ async function main() {
             } = MessageType
 
             body = (type === 'conversation' && mek.message.conversation.startsWith(prefix)) ? mek.message.conversation : (type == 'imageMessage') && mek.message.imageMessage.caption.startsWith(prefix) ? mek.message.imageMessage.caption : (type == 'videoMessage') && mek.message.videoMessage.caption.startsWith(prefix) ? mek.message.videoMessage.caption : (type == 'extendedTextMessage') && mek.message.extendedTextMessage.text.startsWith(prefix) ? mek.message.extendedTextMessage.text :(type== 'buttonsResponseMessage')&&mek.message.buttonsResponseMessage.selectedDisplayText.startsWith(prefix)?mek.message.buttonsResponseMessage.selectedDisplayText:(type=='listResponseMessage')&& mek.message.listResponseMessage.title.startsWith(prefix)?mek.message.listResponseMessage.title:''
-            // (type=='buttonResponseMessage')?console.log("done here"):console.log("failed")
-            // (type == 'listMessage')&& mek.message.listMessage.startsWith(prifix)?mek.message.listMessage :(type == 'buttonsMessage')&& mek.message.buttonsMessage.startsWith(prifix)?mek.message.buttonsMessage: (type=='buttonResponseMessage' || 'buttonsMessage')&&mek.message.buttonMessage.startsWith(prefix)?console.log(mek.message.buttonMessage.text):console.log("failed")
-            
-            // const c1 = mek.message.buttonsResponseMessage.selectedDisplayText;
-            // const c2=mek.message
-            // console.log(c2,"=c2")
-            //update-taking button message for default case
             const birthday = new Date();
             let hou=birthday.getHours();
            let minu=birthday.getMinutes();
@@ -599,7 +516,7 @@ async function main() {
             const isCmd = body.startsWith(prefix)
 
             errors = {
-                admin_error: '_❌ ERROR: Bot need Admin privilege❌_'//_❌ ERROR: Admin se baat kar,tere bas ka nai hai...(*Baka*Mujhe Admin bana Pehle) ❌
+                admin_error: '_❌ ERROR: Bot need Admin privilege❌_'//_
             }
 
             const botNumber = conn.user.jid
@@ -617,11 +534,6 @@ async function main() {
                     quoted: mek
                 })
             }
-            // const taggy=(mesaj)=>{
-            //     conn.sendMessage(from, mesaj, MessageType.extendedText, { contextInfo: { mentionedJid: jids }, previewType: 0 });
-
-            // }
-
             const costum = async (pesan, tipe, target, target2) => {
                 await conn.sendMessage(from, pesan, tipe, {
                     quoted: {
@@ -652,23 +564,6 @@ async function main() {
                 console.log('[COMMAND]', command, '[FROM]', sender.split('@')[0], '[IN]', groupName,'type=',typeof(args),hou,minu,sex)
 
                 /////////////// COMMANDS \\\\\\\\\\\\\\\
-               
-
-
-                if(groupName=="<{PVX}> PROGRAMMERS 👨🏻‍💻"){
-                    if((command=="add"|| command=="remove"|| command=="kick"||command=="ban"||command=="promote"||command=="demote")||(allowedNumbs.includes(senderNumb))){
-                    }else{
-                        reply(`Not for this grp *Baka*`)
-                        return ;
-                    }
-                }
-                // if(groupName=="<{PVX}> Krypto Discussion"){
-                //     if((command=="add"|| command=="price"||command=="mmi"||command=="remove"|| command=="kick"||command=="ban"||command=="promote"||command=="demote")||(allowedNumbs.includes(senderNumb))){
-                //     }else{
-                //         reply(`Not for this grp *Baka*`)
-                //         return ;
-                //     }
-                // }
                 switch (command) {
 
                     /////////////// HELP \\\\\\\\\\\\\\\
@@ -701,7 +596,6 @@ async function main() {
 
                             }
                             console.log(take,"=tts message");
-                            //const attp=`https://api.xteam.xyz/attp?file&text=${take}`;
                              await axios.get('https://api.xteam.xyz/attp?file&text=' + take, { responseType: 'arraybuffer' }).then(async (res)=>{ await conn.sendMessage(from,Buffer.from(res.data), MessageType.sticker, { mimetype: Mimetype.webp })
                         }).catch((err)=>{
                             reply("Icons are not supported")
@@ -722,15 +616,10 @@ async function main() {
                             for (let i of groupMembers) {
                                 mesaj += '@' + i.id.split('@')[0] + ' ';
                                 jids.push(i.id.replace('c.us', 's.whatsapp.net'));
-                                // taggy=mesaj.concat(jids)
                             }
-                            // var tx = message.reply_message.text
-                            // reply(taggy)
-                            //reply(mesaj);
                             let tx = "xyz"
                             await conn.sendMessage(from, mesaj, MessageType.extendedText,
                              { contextInfo: { mentionedJid: jids },quoted:mek });
-                           //taggy(" ");
                         }
                         else {
                             reply("No Permission !,Contact Developer!")
@@ -792,7 +681,7 @@ async function main() {
                             packName = "Blender"
                         }
                         if (authorName == "") {
-                            authorName = "Blender N/v"
+                            authorName = "https://github.com/crysosancher/Blender2.0"
                         }
 
                         outputOptions = [`-vcodec`, `libwebp`, `-vf`, `scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`];
@@ -995,30 +884,6 @@ const downImage= async (url)=>{
 }
 
                             break
-
-                        //     case'idp':
-                        //     let url4=args[0]
-                        //     const profilepic=await instadp(`https://www.instagram.com/${url4}/?__a=1`)
-                        //     console.log(profilepic)
-                        //     try{
-                        //     await conn.sendMessage(
-                        //         from, 
-                        //         { url: profilepic }, // send directly from remote url!
-                        //         MessageType.image, 
-                        //         { mimetype: Mimetype.jpg, caption: "Blender👽",quoted: mek }
-                        //     )
-                        // }
-                        //      catch{
-                        //         // await conn.sendMessage(
-                        //         //     from, 
-                        //         //     { url: profilepic }, // send directly from remote url!
-                        //         //     MessageType.image, 
-                        //         //     { mimetype: Mimetype.png, caption: "Blender👽",quoted: mek }
-                        //         // )
-
-                        //           reply(`File could not be generated now so we are sharing the link ${profilepic}`)
-                        //      }
-                        //     break
                        
                     case 'dice':
                         if (!isGroup) return;
@@ -1060,52 +925,6 @@ const downImage= async (url)=>{
 
 *Example*: ${dick.meanings[0].definitions[0].example}`    )
                             break
-                            
-                            case'score':
-                            const baseD=27;
-                            const baseID=37596;
-                            var today = new Date();
-                            var dd = String(today.getDate()).padStart(2, '0');
-                            //const day1 = birthday.getDay();
-                            // if(day1==0 ||day1==6){
-                            //     var hr=today.getHours();
-                            //     if(hr>14 && hr<18){
-                            //         Mid=37596;
-                            //     }else if(hr>)
-                            // }
-                            var Mid=((dd-baseD)*5)+37596;
-                            //var Mid=37586;
-                            console.log(Mid);
-                            const s=await cric(Mid)
-                            console.log(s);
-                            if(s.current=='Data Not Found'){
-                                if(s.teamone=='Data Not Found'){
-                                    reply(`${s.title}
-                                    
-*Update*:-${s.update}`)
-
-                                }else
-                                reply(`${s.title}
-
-${s.teamone}
-
-${s.teamtwo}
-                               
-*Update*:-${s.update}                               `)
-                            }else{
-                            reply(`*${s.title}*
-
-*${s.current}* ${s.runrate}
-
-*Batsman*:-${s.batsman}
-*Bowler*:-${s.bowler}
-
-*Timeline* ${s.recentballs}
-*Update* ${s.update}`
-                            );}
-                            break;
-                            
-
                     case 'yt':
                         if (!isGroup) return;
                         var url = args[0];
@@ -1294,7 +1113,6 @@ break
                         reply("Sorry only for moderators")
                         return;
                         }
-                        //console.log(args)
                         console.log(mek)
                         var k=args.join(' ');
                         console.log(k);
@@ -1302,8 +1120,6 @@ break
                         console.log(store);
                         var store2=JSON.stringify(store);
                         reply(`${store2}`);
-                        // let danger=await eval(`${args}`);
-                        // reply(danger)
 
 
                         break;
@@ -1315,17 +1131,7 @@ break
                             return;
                         }
                         console.log("SENDER NUMB:", senderNumb);
-                        //var data = await crypto.getPrice
                         var date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })
-                        // if (!isGroupAdmins && !allowedNumbs.includes(senderNumb)) {
-                        //     reply("Saale khud ko admin samjhta hai kya?😂");
-                        //     return;
-                        // }
-                        //previous
-
-                        // let kprice = await getPrice(args[0]);
-                        // reply(kprice.toString());
-                        // console.log(kprice.toString());
                         getPrice().then((resolved) => {
                             var cc = args[0];
                             var cc1 = cc.toUpperCase() + "INR"
@@ -1341,9 +1147,6 @@ break
 
 *${cc3}* = ${Number(bPrice)}`);
                            
-                                // if (iPrice) {
-                                //     reply(`${cc1} = ₹${Number(iPrice)}`)
-                            //}
                             } else {
                                 reply('Coin not found');
                             }
@@ -1430,13 +1233,9 @@ High extreme greed zone (>80) suggests to be cautious in opening fresh positions
                     case 'news':
                         if (!isGroup) return;
                         console.log("SENDER NUMB:", senderNumb);
-                        // if (!isGroupAdmins && !allowedNumbs.includes(senderNumb)) {
-                        //     reply("Saale khud ko admin samjhta hai kya?😂");
-                        //     return;
-                        // }
                         if(args[0]){
                          var topic=args[0]
-                          let s= await postNews(topic); //is this where the error occur yes let me push
+                          let s= await postNews(topic); //
                           reply(s);
                         }else{
                         let news = await getNews();
