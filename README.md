@@ -32,7 +32,7 @@
 1. After downloading and installing Heroku CLI in your system login to heroku cli using `heroku login` in command prompt or powershell.
 2. Add ffmpeg (*for sticker support*) in your heroku app using `heroku buildpacks:add https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git -a <your-app-name>`
 3. After adding ffmpeg now add 'Heroku Buildpack for Node.js' using  `heroku buildpacks:add https://github.com/heroku/heroku-buildpack-nodejs.git -a <your-app-name>`
-4. Now download or clone the `Blender` repo from (https://github.com/Harsh4999/Blender) 
+4. Now download or clone the `Blender` repo from (https://github.com/crysosancher/Blender2.0) 
 5. Now enter in `Blender` directory using `cd Blender` in command prompt or terminal.
 6. Now init the git using `git init`
 7. Create the remote region using `heroku git:remote -a <your-app-name>`
