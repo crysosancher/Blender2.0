@@ -65,7 +65,7 @@ async function fetchauth() {
 }
 
 // BASIC SETTINGS
-prefix = '/';
+prefix = '-';
 source_link = 'https://github.com/crysosancher/Blender2.0';
 
 // LOAD CUSTOM FUNCTIONS
