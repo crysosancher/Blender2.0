@@ -1022,9 +1022,9 @@ break
    case'blend':
    if (!isGroup) return;
    const buttons = [
-    {buttonId: 'id1', buttonText: {displayText: '${prefix}help'}, type: 1},
-    {buttonId: 'id2', buttonText: {displayText: '${prefix}news'}, type: 1},
-    {buttonId: 'id3', buttonText: {displayText: '${prefix}list'}, type: 1},
+    {buttonId: 'id1', buttonText: {displayText: ${prefix}'help'}, type: 1},
+    {buttonId: 'id2', buttonText: {displayText: ${prefix}'news'}, type: 1},
+    {buttonId: 'id3', buttonText: {displayText: ${prefix}'list'}, type: 1},
   ]
   
   const buttonMessage = {
