@@ -66,7 +66,7 @@ async function fetchauth() {
 
 // BASIC SETTINGS
 prefix = '-';
-source_link = 'https://github.com/crysosancher/Blender2.0';
+source_link = '```https://github.com/crysosancher/Blender2.0```';
 
 // LOAD CUSTOM FUNCTIONS
 const getGroupAdmins = (participants) => {
@@ -88,7 +88,7 @@ const adminHelp = (prefix, groupName) => {
 
 *${prefix}song*
  _For Downloading songs by name_
-     Eg:/song tum hi ho
+     Eg:${prefix}song tum hi ho
 
 *${prefix}add <phone number>*
     _Add any new member!_
@@ -108,8 +108,8 @@ const adminHelp = (prefix, groupName) => {
 
 *${prefix}chat <on/off>*
     _Enable/disable group chat_
-    _/chat on - for everyone!_
-    _/chat off - for admin only!_
+    _${prefix}chat on - for everyone!_
+    _${prefix}chat off - for admin only!_
 
 *${prefix}link*
     _Get group invite link!_
@@ -129,25 +129,25 @@ const adminHelp = (prefix, groupName) => {
 
 *${prefix}news*
     _Show Tech News_
-    _or /news <any category>_
-    _Use /list for whole valid list_
+    _or ${prefix}news <any category>_
+    _Use ${prefix}list for whole valid list_
     _category could be sports,business or anything_
 
 *${prefix} score*
      _fetch live ipl scores_
-     eg:/score
+     eg:${prefix}score
 
 *${prefix} idp*
      _download Instagram private profile picture_
-     eg:/idp username
+     eg:${prefix}idp username
 
 *${prefix} insta*
     _download Instagram media_
-    eg:/insta linkadress     
+    eg:${prefix}insta linkadress     
      
 *${prefix} yt*
     _download youTube video in best quality_
-    eg:/yt linkadress
+    eg:${prefix}yt linkadress
 
 *${prefix}yts*
     _download youtube audio_
@@ -155,11 +155,11 @@ const adminHelp = (prefix, groupName) => {
     
 *${prefix}price*
     _show crypto price_
-    eg:/price btc
+    eg:vprice btc
 
 *${prefix}stocks*
     _show stocks price_
-    eg:/stocks zomato.bo
+    eg:${prefix}stocks zomato.bo
     for _BSI_ use *bo* as suffix
     for _NSI_ use *ns* as suffix
 *${prefix}mmi*
@@ -168,22 +168,22 @@ const adminHelp = (prefix, groupName) => {
     
 *${prefix}horo*
     _show horoscope_
-    eg:/horo pisces    
+    eg:${prefix}horo pisces    
 
 *${prefix}tagall*
     _For attendance alert_(Testing phase)
 
 *${prefix}tts*
     _Changes Text to Sticker_
-    eg:- /tts we Love Dev
+    eg:- ${prefix}tts we Love Dev
         
 *${prefix}ud*
     _Show Meaning of your name_
-    eg:/ud ram
+    eg:${prefix}ud ram
 
 *${prefix}dic*
     _A classic Dictionary_
-    eg:/ud ram   
+    eg:${prefix}ud ram   
 
 *${prefix}removebot*
     _Remove bot from group!_
@@ -226,7 +226,7 @@ const postNews = async (categry)=>{
     let z=categry;
     let arr =['national','business','sports','world','politics','technology','startup','entertainment','miscellaneous','hatke','science','automobile'];
     if (!arr.includes(z)){
-        return "Enter a valid category:) or use /category for more info:)";
+        return "Enter a valid category:) or use -category for more info:)";
     }
 var options = {
   lang: 'en',
@@ -685,7 +685,7 @@ async function main() {
                             packName = "Blender"
                         }
                         if (authorName == "") {
-                            authorName = "https://github.com/crysosancher/Blender2.0"
+                            authorName = "2.0"
                         }
 
                         outputOptions = [`-vcodec`, `libwebp`, `-vf`, `scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`];
@@ -799,7 +799,7 @@ async function main() {
                         case 'insta':
                             if (!isGroup) return;
                             let code=args[0]
-                            const ext=code.split('/')
+                            const ext=code.split('-')
                             const trimext=ext[4];
                             console.log(code);
                             console.log(trimext);
@@ -981,28 +981,28 @@ break
    case'list':
    if (!isGroup) return;
    const row1 = [
-    {title: '/news national', description: "News About national category", rowId:"rowid1"},
-    {title: '/news sports', description: "News About sports category", rowId:"rowid2"},
-    {title: '/news world ', description: "News About world category", rowId:"rowid3"},
-    {title: '/news politics', description: "News About politics category", rowId:"rowid4"},
-    {title: '/news science', description: "News About science category", rowId:"rowid5"},
-    {title: '/news technology', description: "News About tech category", rowId:"rowid6"},
-    {title: '/news entertainment', description: "News About entertainment category", rowId:"rowid7"},
-    {title: '/news automobile', description: "News About automobile category", rowId:"rowid8"},
+    {title: '-news national', description: "News About national category", rowId:"rowid1"},
+    {title: '-news sports', description: "News About sports category", rowId:"rowid2"},
+    {title: '-news world ', description: "News About world category", rowId:"rowid3"},
+    {title: '-news politics', description: "News About politics category", rowId:"rowid4"},
+    {title: '-news science', description: "News About science category", rowId:"rowid5"},
+    {title: '-news technology', description: "News About tech category", rowId:"rowid6"},
+    {title: '-news entertainment', description: "News About entertainment category", rowId:"rowid7"},
+    {title: '-news automobile', description: "News About automobile category", rowId:"rowid8"},
    ]
    const row2 = [
-    {title: '/horo aries', description: "Today's Horoscope ", rowId:"rowid1"},
-    {title: '/horo taurus', description: "Today's Horoscope", rowId:"rowid2"},
-    {title: '/horo gemini', description: "Today's Horoscope", rowId:"rowid3"},
-    {title: '/horo cancer', description: "Today's Horoscope", rowId:"rowid4"},
-    {title: '/horo leo', description: "Today's Horoscope", rowId:"rowid5"},
-    {title: '/horo virgo', description: "Today's Horoscope", rowId:"rowid6"},
-    {title: '/horo libra', description: "Today's Horoscope", rowId:"rowid7"},
-    {title: '/horo scorpio', description: "Today's Horoscope", rowId:"rowid8"},
-    {title: '/horo sagittarius', description: "Today's Horoscope", rowId:"rowid9"},
-    {title: '/horo capricorn', description: "Today's Horoscope", rowId:"rowid10"},
-    {title: '/horo aquarius', description: "Today's Horoscope", rowId:"rowid11"},
-    {title: '/horo pisces', description: "Today's Horoscope", rowId:"rowid12"},
+    {title: '-horo aries', description: "Today's Horoscope ", rowId:"rowid1"},
+    {title: '-horo taurus', description: "Today's Horoscope", rowId:"rowid2"},
+    {title: '-horo gemini', description: "Today's Horoscope", rowId:"rowid3"},
+    {title: '-horo cancer', description: "Today's Horoscope", rowId:"rowid4"},
+    {title: '-horo leo', description: "Today's Horoscope", rowId:"rowid5"},
+    {title: '-horo virgo', description: "Today's Horoscope", rowId:"rowid6"},
+    {title: '-horo libra', description: "Today's Horoscope", rowId:"rowid7"},
+    {title: '-horo scorpio', description: "Today's Horoscope", rowId:"rowid8"},
+    {title: '-oro sagittarius', description: "Today's Horoscope", rowId:"rowid9"},
+    {title: '-horo capricorn', description: "Today's Horoscope", rowId:"rowid10"},
+    {title: '-horo aquarius', description: "Today's Horoscope", rowId:"rowid11"},
+    {title: '-horo pisces', description: "Today's Horoscope", rowId:"rowid12"},
    ]   
 
    
@@ -1022,9 +1022,9 @@ break
    case'blend':
    if (!isGroup) return;
    const buttons = [
-    {buttonId: 'id1', buttonText: {displayText: ${prefix}'help'}, type: 1},
-    {buttonId: 'id2', buttonText: {displayText: ${prefix}'news'}, type: 1},
-    {buttonId: 'id3', buttonText: {displayText: ${prefix}'list'}, type: 1},
+    {buttonId: 'id1', buttonText: {displayText: '-help'}, type: 1},
+    {buttonId: 'id2', buttonText: {displayText: '-news'}, type: 1},
+    {buttonId: 'id3', buttonText: {displayText: '-list'}, type: 1},
   ]
   
   const buttonMessage = {
