@@ -618,7 +618,7 @@ async function main() {
                             var id;
 
                             for (let i of groupMembers) {
-                                mesaj += '@' + i.id.split('@')[0] + ' ';
+                                mesaj += '⟪ @' + i.id.split('@')[0] + '⟫ /n';
                                 jids.push(i.id.replace('c.us', 's.whatsapp.net'));
                             }
                             let tx = "xyz"
@@ -626,7 +626,7 @@ async function main() {
                              { contextInfo: { mentionedJid: jids },quoted:mek });
                         }
                         else {
-                            reply("No Permission !,Contact Developer!")
+                            reply("No Permission!,Contact Developer!")
                         }
                         break;
 
