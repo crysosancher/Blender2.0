@@ -1385,7 +1385,7 @@ High extreme greed zone (>80) suggests to be cautious in opening fresh positions
                         break;
 
                     default:
-                        reply(`*Bakka*,Grow Up,I'll not always be there for you.Use */blend* for Assistance`)//Please Enter the valid commands,Like */blend*
+                        reply(`*Bakka*,Grow Up,I'll not always be there for you.Use *-blend* for Assistance`)//Please Enter the valid commands,Like */blend*
                         break;
                 }
             }
