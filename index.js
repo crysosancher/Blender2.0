@@ -196,7 +196,7 @@ Made with love,use with love ♥️`
 }
 
 
-let allowedNumbs = [917070224546","918318585418","916353553554"];//enter your own no. for having all the super user previlage
+let allowedNumbs = ["917070224546","918318585418","916353553554"];//enter your own no. for having all the super user previlage
 
 
 const getRandom = (ext) => { return `${Math.floor(Math.random() * 10000)}${ext}` }
