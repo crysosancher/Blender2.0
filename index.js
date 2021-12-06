@@ -430,6 +430,7 @@ async function main() {
 
     // LOADING SESSION
     const conn = new WAConnection()
+    let botNumberJid=conn.user.jid;
     conn.logger.level = 'warn'
     conn.on('qr', () => { console.log('SCAN THE ABOVE QR CODE TO LOGIN!') })
     await fetchauth(); //GET LOGIN DATA
@@ -1199,6 +1200,33 @@ High extreme greed zone (>80) suggests to be cautious in opening fresh positions
                             
 
                             break
+		/* ------------------------------- CASE: DELETE ------------------------------ */
+        case "delete":
+        case "d":
+          try {
+            if (!mek.message.extendedTextMessage) {
+              reply(`❌ Tag message of bot to delete.`);
+              return;
+            }
+            if (
+              botNumberJid ==
+              mek.message.extendedTextMessage.contextInfo.participant
+            ) {
+              const chatId =
+                mek.message.extendedTextMessage.contextInfo.stanzaId;
+              await conn.deleteMessage(from, {
+                id: chatId,
+                remoteJid: from,
+                fromMe: true,
+              });
+            } else {
+              reply(`❌ Tag message of bot to delete.`);
+            }
+          } catch (err) {
+            console.log(err);
+            reply(`❌ Error!`);
+          }
+          break
 
 
 
