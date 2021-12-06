@@ -430,7 +430,6 @@ async function main() {
 
     // LOADING SESSION
     const conn = new WAConnection()
-    let botNumberJid=conn.user.jid;
     conn.logger.level = 'warn'
     conn.on('qr', () => { console.log('SCAN THE ABOVE QR CODE TO LOGIN!') })
     await fetchauth(); //GET LOGIN DATA
@@ -1209,11 +1208,9 @@ High extreme greed zone (>80) suggests to be cautious in opening fresh positions
               return;
             }
             if (
-              botNumberJid ==
-              mek.message.extendedTextMessage.contextInfo.participant
-            ) {
-              const chatId =
-                mek.message.extendedTextMessage.contextInfo.stanzaId;
+              botNumber == mek.message.extendedTextMessage.contextInfo.participant) 
+	    {
+              const chatId = mek.message.extendedTextMessage.contextInfo.stanzaId;
               await conn.deleteMessage(from, {
                 id: chatId,
                 remoteJid: from,
@@ -1226,8 +1223,7 @@ High extreme greed zone (>80) suggests to be cautious in opening fresh positions
             console.log(err);
             reply(`❌ Error!`);
           }
-          break
-
+				break
 
 
                     /////////////// ADMIN COMMANDS \\\\\\\\\\\\\\\
