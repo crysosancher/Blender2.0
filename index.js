@@ -96,6 +96,10 @@ const adminHelp = (prefix, groupName) => {
 *${prefix}ban <@mention>*
     _Kick any member out from group!_
     _Alias with ${prefix}remove, ${prefix}kick_
+  
+*${prefix}delete*
+	_delete message send by bot_
+	_Alias ${prefix}d, ${prefix}delete_
 
 *${prefix}promote <@mention>*
     _Give admin permission to a member!_
