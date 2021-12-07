@@ -927,7 +927,7 @@ async function main() {
 
                             //reply(sadsa)
                         
-                            break
+                            break*/
                             case'idp':
                             let prof=args[0];
                             
@@ -987,7 +987,7 @@ const downImage= async (url)=>{
   });
 }
 
-                            break*/
+                            break
                        
                     case 'dice':
                         if (!isGroup) return;
@@ -1226,7 +1226,7 @@ break
           }
           let urlInsta = args[0];
 
-          if (
+          /*if (
             !(
               urlInsta.includes("instagram.com/p/") ||
               urlInsta.includes("instagram.com/reel/") ||
@@ -1237,7 +1237,7 @@ break
               `❌ Wrong URL! Only Instagram posted videos, tv and reels can be downloaded.`
             );
             return;
-          }
+          }*/
 
           try {
             console.log("Video downloading ->", urlInsta);
