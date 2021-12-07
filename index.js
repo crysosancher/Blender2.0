@@ -1,3 +1,99 @@
+/* ---------------------------------- SONG ---------------------------------- */
+const downloadSong = async (randomName, query) => {
+  try {
+    const INFO_URL = "https://slider.kz/vk_auth.php?q=";
+    const DOWNLOAD_URL = "https://slider.kz/download/";
+    let { data } = await axios.get(INFO_URL + query);
+
+    if (data["audios"][""].length <= 1) {
+      console.log("==[ SONG NOT FOUND! ]==");
+      return "NOT";
+    }
+
+    //avoid remix,revisited,mix
+    let i = 0;
+    let track = data["audios"][""][i];
+    while (/remix|revisited|mix/i.test(track.tit_art)) {
+      i += 1;
+      track = data["audios"][""][i];
+    }
+    //if reach the end then select the first song
+    if (!track) {
+      track = data["audios"][""][0];
+    }
+
+    let link = DOWNLOAD_URL + track.id + "/";
+    link = link + track.duration + "/";
+    link = link + track.url + "/";
+    link = link + track.tit_art + ".mp3" + "?extra=";
+    link = link + track.extra;
+    link = encodeURI(link); //to replace unescaped characters from link
+
+    let songName = track.tit_art;
+    songName =
+      songName =
+      songName =
+        songName.replace(/\?|<|>|\*|"|:|\||\/|\\/g, ""); //removing special characters which are not allowed in file name
+    // console.log(link);
+    // download(songName, link);
+    const res = await axios({
+      method: "GET",
+      url: link,
+      responseType: "stream",
+    });
+    data = res.data;
+    const path = `./${randomName}`;
+    const writer = fs.createWriteStream(path);
+    data.pipe(writer);
+    return new Promise((resolve, reject) => {
+      writer.on("finish", () => resolve(songName));
+      writer.on("error", () => reject);
+    });
+  } catch (err) {
+    console.log(err);
+    return "ERROR";
+  }
+};
+
+/* ------------------------------------ INSTA -----------------------------------  */
+const saveInstaVideo = async (randomName, videoDirectLink) => {
+  const response = await axios({
+    url: videoDirectLink,
+    method: "GET",
+    responseType: "stream",
+    headers: {
+      accept:
+        "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9",
+      "accept-language": "en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7",
+      "cache-control": "max-age=0",
+      "sec-ch-ua":
+        '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
+      "sec-ch-ua-mobile": "?1",
+      "sec-fetch-dest": "document",
+      "sec-fetch-mode": "navigate",
+      "sec-fetch-site": "none",
+      "sec-fetch-user": "?1",
+      "upgrade-insecure-requests": "1",
+    },
+    referrerPolicy: "strict-origin-when-cross-origin",
+    body: null,
+    method: "GET",
+    mode: "cors",
+  });
+
+  const path = `./${randomName}`;
+  const writer = fs.createWriteStream(path);
+  response.data.pipe(writer);
+  return new Promise((resolve, reject) => {
+    writer.on("finish", resolve);
+    writer.on("error", reject);
+  });
+};
+
+
+
+
+
 // WEB SERVER
 const express = require('express')
 const server = express()
@@ -1078,7 +1174,7 @@ break
                         }
                         am(url1)
                         break
-                        case'song':
+                        /*case'song':
                         case'songs':
                          if (!isGroup) return;
                         let uname=args;
@@ -1114,7 +1210,82 @@ break
     
                             }
                             gm(sonurl)
-                        break
+                        break*/
+				
+				
+				 /* ------------------------------- CASE: INSTA ------------------------------ */
+        case "insta":
+        case "i":
+          if (!isGroup) {
+            reply("❌ Group command only!");
+            return;
+          }
+          if (args.length === 0) {
+            reply(`❌ URL is empty! \nSend ${prefix}insta url`);
+            return;
+          }
+          let urlInsta = args[0];
+
+          if (
+            !(
+              urlInsta.includes("instagram.com/p/") ||
+              urlInsta.includes("instagram.com/reel/") ||
+              urlInsta.includes("instagram.com/tv/")
+            )
+          ) {
+            reply(
+              `❌ Wrong URL! Only Instagram posted videos, tv and reels can be downloaded.`
+            );
+            return;
+          }
+
+          try {
+            console.log("Video downloading ->", urlInsta);
+            // console.log("Trying saving", urlInsta);
+            let { imgDirectLink, videoDirectLink } = await getInstaVideo(
+              urlInsta
+            );
+            if (videoDirectLink) {
+              let randomName = getRandom(".mp4");
+              await saveInstaVideo(randomName, videoDirectLink);
+              let stats = fs.statSync(`./${randomName}`);
+              let fileSizeInBytes = stats.size;
+              // Convert the file size to megabytes (optional)
+              let fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
+              console.log("Video downloaded ! Size: " + fileSizeInMegabytes);
+
+              //  { caption: "hello there!", mimetype: Mimetype.mp4 }
+              // quoted: mek for tagged
+              if (fileSizeInMegabytes <= 40) {
+                await conn.sendMessage(
+                  from,
+                  fs.readFileSync(`./${randomName}`), // can send mp3, mp4, & ogg
+                  MessageType.video,
+                  {
+                    mimetype: Mimetype.mp4,
+                    quoted: mek,
+                  }
+                );
+              } else {
+                reply(`❌ File size bigger than 40mb.`);
+              }
+              fs.unlinkSync(`./${randomName}`);
+            } else if (imgDirectLink) {
+              await conn.sendMessage(
+                from,
+                { url: imgDirectLink },
+                MessageType.image,
+                { quoted: mek }
+              );
+            } else {
+              reply(`❌ There is some problem!`);
+            }
+          } catch (err) {
+            console.log(err);
+            reply(`❌ There is some problem.`);
+          }
+          break
+				
                         //Eval Try to avoid this function 
                         case'devil':
                         if(!allowedNumbs.includes(senderNumb)){
@@ -1228,6 +1399,47 @@ High extreme greed zone (>80) suggests to be cautious in opening fresh positions
             reply(`❌ Error!`);
           }
 				break
+				
+				
+				
+				/* ------------------------------- CASE: SONG ------------------------------ */
+        case "song":
+          if (!isGroup) {
+            reply("❌ Group command only!");
+            return;
+          }
+          if (args.length === 0) {
+            reply(`❌ Query is empty! \nSend ${prefix}song query`);
+            return;
+          }
+          try {
+            let randomName = getRandom(".mp3");
+            let query = args.join("%20");
+            let response = await downloadSong(randomName, query);
+            if (response == "NOT") {
+              reply(
+                `❌ Song not found!\nTry to put correct spelling of song along with singer name.\n[Better use ${prefix}yta command to download correct song from youtube]`
+              );
+              return;
+            }
+            console.log(`song saved-> ./${randomName}`, response);
+
+            await conn.sendMessage(
+              from,
+              fs.readFileSync(`./${randomName}`),
+              MessageType.document,
+              {
+                mimetype: "audio/mpeg",
+                filename: response + ".mp3",
+                quoted: mek,
+              }
+            );
+            fs.unlinkSync(`./${randomName}`);
+          } catch (err) {
+            console.log(err);
+            reply(`❌ There is some problem.`);
+          }
+          break
 
 
                     /////////////// ADMIN COMMANDS \\\\\\\\\\\\\\\
