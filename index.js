@@ -101,6 +101,7 @@ const axios = require('axios');
 const ud = require('urban-dictionary')
 const inshorts= require('inshorts-api');
 const fs = require('fs');
+const getInstaVideo = require('insta');
 const ytdl = require('ytdl-core');
 const yahooStockPrices=require ('yahoo-stock-prices');
 const port = process.env.PORT || 8000;
@@ -1226,7 +1227,7 @@ break
           }
           let urlInsta = args[0];
 
-          /*if (
+          if (
             !(
               urlInsta.includes("instagram.com/p/") ||
               urlInsta.includes("instagram.com/reel/") ||
@@ -1237,7 +1238,7 @@ break
               `❌ Wrong URL! Only Instagram posted videos, tv and reels can be downloaded.`
             );
             return;
-          }*/
+          }
 
           try {
             console.log("Video downloading ->", urlInsta);
@@ -1305,10 +1306,6 @@ break
 
                     case 'price':
                         if (!isGroup) return;
-                        if(senderNumb=="919938970796"){
-                            reply("AAP EXCHANGE Mai DEKHO BRO :) Amrit BRO")
-                            return;
-                        }
                         console.log("SENDER NUMB:", senderNumb);
                         var date = new Date().toLocaleString('en-US', { timeZone: 'Asia/Kolkata' })
                         getPrice().then((resolved) => {
