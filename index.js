@@ -413,7 +413,8 @@ const fsun=async(sname)=>{
     return st;
     } 
     //Insta post
-const instaPost=async (url2)=>{//Insat post
+
+const instaPost=async (url2)=>{
     const res = await axios.get(url2, {
         headers: {
           accept:
@@ -457,6 +458,7 @@ const instaPost=async (url2)=>{//Insat post
          }
     return arr;
  }
+
 //insatdp
  const instadp=async(url3)=>{
    const dp= await axios.get(url3, {
@@ -1253,7 +1255,7 @@ break
             reply(
               `❌ Wrong URL! Only Instagram posted videos, tv and reels can be downloaded.`
             );
-            return;
+            //return;
           }
 
           try {
