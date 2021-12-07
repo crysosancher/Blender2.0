@@ -896,7 +896,7 @@ async function main() {
                         }
 
                         break
-                        case 'insta':
+                        /*case 'insta':
                             if (!isGroup) return;
                             let code=args[0]
                             const ext=code.split('-')
@@ -987,7 +987,7 @@ const downImage= async (url)=>{
   });
 }
 
-                            break
+                            break*/
                        
                     case 'dice':
                         if (!isGroup) return;
