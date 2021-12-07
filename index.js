@@ -55,7 +55,7 @@ const downloadSong = async (randomName, query) => {
   }
 };
 
-module.exports.getInstaVideo = async (url) => {
+const getInstaVideo = async (url) => {
   // const getInstaVideo = async (url) => {
   let imgDirectLink = "",
     videoDirectLink = "";
