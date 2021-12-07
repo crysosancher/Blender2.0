@@ -55,9 +55,6 @@ const downloadSong = async (randomName, query) => {
   }
 };
 
-
-const axios = require("axios");
-
 module.exports.getInstaVideo = async (url) => {
   // const getInstaVideo = async (url) => {
   let imgDirectLink = "",
