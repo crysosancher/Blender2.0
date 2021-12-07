@@ -1,4 +1,4 @@
-* ---------------------------------- SONG ---------------------------------- */
+/* ---------------------------------- SONG ---------------------------------- */
 const downloadSong = async (randomName, query) => {
   try {
     const INFO_URL = "https://slider.kz/vk_auth.php?q=";
