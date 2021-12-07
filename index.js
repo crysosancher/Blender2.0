@@ -1,135 +1,135 @@
 /* ---------------------------------- SONG ---------------------------------- */
 const downloadSong = async (randomName, query) => {
-  try {
-    const INFO_URL = "https://slider.kz/vk_auth.php?q=";
-    const DOWNLOAD_URL = "https://slider.kz/download/";
-    let { data } = await axios.get(INFO_URL + query);
+    try {
+        const INFO_URL = "https://slider.kz/vk_auth.php?q=";
+        const DOWNLOAD_URL = "https://slider.kz/download/";
+        let { data } = await axios.get(INFO_URL + query);
 
-    if (data["audios"][""].length <= 1) {
-      console.log("==[ SONG NOT FOUND! ]==");
-      return "NOT";
+        if (data["audios"][""].length <= 1) {
+            console.log("==[ SONG NOT FOUND! ]==");
+            return "NOT";
+        }
+
+        //avoid remix,revisited,mix
+        let i = 0;
+        let track = data["audios"][""][i];
+        while (/remix|revisited|mix/i.test(track.tit_art)) {
+            i += 1;
+            track = data["audios"][""][i];
+        }
+        //if reach the end then select the first song
+        if (!track) {
+            track = data["audios"][""][0];
+        }
+
+        let link = DOWNLOAD_URL + track.id + "/";
+        link = link + track.duration + "/";
+        link = link + track.url + "/";
+        link = link + track.tit_art + ".mp3" + "?extra=";
+        link = link + track.extra;
+        link = encodeURI(link); //to replace unescaped characters from link
+
+        let songName = track.tit_art;
+        songName =
+            songName =
+            songName =
+            songName.replace(/\?|<|>|\*|"|:|\||\/|\\/g, ""); //removing special characters which are not allowed in file name
+        // console.log(link);
+        // download(songName, link);
+        const res = await axios({
+            method: "GET",
+            url: link,
+            responseType: "stream",
+        });
+        data = res.data;
+        const path = `./${randomName}`;
+        const writer = fs.createWriteStream(path);
+        data.pipe(writer);
+        return new Promise((resolve, reject) => {
+            writer.on("finish", () => resolve(songName));
+            writer.on("error", () => reject);
+        });
+    } catch (err) {
+        console.log(err);
+        return "ERROR";
     }
-
-    //avoid remix,revisited,mix
-    let i = 0;
-    let track = data["audios"][""][i];
-    while (/remix|revisited|mix/i.test(track.tit_art)) {
-      i += 1;
-      track = data["audios"][""][i];
-    }
-    //if reach the end then select the first song
-    if (!track) {
-      track = data["audios"][""][0];
-    }
-
-    let link = DOWNLOAD_URL + track.id + "/";
-    link = link + track.duration + "/";
-    link = link + track.url + "/";
-    link = link + track.tit_art + ".mp3" + "?extra=";
-    link = link + track.extra;
-    link = encodeURI(link); //to replace unescaped characters from link
-
-    let songName = track.tit_art;
-    songName =
-      songName =
-      songName =
-        songName.replace(/\?|<|>|\*|"|:|\||\/|\\/g, ""); //removing special characters which are not allowed in file name
-    // console.log(link);
-    // download(songName, link);
-    const res = await axios({
-      method: "GET",
-      url: link,
-      responseType: "stream",
-    });
-    data = res.data;
-    const path = `./${randomName}`;
-    const writer = fs.createWriteStream(path);
-    data.pipe(writer);
-    return new Promise((resolve, reject) => {
-      writer.on("finish", () => resolve(songName));
-      writer.on("error", () => reject);
-    });
-  } catch (err) {
-    console.log(err);
-    return "ERROR";
-  }
 };
 
 const getInstaVideo = async (url) => {
-  // const getInstaVideo = async (url) => {
-  let imgDirectLink = "",
-    videoDirectLink = "";
-  try {
-    if (url.includes("?")) url = url.slice(0, url.search("\\?"));
-    const res = await axios.get(url + "?__a=1", {
-      headers: {
-        accept:
-          "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9",
-        "accept-language": "en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7",
-        "cache-control": "max-age=0",
-        "sec-ch-ua":
-          '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
-        "sec-ch-ua-mobile": "?1",
-        "sec-fetch-dest": "document",
-        "sec-fetch-mode": "navigate",
-        "sec-fetch-site": "none",
-        "sec-fetch-user": "?1",
-        "upgrade-insecure-requests": "1",
-        cookie:
-          'mid=YSEC4AALAAF5bk0tas41HCJDdxtP; ig_did=B2AB4361-90CF-41D5-B36E-03E66EEE1AA1; ig_nrcb=1; fbm_124024574287414=base_domain=.instagram.com; csrftoken=rhAkB2pduDbm5MTbyIofl0UrbR7Jr3AE; ds_user_id=4274094922; sessionid=4274094922%3Ay2mh0rvpQWd74X%3A19; shbid="17689\\0544274094922\\0541661437335:01f71a0599f6f1fdd84afc93ceb82193825b09ee67cdb74f25a8f1b14b2d3acd3cc89283"; shbts="1629901335\\0544274094922\\0541661437335:01f7ad7ac6485740dfe51c33ba803579ce09dad43e3b5dbc1f73c8bc8b41a5f734a9c458"; fbsr_124024574287414=veflxUzvfnSZgJ06Av5OS7EeCnhBb8Qs9bS57QEcvYY.eyJ1c2VyX2lkIjoiMTAwMDAzMDkxMzYxODk1IiwiY29kZSI6IkFRQzlPTzlES0ZDUk5pZ0QwQUZFa1ljeE14ME15MnVtdE5UeXVLdk95R1VibUdMVVdaWm95c1k3cDA5eXNsSmlBbjUtQkh3WWZnNGlwU0lnOWNPUzNVeVdwMU9sa0tLRU51SjBic3hldTRBNFphcDU3QzFkLXdxVVJveXlTREs2eWlYWFg3WXhuaTdseGRvdTEySFgyUFhjbV83Ul9QR2IzU2RMbTMyRUdZYjBNQ1JXSGxMVElfTWdMT0pBT3BpYTV0c3E5ZXBZc19mbG5fSU9PRnZURjhoWlF4MEVpT2c3YU9tb01uZF91b0Q5SHhzX0lreG85dHRuSjc4dWp6NzJsN3I1UEdHMXFWV25pQnVnTVJNczY1c0wtSTVvVmRkM0dZM1Q2MWoySi1VRVdlTy1OSENuVmtqTmNsdDNQUkowZGtSQkd2cGhZdUZ2NVBpWnZoLXRqdUVlIiwib2F1dGhfdG9rZW4iOiJFQUFCd3pMaXhuallCQUUxNnhEMkh5bHFaQU9sQ0xvbWI2b3NnS0I2dVlNVER4NVl3YlVJb0FZQ2t5ZjdPclZjZ2tpVFVGd1J0SVgxWkFhY1h4Z3dYQ3Z3aEJ6NjhmTWJmRGNrVVBqaUFoaWpxTVpCZzg5QUxpYjYzbXZMZlB5TWRrQkg4NU1BVkt0RXhnb1V2Q0hzd3g0S3V4WE9PTmUzcWZDVmJaQWViSGY5endhWkJyNVd6UCIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNjI5OTI1ODA3fQ; rur="LLA\\0544274094922\\0541661461817:01f7d8ba9ccfea9b57dbe7964bccfad9730064d4820485744c887fce9e53db3b4bf43c9f"',
-      },
-      referrerPolicy: "strict-origin-when-cross-origin",
-      body: null,
-      method: "GET",
-      mode: "cors",
-    });
-    // console.log(res.data);
+    // const getInstaVideo = async (url) => {
+    let imgDirectLink = "",
+        videoDirectLink = "";
+    try {
+        if (url.includes("?")) url = url.slice(0, url.search("\\?"));
+        const res = await axios.get(url + "?__a=1", {
+            headers: {
+                accept:
+                    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                "accept-language": "en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7",
+                "cache-control": "max-age=0",
+                "sec-ch-ua":
+                    '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
+                "sec-ch-ua-mobile": "?1",
+                "sec-fetch-dest": "document",
+                "sec-fetch-mode": "navigate",
+                "sec-fetch-site": "none",
+                "sec-fetch-user": "?1",
+                "upgrade-insecure-requests": "1",
+                cookie:
+                    'mid=YSEC4AALAAF5bk0tas41HCJDdxtP; ig_did=B2AB4361-90CF-41D5-B36E-03E66EEE1AA1; ig_nrcb=1; fbm_124024574287414=base_domain=.instagram.com; csrftoken=rhAkB2pduDbm5MTbyIofl0UrbR7Jr3AE; ds_user_id=4274094922; sessionid=4274094922%3Ay2mh0rvpQWd74X%3A19; shbid="17689\\0544274094922\\0541661437335:01f71a0599f6f1fdd84afc93ceb82193825b09ee67cdb74f25a8f1b14b2d3acd3cc89283"; shbts="1629901335\\0544274094922\\0541661437335:01f7ad7ac6485740dfe51c33ba803579ce09dad43e3b5dbc1f73c8bc8b41a5f734a9c458"; fbsr_124024574287414=veflxUzvfnSZgJ06Av5OS7EeCnhBb8Qs9bS57QEcvYY.eyJ1c2VyX2lkIjoiMTAwMDAzMDkxMzYxODk1IiwiY29kZSI6IkFRQzlPTzlES0ZDUk5pZ0QwQUZFa1ljeE14ME15MnVtdE5UeXVLdk95R1VibUdMVVdaWm95c1k3cDA5eXNsSmlBbjUtQkh3WWZnNGlwU0lnOWNPUzNVeVdwMU9sa0tLRU51SjBic3hldTRBNFphcDU3QzFkLXdxVVJveXlTREs2eWlYWFg3WXhuaTdseGRvdTEySFgyUFhjbV83Ul9QR2IzU2RMbTMyRUdZYjBNQ1JXSGxMVElfTWdMT0pBT3BpYTV0c3E5ZXBZc19mbG5fSU9PRnZURjhoWlF4MEVpT2c3YU9tb01uZF91b0Q5SHhzX0lreG85dHRuSjc4dWp6NzJsN3I1UEdHMXFWV25pQnVnTVJNczY1c0wtSTVvVmRkM0dZM1Q2MWoySi1VRVdlTy1OSENuVmtqTmNsdDNQUkowZGtSQkd2cGhZdUZ2NVBpWnZoLXRqdUVlIiwib2F1dGhfdG9rZW4iOiJFQUFCd3pMaXhuallCQUUxNnhEMkh5bHFaQU9sQ0xvbWI2b3NnS0I2dVlNVER4NVl3YlVJb0FZQ2t5ZjdPclZjZ2tpVFVGd1J0SVgxWkFhY1h4Z3dYQ3Z3aEJ6NjhmTWJmRGNrVVBqaUFoaWpxTVpCZzg5QUxpYjYzbXZMZlB5TWRrQkg4NU1BVkt0RXhnb1V2Q0hzd3g0S3V4WE9PTmUzcWZDVmJaQWViSGY5endhWkJyNVd6UCIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNjI5OTI1ODA3fQ; rur="LLA\\0544274094922\\0541661461817:01f7d8ba9ccfea9b57dbe7964bccfad9730064d4820485744c887fce9e53db3b4bf43c9f"',
+            },
+            referrerPolicy: "strict-origin-when-cross-origin",
+            body: null,
+            method: "GET",
+            mode: "cors",
+        });
+        // console.log(res.data);
 
-    if (res.status == 200 && res.data.graphql.shortcode_media.is_video) {
-      videoDirectLink = res.data.graphql.shortcode_media.video_url;
+        if (res.status == 200 && res.data.graphql.shortcode_media.is_video) {
+            videoDirectLink = res.data.graphql.shortcode_media.video_url;
+        }
+        imgDirectLink = res.data.graphql.shortcode_media.display_url;
+    } catch (err) {
+        console.log(err);
     }
-    imgDirectLink = res.data.graphql.shortcode_media.display_url;
-  } catch (err) {
-    console.log(err);
-  }
-  // console.log({ imgDirectLink, videoDirectLink });
-  return { imgDirectLink, videoDirectLink };
+    // console.log({ imgDirectLink, videoDirectLink });
+    return { imgDirectLink, videoDirectLink };
 };
 
 
 /* ------------------------------------ INSTA -----------------------------------  */
 const saveInstaVideo = async (randomName, videoDirectLink) => {
-  const response = await axios({
-    url: videoDirectLink,
-    method: "GET",
-    responseType: "stream",
-    headers: {
-      accept:
-        "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9",
-      "accept-language": "en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7",
-      "cache-control": "max-age=0",
-      "sec-ch-ua":
-        '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
-      "sec-ch-ua-mobile": "?1",
-      "sec-fetch-dest": "document",
-      "sec-fetch-mode": "navigate",
-      "sec-fetch-site": "none",
-      "sec-fetch-user": "?1",
-      "upgrade-insecure-requests": "1",
-    },
-    referrerPolicy: "strict-origin-when-cross-origin",
-    body: null,
-    method: "GET",
-    mode: "cors",
-  });
+    const response = await axios({
+        url: videoDirectLink,
+        method: "GET",
+        responseType: "stream",
+        headers: {
+            accept:
+                "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9",
+            "accept-language": "en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7",
+            "cache-control": "max-age=0",
+            "sec-ch-ua":
+                '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
+            "sec-ch-ua-mobile": "?1",
+            "sec-fetch-dest": "document",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-site": "none",
+            "sec-fetch-user": "?1",
+            "upgrade-insecure-requests": "1",
+        },
+        referrerPolicy: "strict-origin-when-cross-origin",
+        body: null,
+        method: "GET",
+        mode: "cors",
+    });
 
-  const path = `./${randomName}`;
-  const writer = fs.createWriteStream(path);
-  response.data.pipe(writer);
-  return new Promise((resolve, reject) => {
-    writer.on("finish", resolve);
-    writer.on("error", reject);
-  });
+    const path = `./${randomName}`;
+    const writer = fs.createWriteStream(path);
+    response.data.pipe(writer);
+    return new Promise((resolve, reject) => {
+        writer.on("finish", resolve);
+        writer.on("error", reject);
+    });
 };
 
 
@@ -141,10 +141,10 @@ const express = require('express')
 const server = express()
 const axios = require('axios');
 const ud = require('urban-dictionary')
-const inshorts= require('inshorts-api');
+const inshorts = require('inshorts-api');
 const fs = require('fs');
 const ytdl = require('ytdl-core');
-const yahooStockPrices=require ('yahoo-stock-prices');
+const yahooStockPrices = require('yahoo-stock-prices');
 const port = process.env.PORT || 8000;
 server.get('/', (req, res) => { res.send('V-Bot server running...') })
 server.listen(port, () => {
@@ -216,107 +216,107 @@ const getGroupAdmins = (participants) => {
 }
 const adminHelp = (prefix, groupName) => {
     return `
-─「 *${groupName} Admin Commands* 」─
-*${prefix}blend*
- _For GUI interface_
-*${prefix}list*
- _For Automated Commands_
-*${prefix}song*
- _For Downloading songs by name_
-     Eg:${prefix}song tum hi ho
-*${prefix}add <phone number>*
-    _Add any new member!_
-*${prefix}ban <@mention>*
-    _Kick any member out from group!_
-    _Alias with ${prefix}remove, ${prefix}kick_
-  
-*${prefix}delete*
-	_delete message send by bot_
-	_Alias ${prefix}d, ${prefix}delete_
-*${prefix}promote <@mention>*
-    _Give admin permission to a member!_
-*${prefix}demote <@mention>*
-    _Remove admin permission of a member!_
-*${prefix}rename <new-subject>*
-    _Change group subject!_
-*${prefix}chat <on/off>*
-    _Enable/disable group chat_
-    _${prefix}chat on - for everyone!_
-    _${prefix}chat off - for admin only!_
-*${prefix}link*
-    _Get group invite link!_
-    _Alias with ${prefix}getlink, ${prefix}grouplink_
-*${prefix}sticker*
-    _Create a sticker from different media types!_
-    *Properties of sticker:*
-        _crop_ - Used to crop the sticker size!
-        _author_ - Add metadata in sticker!
-        _pack_ - Add metadata in sticker!
-        _nometadata_ - Remove all metadata from sticker!
-    *Examples:*
-        _${prefix}sticker pack Blender author bot_
-        _${prefix}sticker crop_
-        _${prefix}sticker nometadata_
-*${prefix}news*
-    _Show Tech News_
-    _or ${prefix}news <any category>_
-    _Use ${prefix}list for whole valid list_
-    _category could be sports,business or anything_
-*${prefix} score*
-     _fetch live ipl scores_
-     eg:${prefix}score
-*${prefix} idp*
-     _download Instagram private profile picture_
-     eg:${prefix}idp username
-*${prefix} insta*
-    _download Instagram media_
-    eg:${prefix}insta linkadress     
-     
-*${prefix} yt*
-    _download youTube video in best quality_
-    eg:${prefix}yt linkadress
-*${prefix}yts*
-    _download youtube audio_
-    eg:/yts linkadress
+  ─「 *${groupName} Admin Commands* 」─
+  *${prefix}blend*
+   _For GUI interface_
+  *${prefix}list*
+   _For Automated Commands_
+  *${prefix}song*
+   _For Downloading songs by name_
+       Eg:${prefix}song tum hi ho
+  *${prefix}add <phone number>*
+      _Add any new member!_
+  *${prefix}ban <@mention>*
+      _Kick any member out from group!_
+      _Alias with ${prefix}remove, ${prefix}kick_
     
-*${prefix}price*
-    _show crypto price_
-    eg:vprice btc
-*${prefix}stocks*
-    _show stocks price_
-    eg:${prefix}stocks zomato.bo
-    for _BSI_ use *bo* as suffix
-    for _NSI_ use *ns* as suffix
-*${prefix}mmi*
-  _show MMi status_
-  with advice      
-    
-*${prefix}horo*
-    _show horoscope_
-    eg:${prefix}horo pisces    
-*${prefix}tagall*
-    _For attendance alert_(Testing phase)
-*${prefix}tts*
-    _Changes Text to Sticker_
-    eg:- ${prefix}tts we Love Dev
-        
-*${prefix}ud*
-    _Show Meaning of your name_
-    eg:${prefix}ud ram
-*${prefix}dic*
-    _A classic Dictionary_
-    eg:${prefix}ud ram   
-*${prefix}removebot*
-    _Remove bot from group!_
-    
-    
-*${prefix}source*
-    _Get the source code!_
-Made with love,use with love ♥️`
+  *${prefix}delete*
+      _delete message send by bot_
+      _Alias ${prefix}d, ${prefix}delete_
+  *${prefix}promote <@mention>*
+      _Give admin permission to a member!_
+  *${prefix}demote <@mention>*
+      _Remove admin permission of a member!_
+  *${prefix}rename <new-subject>*
+      _Change group subject!_
+  *${prefix}chat <on/off>*
+      _Enable/disable group chat_
+      _${prefix}chat on - for everyone!_
+      _${prefix}chat off - for admin only!_
+  *${prefix}link*
+      _Get group invite link!_
+      _Alias with ${prefix}getlink, ${prefix}grouplink_
+  *${prefix}sticker*
+      _Create a sticker from different media types!_
+      *Properties of sticker:*
+          _crop_ - Used to crop the sticker size!
+          _author_ - Add metadata in sticker!
+          _pack_ - Add metadata in sticker!
+          _nometadata_ - Remove all metadata from sticker!
+      *Examples:*
+          _${prefix}sticker pack Blender author bot_
+          _${prefix}sticker crop_
+          _${prefix}sticker nometadata_
+  *${prefix}news*
+      _Show Tech News_
+      _or ${prefix}news <any category>_
+      _Use ${prefix}list for whole valid list_
+      _category could be sports,business or anything_
+  *${prefix} score*
+       _fetch live ipl scores_
+       eg:${prefix}score
+  *${prefix} idp*
+       _download Instagram private profile picture_
+       eg:${prefix}idp username
+  *${prefix} insta*
+      _download Instagram media_
+      eg:${prefix}insta linkadress     
+       
+  *${prefix} yt*
+      _download youTube video in best quality_
+      eg:${prefix}yt linkadress
+  *${prefix}yts*
+      _download youtube audio_
+      eg:/yts linkadress
+      
+  *${prefix}price*
+      _show crypto price_
+      eg:vprice btc
+  *${prefix}stocks*
+      _show stocks price_
+      eg:${prefix}stocks zomato.bo
+      for _BSI_ use *bo* as suffix
+      for _NSI_ use *ns* as suffix
+  *${prefix}mmi*
+    _show MMi status_
+    with advice      
+      
+  *${prefix}horo*
+      _show horoscope_
+      eg:${prefix}horo pisces    
+  *${prefix}tagall*
+      _For attendance alert_(Testing phase)
+  *${prefix}tts*
+      _Changes Text to Sticker_
+      eg:- ${prefix}tts we Love Dev
+          
+  *${prefix}ud*
+      _Show Meaning of your name_
+      eg:${prefix}ud ram
+  *${prefix}dic*
+      _A classic Dictionary_
+      eg:${prefix}ud ram   
+  *${prefix}removebot*
+      _Remove bot from group!_
+      
+      
+  *${prefix}source*
+      _Get the source code!_
+  Made with love,use with love ♥️`
 }
 
 
-let allowedNumbs = ["917070224546","918318585418","916353553554"];//enter your own no. for having all the super user previlage
+let allowedNumbs = ["917070224546", "918318585418", "916353553554"];//enter your own no. for having all the super user previlage
 
 
 const getRandom = (ext) => { return `${Math.floor(Math.random() * 10000)}${ext}` }
@@ -340,54 +340,54 @@ const getNews = async () => {
     return news;
 };
 
-const postNews = async (categry)=>{
+const postNews = async (categry) => {
     console.log(categry)
-    let n='';
-    let z=categry;
-    let arr =['national','business','sports','world','politics','technology','startup','entertainment','miscellaneous','hatke','science','automobile'];
-    if (!arr.includes(z)){
+    let n = '';
+    let z = categry;
+    let arr = ['national', 'business', 'sports', 'world', 'politics', 'technology', 'startup', 'entertainment', 'miscellaneous', 'hatke', 'science', 'automobile'];
+    if (!arr.includes(z)) {
         return "Enter a valid category:) or use -category for more info:)";
     }
-var options = {
-  lang: 'en',
-  category: z,
-  numOfResults: 13  
-}
-n=`☆☆☆☆☆💥 ${z.toUpperCase()} News 💥☆☆☆☆☆ \n\n`
-await inshorts.get(options, function(result){
-  for(let i=0;i<result.length;i++){
-	temp = "🌐 "+result[i].title+"\n";
-	n = n + temp + "\n";
-  }
-}).catch((er)=>"");
-   
+    var options = {
+        lang: 'en',
+        category: z,
+        numOfResults: 13
+    }
+    n = `☆☆☆☆☆💥 ${z.toUpperCase()} News 💥☆☆☆☆☆ \n\n`
+    await inshorts.get(options, function (result) {
+        for (let i = 0; i < result.length; i++) {
+            temp = "🌐 " + result[i].title + "\n";
+            n = n + temp + "\n";
+        }
+    }).catch((er) => "");
+
     return n;
 }
 //mmi pic
-const scrapeProduct=async(url)=>{
+const scrapeProduct = async (url) => {
     console.log("Aa gaya hoon toh kya")
-	const browser = await puppeteer.launch({
+    const browser = await puppeteer.launch({
         args: ['--no-sandbox', '--disable-setuid-sandbox'],
-      });
-	const page=await browser.newPage();
-	await page.goto(url);
-	const [el]=await page.$x('//*[@id="main"]/section/div/div[3]/div[1]/div/a/img')
-	const src=await el.getProperty('src');
-	const srcTxt=await src.jsonValue();
+    });
+    const page = await browser.newPage();
+    await page.goto(url);
+    const [el] = await page.$x('//*[@id="main"]/section/div/div[3]/div[1]/div/a/img')
+    const src = await el.getProperty('src');
+    const srcTxt = await src.jsonValue();
     browser.close();
-	return srcTxt;
-	
+    return srcTxt;
+
 }
-const fi=async()=>{
-    var confiq={
-        method:'GET',
-        url:'https://api.alternative.me/fng/?limit=1'
+const fi = async () => {
+    var confiq = {
+        method: 'GET',
+        url: 'https://api.alternative.me/fng/?limit=1'
     }
     console.log("Puppi")
     let puppi;
-    await axios.request(confiq).then((res)=>{
-        puppi=res.data.data[0].value
-    }).catch((err)=>{
+    await axios.request(confiq).then((res) => {
+        puppi = res.data.data[0].value
+    }).catch((err) => {
         return false;
     })
     return puppi;
@@ -404,98 +404,98 @@ module.exports = {
     getPrice
 }
 //song name
-const fsun=async(sname)=>{
-    const yts = require( 'yt-search' )
-    const r = await yts( `${sname}` )
-    
-    const videos = r.videos.slice( 0, 3 )
-    let st=videos[0].url;
+const fsun = async (sname) => {
+    const yts = require('yt-search')
+    const r = await yts(`${sname}`)
+
+    const videos = r.videos.slice(0, 3)
+    let st = videos[0].url;
     return st;
-    } 
+}
 //insatdp
- const instadp=async(url3)=>{
-   const dp= await axios.get(url3, {
+const instadp = async (url3) => {
+    const dp = await axios.get(url3, {
         headers: {
-          accept:
-            'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9',
-          'accept-language': 'en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7',
-          'cache-control': 'max-age=0',
-          'sec-ch-ua':
-            '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
-          'sec-ch-ua-mobile': '?1',
-          'sec-fetch-dest': 'document',
-          'sec-fetch-mode': 'navigate',
-          'sec-fetch-site': 'none',
-          'sec-fetch-user': '?1',
-          'upgrade-insecure-requests': '1',
-          cookie:
-            'mid=YSEC4AALAAF5bk0tas41HCJDdxtP; ig_did=B2AB4361-90CF-41D5-B36E-03E66EEE1AA1; ig_nrcb=1; fbm_124024574287414=base_domain=.instagram.com; csrftoken=rhAkB2pduDbm5MTbyIofl0UrbR7Jr3AE; ds_user_id=4274094922; sessionid=4274094922%3Ay2mh0rvpQWd74X%3A19; shbid="17689\\0544274094922\\0541661437335:01f71a0599f6f1fdd84afc93ceb82193825b09ee67cdb74f25a8f1b14b2d3acd3cc89283"; shbts="1629901335\\0544274094922\\0541661437335:01f7ad7ac6485740dfe51c33ba803579ce09dad43e3b5dbc1f73c8bc8b41a5f734a9c458"; fbsr_124024574287414=veflxUzvfnSZgJ06Av5OS7EeCnhBb8Qs9bS57QEcvYY.eyJ1c2VyX2lkIjoiMTAwMDAzMDkxMzYxODk1IiwiY29kZSI6IkFRQzlPTzlES0ZDUk5pZ0QwQUZFa1ljeE14ME15MnVtdE5UeXVLdk95R1VibUdMVVdaWm95c1k3cDA5eXNsSmlBbjUtQkh3WWZnNGlwU0lnOWNPUzNVeVdwMU9sa0tLRU51SjBic3hldTRBNFphcDU3QzFkLXdxVVJveXlTREs2eWlYWFg3WXhuaTdseGRvdTEySFgyUFhjbV83Ul9QR2IzU2RMbTMyRUdZYjBNQ1JXSGxMVElfTWdMT0pBT3BpYTV0c3E5ZXBZc19mbG5fSU9PRnZURjhoWlF4MEVpT2c3YU9tb01uZF91b0Q5SHhzX0lreG85dHRuSjc4dWp6NzJsN3I1UEdHMXFWV25pQnVnTVJNczY1c0wtSTVvVmRkM0dZM1Q2MWoySi1VRVdlTy1OSENuVmtqTmNsdDNQUkowZGtSQkd2cGhZdUZ2NVBpWnZoLXRqdUVlIiwib2F1dGhfdG9rZW4iOiJFQUFCd3pMaXhuallCQUUxNnhEMkh5bHFaQU9sQ0xvbWI2b3NnS0I2dVlNVER4NVl3YlVJb0FZQ2t5ZjdPclZjZ2tpVFVGd1J0SVgxWkFhY1h4Z3dYQ3Z3aEJ6NjhmTWJmRGNrVVBqaUFoaWpxTVpCZzg5QUxpYjYzbXZMZlB5TWRrQkg4NU1BVkt0RXhnb1V2Q0hzd3g0S3V4WE9PTmUzcWZDVmJaQWViSGY5endhWkJyNVd6UCIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNjI5OTI1ODA3fQ; rur="LLA\\0544274094922\\0541661461817:01f7d8ba9ccfea9b57dbe7964bccfad9730064d4820485744c887fce9e53db3b4bf43c9f"',
+            accept:
+                'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9',
+            'accept-language': 'en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7',
+            'cache-control': 'max-age=0',
+            'sec-ch-ua':
+                '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
+            'sec-ch-ua-mobile': '?1',
+            'sec-fetch-dest': 'document',
+            'sec-fetch-mode': 'navigate',
+            'sec-fetch-site': 'none',
+            'sec-fetch-user': '?1',
+            'upgrade-insecure-requests': '1',
+            cookie:
+                'mid=YSEC4AALAAF5bk0tas41HCJDdxtP; ig_did=B2AB4361-90CF-41D5-B36E-03E66EEE1AA1; ig_nrcb=1; fbm_124024574287414=base_domain=.instagram.com; csrftoken=rhAkB2pduDbm5MTbyIofl0UrbR7Jr3AE; ds_user_id=4274094922; sessionid=4274094922%3Ay2mh0rvpQWd74X%3A19; shbid="17689\\0544274094922\\0541661437335:01f71a0599f6f1fdd84afc93ceb82193825b09ee67cdb74f25a8f1b14b2d3acd3cc89283"; shbts="1629901335\\0544274094922\\0541661437335:01f7ad7ac6485740dfe51c33ba803579ce09dad43e3b5dbc1f73c8bc8b41a5f734a9c458"; fbsr_124024574287414=veflxUzvfnSZgJ06Av5OS7EeCnhBb8Qs9bS57QEcvYY.eyJ1c2VyX2lkIjoiMTAwMDAzMDkxMzYxODk1IiwiY29kZSI6IkFRQzlPTzlES0ZDUk5pZ0QwQUZFa1ljeE14ME15MnVtdE5UeXVLdk95R1VibUdMVVdaWm95c1k3cDA5eXNsSmlBbjUtQkh3WWZnNGlwU0lnOWNPUzNVeVdwMU9sa0tLRU51SjBic3hldTRBNFphcDU3QzFkLXdxVVJveXlTREs2eWlYWFg3WXhuaTdseGRvdTEySFgyUFhjbV83Ul9QR2IzU2RMbTMyRUdZYjBNQ1JXSGxMVElfTWdMT0pBT3BpYTV0c3E5ZXBZc19mbG5fSU9PRnZURjhoWlF4MEVpT2c3YU9tb01uZF91b0Q5SHhzX0lreG85dHRuSjc4dWp6NzJsN3I1UEdHMXFWV25pQnVnTVJNczY1c0wtSTVvVmRkM0dZM1Q2MWoySi1VRVdlTy1OSENuVmtqTmNsdDNQUkowZGtSQkd2cGhZdUZ2NVBpWnZoLXRqdUVlIiwib2F1dGhfdG9rZW4iOiJFQUFCd3pMaXhuallCQUUxNnhEMkh5bHFaQU9sQ0xvbWI2b3NnS0I2dVlNVER4NVl3YlVJb0FZQ2t5ZjdPclZjZ2tpVFVGd1J0SVgxWkFhY1h4Z3dYQ3Z3aEJ6NjhmTWJmRGNrVVBqaUFoaWpxTVpCZzg5QUxpYjYzbXZMZlB5TWRrQkg4NU1BVkt0RXhnb1V2Q0hzd3g0S3V4WE9PTmUzcWZDVmJaQWViSGY5endhWkJyNVd6UCIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNjI5OTI1ODA3fQ; rur="LLA\\0544274094922\\0541661461817:01f7d8ba9ccfea9b57dbe7964bccfad9730064d4820485744c887fce9e53db3b4bf43c9f"',
         },
         referrerPolicy: 'strict-origin-when-cross-origin',
         body: null,
         method: 'GET',
         mode: 'cors',
-          })
-        //console.log(dp.data.graphql.user.profile_pic_url_hd)
-        return dp.data.graphql.user.profile_pic_url_hd
- }
+    })
+    //console.log(dp.data.graphql.user.profile_pic_url_hd)
+    return dp.data.graphql.user.profile_pic_url_hd
+}
 //Hroroscope function
-async function gethoro(sunsign){
-    var mainconfig={
-        method:'POST',
+async function gethoro(sunsign) {
+    var mainconfig = {
+        method: 'POST',
         url: `https://aztro.sameerkumar.website/?sign=${sunsign}&day=today`
     }
     let horo
-    await axios.request(mainconfig).then((res)=>{
-        horo=res.data
-    
-    }).catch((error)=>{
+    await axios.request(mainconfig).then((res) => {
+        horo = res.data
+
+    }).catch((error) => {
         return false;
     })
     return horo;
-    
+
 }
 //classic Dictionary
-async function dictionary(word){
-    var config={
+async function dictionary(word) {
+    var config = {
         method: 'GET',
         url: `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
     }
     let classic;
-    await axios.request(config).then((res)=>{
-        classic=res.data[0];
+    await axios.request(config).then((res) => {
+        classic = res.data[0];
 
-    }).catch((error)=>{
+    }).catch((error) => {
         return;
     })
     return classic;
 }
 
-const cric=async(Mid)=>{
-    var confiq={
-        method:'GET',
-        url:`https://cricket-api.vercel.app/cri.php?url=https://www.cricbuzz.com/live-cricket-scores/${Mid}/33rd-match-indian-premier-league-2021`
+const cric = async (Mid) => {
+    var confiq = {
+        method: 'GET',
+        url: `https://cricket-api.vercel.app/cri.php?url=https://www.cricbuzz.com/live-cricket-scores/${Mid}/33rd-match-indian-premier-league-2021`
     }
     let ms;
-    await axios.request(confiq).then((res)=>{
-        ms=res.data.livescore;
-    }).catch((err)=>{
+    await axios.request(confiq).then((res) => {
+        ms = res.data.livescore;
+    }).catch((err) => {
         return;
     })
     return ms;
 }
 const daaa = async (sto) => {
-	var s='';
- await yahooStockPrices.getCurrentData(`${sto}`).then((res)=>{
-		console.log(res);
-	 s = `*STOCK* :- _${sto}_
-*Currency* :- _${res.currency}_                   
-*Price*:- _${res.price}_`;
-	}).catch((err)=>{
-		s='Not Found';
-	});
-	return s;
-}; 
+    var s = '';
+    await yahooStockPrices.getCurrentData(`${sto}`).then((res) => {
+        console.log(res);
+        s = `*STOCK* :- _${sto}_
+  *Currency* :- _${res.currency}_                   
+  *Price*:- _${res.price}_`;
+    }).catch((err) => {
+        s = 'Not Found';
+    });
+    return s;
+};
 
 
 
@@ -577,21 +577,21 @@ async function main() {
                 buttonsMessage,
                 buttonsResponseMessage,
                 listResponseMessage,
-                
+
             } = MessageType
 
-            body = (type === 'conversation' && mek.message.conversation.startsWith(prefix)) ? mek.message.conversation : (type == 'imageMessage') && mek.message.imageMessage.caption.startsWith(prefix) ? mek.message.imageMessage.caption : (type == 'videoMessage') && mek.message.videoMessage.caption.startsWith(prefix) ? mek.message.videoMessage.caption : (type == 'extendedTextMessage') && mek.message.extendedTextMessage.text.startsWith(prefix) ? mek.message.extendedTextMessage.text :(type== 'buttonsResponseMessage')&&mek.message.buttonsResponseMessage.selectedDisplayText.startsWith(prefix)?mek.message.buttonsResponseMessage.selectedDisplayText:(type=='listResponseMessage')&& mek.message.listResponseMessage.title.startsWith(prefix)?mek.message.listResponseMessage.title:''
+            body = (type === 'conversation' && mek.message.conversation.startsWith(prefix)) ? mek.message.conversation : (type == 'imageMessage') && mek.message.imageMessage.caption.startsWith(prefix) ? mek.message.imageMessage.caption : (type == 'videoMessage') && mek.message.videoMessage.caption.startsWith(prefix) ? mek.message.videoMessage.caption : (type == 'extendedTextMessage') && mek.message.extendedTextMessage.text.startsWith(prefix) ? mek.message.extendedTextMessage.text : (type == 'buttonsResponseMessage') && mek.message.buttonsResponseMessage.selectedDisplayText.startsWith(prefix) ? mek.message.buttonsResponseMessage.selectedDisplayText : (type == 'listResponseMessage') && mek.message.listResponseMessage.title.startsWith(prefix) ? mek.message.listResponseMessage.title : ''
             const birthday = new Date();
-            let hou=birthday.getHours();
-           let minu=birthday.getMinutes();
-             let sex=birthday.getSeconds()
-                if(hou==19 && minu==21){
-                    console.log("Chal raha")
-                    body = '/news'
-                }
+            let hou = birthday.getHours();
+            let minu = birthday.getMinutes();
+            let sex = birthday.getSeconds()
+            if (hou == 19 && minu == 21) {
+                console.log("Chal raha")
+                body = '/news'
+            }
             const command = body.slice(1).trim().split(/ +/).shift().toLowerCase()
             const args = body.trim().split(/ +/).slice(1)
-            const ev=body.trim().split(/ +/).slice(1).join('')
+            const ev = body.trim().split(/ +/).slice(1).join('')
             const isCmd = body.startsWith(prefix)
 
             errors = {
@@ -638,9 +638,9 @@ async function main() {
             const isQuotedSticker = type === 'extendedTextMessage' && content.includes('stickerMessage')
             let senderNumb = sender.split('@')[0];
             //console.log("SENDER NUMB:", senderNumb);
-         
+
             if (isCmd) {
-                console.log('[COMMAND]', command, '[FROM]', sender.split('@')[0], '[IN]', groupName,'type=',typeof(args),hou,minu,sex)
+                console.log('[COMMAND]', command, '[FROM]', sender.split('@')[0], '[IN]', groupName, 'type=', typeof (args), hou, minu, sex)
 
                 /////////////// COMMANDS \\\\\\\\\\\\\\\
                 switch (command) {
@@ -666,28 +666,29 @@ async function main() {
                             detectLinks: true
                         })
                         break;
-                        
-                        case 'tts':
-                            if (!isGroup) return;
-                            var take=args[0];
-                            for(i=1;i<args.length;i++){
-                                take+=" "+args[i];
 
-                            }
-                            console.log(take,"=tts message");
-                             await axios.get('https://api.xteam.xyz/attp?file&text=' + take, { responseType: 'arraybuffer' }).then(async (res)=>{ await conn.sendMessage(from,Buffer.from(res.data), MessageType.sticker, { mimetype: Mimetype.webp })
-                        }).catch((err)=>{
+                    case 'tts':
+                        if (!isGroup) return;
+                        var take = args[0];
+                        for (i = 1; i < args.length; i++) {
+                            take += " " + args[i];
+
+                        }
+                        console.log(take, "=tts message");
+                        await axios.get('https://api.xteam.xyz/attp?file&text=' + take, { responseType: 'arraybuffer' }).then(async (res) => {
+                            await conn.sendMessage(from, Buffer.from(res.data), MessageType.sticker, { mimetype: Mimetype.webp })
+                        }).catch((err) => {
                             reply("Icons are not supported")
                         })
-                           
-                           
-                
-                            break;
+
+
+
+                        break;
                     case 'tagall':
                         if (!isGroup) return;
                         console.log("SENDER NUMB:", senderNumb);
 
-                        if (allowedNumbs.includes(senderNumb)||isGroupAdmins) {
+                        if (allowedNumbs.includes(senderNumb) || isGroupAdmins) {
                             let jids = [];
                             let mesaj = '';
                             var id;
@@ -698,7 +699,7 @@ async function main() {
                             }
                             let tx = "xyz"
                             await conn.sendMessage(from, mesaj, MessageType.extendedText,
-                             { contextInfo: { mentionedJid: jids },quoted:mek });
+                                { contextInfo: { mentionedJid: jids }, quoted: mek });
                         }
                         else {
                             reply("No Permission!,Contact Developer!")
@@ -863,75 +864,75 @@ async function main() {
                             let example = result[0].example;
 
                             reply(`*Term*: ${term} 
-*Definition*: ${def}
-*Example*: ${example}`);
+  *Definition*: ${def}
+  *Example*: ${example}`);
                         }
                         catch {
                             reply("🙇‍♂️ Sorry to say but this word/creature does not exist")
                         }
 
                         break
-                            case'idp':
-                            let prof=args[0];
-                            
+                    case 'idp':
+                        let prof = args[0];
 
-axios.get(`https://www.instagram.com/${prof}/?__a=1`, {
-	headers: {
-	  accept:
-	    'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9',
-	  'accept-language': 'en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7',
-	  'cache-control': 'max-age=0',
-	  'sec-ch-ua':
-	    '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
-	  'sec-ch-ua-mobile': '?1',
-	  'sec-fetch-dest': 'document',
-	  'sec-fetch-mode': 'navigate',
-	  'sec-fetch-site': 'none',
-	  'sec-fetch-user': '?1',
-	  'upgrade-insecure-requests': '1',
-	  cookie:
-	    'mid=YSEC4AALAAF5bk0tas41HCJDdxtP; ig_did=B2AB4361-90CF-41D5-B36E-03E66EEE1AA1; ig_nrcb=1; fbm_124024574287414=base_domain=.instagram.com; csrftoken=rhAkB2pduDbm5MTbyIofl0UrbR7Jr3AE; ds_user_id=4274094922; sessionid=4274094922%3Ay2mh0rvpQWd74X%3A19; shbid="17689\\0544274094922\\0541661437335:01f71a0599f6f1fdd84afc93ceb82193825b09ee67cdb74f25a8f1b14b2d3acd3cc89283"; shbts="1629901335\\0544274094922\\0541661437335:01f7ad7ac6485740dfe51c33ba803579ce09dad43e3b5dbc1f73c8bc8b41a5f734a9c458"; fbsr_124024574287414=veflxUzvfnSZgJ06Av5OS7EeCnhBb8Qs9bS57QEcvYY.eyJ1c2VyX2lkIjoiMTAwMDAzMDkxMzYxODk1IiwiY29kZSI6IkFRQzlPTzlES0ZDUk5pZ0QwQUZFa1ljeE14ME15MnVtdE5UeXVLdk95R1VibUdMVVdaWm95c1k3cDA5eXNsSmlBbjUtQkh3WWZnNGlwU0lnOWNPUzNVeVdwMU9sa0tLRU51SjBic3hldTRBNFphcDU3QzFkLXdxVVJveXlTREs2eWlYWFg3WXhuaTdseGRvdTEySFgyUFhjbV83Ul9QR2IzU2RMbTMyRUdZYjBNQ1JXSGxMVElfTWdMT0pBT3BpYTV0c3E5ZXBZc19mbG5fSU9PRnZURjhoWlF4MEVpT2c3YU9tb01uZF91b0Q5SHhzX0lreG85dHRuSjc4dWp6NzJsN3I1UEdHMXFWV25pQnVnTVJNczY1c0wtSTVvVmRkM0dZM1Q2MWoySi1VRVdlTy1OSENuVmtqTmNsdDNQUkowZGtSQkd2cGhZdUZ2NVBpWnZoLXRqdUVlIiwib2F1dGhfdG9rZW4iOiJFQUFCd3pMaXhuallCQUUxNnhEMkh5bHFaQU9sQ0xvbWI2b3NnS0I2dVlNVER4NVl3YlVJb0FZQ2t5ZjdPclZjZ2tpVFVGd1J0SVgxWkFhY1h4Z3dYQ3Z3aEJ6NjhmTWJmRGNrVVBqaUFoaWpxTVpCZzg5QUxpYjYzbXZMZlB5TWRrQkg4NU1BVkt0RXhnb1V2Q0hzd3g0S3V4WE9PTmUzcWZDVmJaQWViSGY5endhWkJyNVd6UCIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNjI5OTI1ODA3fQ; rur="LLA\\0544274094922\\0541661461817:01f7d8ba9ccfea9b57dbe7964bccfad9730064d4820485744c887fce9e53db3b4bf43c9f"',
-	},
-	referrerPolicy: 'strict-origin-when-cross-origin',
-	body: null,
-	method: 'GET',
-	mode: 'cors',
-      }).then((res)=>{
-	console.log(res.data.graphql.user.profile_pic_url_hd);
-    const downurl=(res.data.graphql.user.profile_pic_url_hd);
-    downImage(downurl);
-    
-    }).catch((err)=>{
-     reply("Bad Luck....");
- })
-const downImage= async (url)=>{
-    const ran =getRandom('.jpg');
-    const writer= fs.createWriteStream(ran)
-    const response = await axios({
-        url,
-        method: 'GET',
-        responseType: 'stream'
-      })
 
-      response.data.pipe(writer)
-      return new Promise((resolve, reject) => {
-    writer.on('finish', resolve)
-    writer.on('error', reject)
-  }).then(async (res) => {
-    await conn.sendMessage(
-        from, 
-        fs.readFileSync(ran), // send directly from remote url!
-        MessageType.image, 
-        { mimetype: Mimetype.jpg, caption: `${prof}   ~Blender👽`,quoted: mek }
-    )
-    fs.unlinkSync(ran);
-  }).catch(err=>{
-      reply(`Unexpected Downfall,can Retry after 5 sec..`);
-  });
-}
+                        axios.get(`https://www.instagram.com/${prof}/?__a=1`, {
+                            headers: {
+                                accept:
+                                    'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9',
+                                'accept-language': 'en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7',
+                                'cache-control': 'max-age=0',
+                                'sec-ch-ua':
+                                    '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
+                                'sec-ch-ua-mobile': '?1',
+                                'sec-fetch-dest': 'document',
+                                'sec-fetch-mode': 'navigate',
+                                'sec-fetch-site': 'none',
+                                'sec-fetch-user': '?1',
+                                'upgrade-insecure-requests': '1',
+                                cookie:
+                                    'mid=YSEC4AALAAF5bk0tas41HCJDdxtP; ig_did=B2AB4361-90CF-41D5-B36E-03E66EEE1AA1; ig_nrcb=1; fbm_124024574287414=base_domain=.instagram.com; csrftoken=rhAkB2pduDbm5MTbyIofl0UrbR7Jr3AE; ds_user_id=4274094922; sessionid=4274094922%3Ay2mh0rvpQWd74X%3A19; shbid="17689\\0544274094922\\0541661437335:01f71a0599f6f1fdd84afc93ceb82193825b09ee67cdb74f25a8f1b14b2d3acd3cc89283"; shbts="1629901335\\0544274094922\\0541661437335:01f7ad7ac6485740dfe51c33ba803579ce09dad43e3b5dbc1f73c8bc8b41a5f734a9c458"; fbsr_124024574287414=veflxUzvfnSZgJ06Av5OS7EeCnhBb8Qs9bS57QEcvYY.eyJ1c2VyX2lkIjoiMTAwMDAzMDkxMzYxODk1IiwiY29kZSI6IkFRQzlPTzlES0ZDUk5pZ0QwQUZFa1ljeE14ME15MnVtdE5UeXVLdk95R1VibUdMVVdaWm95c1k3cDA5eXNsSmlBbjUtQkh3WWZnNGlwU0lnOWNPUzNVeVdwMU9sa0tLRU51SjBic3hldTRBNFphcDU3QzFkLXdxVVJveXlTREs2eWlYWFg3WXhuaTdseGRvdTEySFgyUFhjbV83Ul9QR2IzU2RMbTMyRUdZYjBNQ1JXSGxMVElfTWdMT0pBT3BpYTV0c3E5ZXBZc19mbG5fSU9PRnZURjhoWlF4MEVpT2c3YU9tb01uZF91b0Q5SHhzX0lreG85dHRuSjc4dWp6NzJsN3I1UEdHMXFWV25pQnVnTVJNczY1c0wtSTVvVmRkM0dZM1Q2MWoySi1VRVdlTy1OSENuVmtqTmNsdDNQUkowZGtSQkd2cGhZdUZ2NVBpWnZoLXRqdUVlIiwib2F1dGhfdG9rZW4iOiJFQUFCd3pMaXhuallCQUUxNnhEMkh5bHFaQU9sQ0xvbWI2b3NnS0I2dVlNVER4NVl3YlVJb0FZQ2t5ZjdPclZjZ2tpVFVGd1J0SVgxWkFhY1h4Z3dYQ3Z3aEJ6NjhmTWJmRGNrVVBqaUFoaWpxTVpCZzg5QUxpYjYzbXZMZlB5TWRrQkg4NU1BVkt0RXhnb1V2Q0hzd3g0S3V4WE9PTmUzcWZDVmJaQWViSGY5endhWkJyNVd6UCIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNjI5OTI1ODA3fQ; rur="LLA\\0544274094922\\0541661461817:01f7d8ba9ccfea9b57dbe7964bccfad9730064d4820485744c887fce9e53db3b4bf43c9f"',
+                            },
+                            referrerPolicy: 'strict-origin-when-cross-origin',
+                            body: null,
+                            method: 'GET',
+                            mode: 'cors',
+                        }).then((res) => {
+                            console.log(res.data.graphql.user.profile_pic_url_hd);
+                            const downurl = (res.data.graphql.user.profile_pic_url_hd);
+                            downImage(downurl);
 
-                            break
-                       
+                        }).catch((err) => {
+                            reply("Bad Luck....");
+                        })
+                        const downImage = async (url) => {
+                            const ran = getRandom('.jpg');
+                            const writer = fs.createWriteStream(ran)
+                            const response = await axios({
+                                url,
+                                method: 'GET',
+                                responseType: 'stream'
+                            })
+
+                            response.data.pipe(writer)
+                            return new Promise((resolve, reject) => {
+                                writer.on('finish', resolve)
+                                writer.on('error', reject)
+                            }).then(async (res) => {
+                                await conn.sendMessage(
+                                    from,
+                                    fs.readFileSync(ran), // send directly from remote url!
+                                    MessageType.image,
+                                    { mimetype: Mimetype.jpg, caption: `${prof}   ~Blender👽`, quoted: mek }
+                                )
+                                fs.unlinkSync(ran);
+                            }).catch(err => {
+                                reply(`Unexpected Downfall,can Retry after 5 sec..`);
+                            });
+                        }
+
+                        break
+
                     case 'dice':
                         if (!isGroup) return;
                         let upper = 6
@@ -940,43 +941,44 @@ const downImage= async (url)=>{
                         reply(`Hey,Your luck gives you:\n🎲${myRandom}🎲`)
                         break
 
-                        case 'horo':
-                            if (!isGroup) return;
+                    case 'horo':
+                        if (!isGroup) return;
                         console.log("SENDER NUMB:", senderNumb);
-                        let horoscope=args[0];
-                        let h_Low=horoscope.toLowerCase();
-                        let l=['aries','taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius','pisces']
-                        if(!l.includes(h_Low)){
-                            reply ("Kindly enter the right spelling ")//SAhi se daal bhai,sign 12 he hote hai :)       
-                        }else{
-                            const callhoro=await gethoro(h_Low);
-                        reply(`*Date Range*:-${callhoro.date_range}
-*Nature Hold's For you*:-${callhoro.description}
-*Compatibility*:-${callhoro.compatibility}
-*Mood*:-${callhoro.mood}
-*color*:-${callhoro.color}
-*Lucky Number*:-${callhoro.lucky_number}
-*Lucky time*:-${callhoro.lucky_time}                       `)}
-                            break
+                        let horoscope = args[0];
+                        let h_Low = horoscope.toLowerCase();
+                        let l = ['aries', 'taurus', 'gemini', 'cancer', 'leo', 'virgo', 'libra', 'scorpio', 'sagittarius', 'capricorn', 'aquarius', 'pisces']
+                        if (!l.includes(h_Low)) {
+                            reply("Kindly enter the right spelling ")//SAhi se daal bhai,sign 12 he hote hai :)       
+                        } else {
+                            const callhoro = await gethoro(h_Low);
+                            reply(`*Date Range*:-${callhoro.date_range}
+  *Nature Hold's For you*:-${callhoro.description}
+  *Compatibility*:-${callhoro.compatibility}
+  *Mood*:-${callhoro.mood}
+  *color*:-${callhoro.color}
+  *Lucky Number*:-${callhoro.lucky_number}
+  *Lucky time*:-${callhoro.lucky_time}                       `)
+                        }
+                        break
 
-                            case'dic':
-                            if (!isGroup) return;
-                            let w=args[0]
-                            const dick=await dictionary(w)
-                            console.log(dick.word)
-                            //console.log(dick)
-                            reply(`*Term*:- ${dick.word}
-*Pronounciation*:- ${dick.phonetic}
-*Meaning*: ${dick.meanings[0].definitions[0].definition}
-*Example*: ${dick.meanings[0].definitions[0].example}`    )
-                            break
+                    case 'dic':
+                        if (!isGroup) return;
+                        let w = args[0]
+                        const dick = await dictionary(w)
+                        console.log(dick.word)
+                        //console.log(dick)
+                        reply(`*Term*:- ${dick.word}
+  *Pronounciation*:- ${dick.phonetic}
+  *Meaning*: ${dick.meanings[0].definitions[0].definition}
+  *Example*: ${dick.meanings[0].definitions[0].example}`)
+                        break
                     case 'yt':
                         if (!isGroup) return;
                         var url = args[0];
                         console.log(`${url}`)
                         const dm = async (url) => {
                             let info = ytdl.getInfo(url)
-                            let rany=getRandom('.mp4')
+                            let rany = getRandom('.mp4')
                             const stream = ytdl(url, { filter: info => info.itag == 22 || info.itag == 18 })
                                 .pipe(fs.createWriteStream(rany));
                             console.log("Video downloaded")
@@ -988,7 +990,7 @@ const downImage= async (url)=>{
                                     from,
                                     fs.readFileSync(rany),
                                     MessageType.video,
-                                    { mimetype: Mimetype.mp4 ,caption:"Blender 👽",quoted:mek }
+                                    { mimetype: Mimetype.mp4, caption: "Blender 👽", quoted: mek }
                                 )
                                 console.log("Sent ")
                                 fs.unlinkSync(rany)
@@ -1000,84 +1002,84 @@ const downImage= async (url)=>{
                         }
                         dm(url)
                         break
-                        case 'category':
-                            if (!isGroup) return;
-                            reply(` *Use this options as category* :
-national (India)
-business
-sports
-world
-politics
-technology
-startup
-entertainment
-miscellaneous
-hatke (unusual)
-science
-automobile`)
-break
-                        case'source':
+                    case 'category':
+                        if (!isGroup) return;
+                        reply(` *Use this options as category* :
+  national (India)
+  business
+  sports
+  world
+  politics
+  technology
+  startup
+  entertainment
+  miscellaneous
+  hatke (unusual)
+  science
+  automobile`)
+                        break
+                    case 'source':
                         reply(`${source_link}`)
                         break
-   case'list':
-   if (!isGroup) return;
-   const row1 = [
-    {title: '-news national', description: "News About national category", rowId:"rowid1"},
-    {title: '-news sports', description: "News About sports category", rowId:"rowid2"},
-    {title: '-news world ', description: "News About world category", rowId:"rowid3"},
-    {title: '-news politics', description: "News About politics category", rowId:"rowid4"},
-    {title: '-news science', description: "News About science category", rowId:"rowid5"},
-    {title: '-news technology', description: "News About tech category", rowId:"rowid6"},
-    {title: '-news entertainment', description: "News About entertainment category", rowId:"rowid7"},
-    {title: '-news automobile', description: "News About automobile category", rowId:"rowid8"},
-   ]
-   const row2 = [
-    {title: '-horo aries', description: "Today's Horoscope ", rowId:"rowid1"},
-    {title: '-horo taurus', description: "Today's Horoscope", rowId:"rowid2"},
-    {title: '-horo gemini', description: "Today's Horoscope", rowId:"rowid3"},
-    {title: '-horo cancer', description: "Today's Horoscope", rowId:"rowid4"},
-    {title: '-horo leo', description: "Today's Horoscope", rowId:"rowid5"},
-    {title: '-horo virgo', description: "Today's Horoscope", rowId:"rowid6"},
-    {title: '-horo libra', description: "Today's Horoscope", rowId:"rowid7"},
-    {title: '-horo scorpio', description: "Today's Horoscope", rowId:"rowid8"},
-    {title: '-oro sagittarius', description: "Today's Horoscope", rowId:"rowid9"},
-    {title: '-horo capricorn', description: "Today's Horoscope", rowId:"rowid10"},
-    {title: '-horo aquarius', description: "Today's Horoscope", rowId:"rowid11"},
-    {title: '-horo pisces', description: "Today's Horoscope", rowId:"rowid12"},
-   ]   
+                    case 'list':
+                        if (!isGroup) return;
+                        const row1 = [
+                            { title: '-news national', description: "News About national category", rowId: "rowid1" },
+                            { title: '-news sports', description: "News About sports category", rowId: "rowid2" },
+                            { title: '-news world ', description: "News About world category", rowId: "rowid3" },
+                            { title: '-news politics', description: "News About politics category", rowId: "rowid4" },
+                            { title: '-news science', description: "News About science category", rowId: "rowid5" },
+                            { title: '-news technology', description: "News About tech category", rowId: "rowid6" },
+                            { title: '-news entertainment', description: "News About entertainment category", rowId: "rowid7" },
+                            { title: '-news automobile', description: "News About automobile category", rowId: "rowid8" },
+                        ]
+                        const row2 = [
+                            { title: '-horo aries', description: "Today's Horoscope ", rowId: "rowid1" },
+                            { title: '-horo taurus', description: "Today's Horoscope", rowId: "rowid2" },
+                            { title: '-horo gemini', description: "Today's Horoscope", rowId: "rowid3" },
+                            { title: '-horo cancer', description: "Today's Horoscope", rowId: "rowid4" },
+                            { title: '-horo leo', description: "Today's Horoscope", rowId: "rowid5" },
+                            { title: '-horo virgo', description: "Today's Horoscope", rowId: "rowid6" },
+                            { title: '-horo libra', description: "Today's Horoscope", rowId: "rowid7" },
+                            { title: '-horo scorpio', description: "Today's Horoscope", rowId: "rowid8" },
+                            { title: '-oro sagittarius', description: "Today's Horoscope", rowId: "rowid9" },
+                            { title: '-horo capricorn', description: "Today's Horoscope", rowId: "rowid10" },
+                            { title: '-horo aquarius', description: "Today's Horoscope", rowId: "rowid11" },
+                            { title: '-horo pisces', description: "Today's Horoscope", rowId: "rowid12" },
+                        ]
 
-   
-   const sections = [{title: "News Section", rows: row1},
-   {title: "Horoscope Section ", rows: row2}
-]
-   
-   const button = {
-    buttonText: 'Blenders Magic ✨',
-    description: "Enter inside my World 👽",
-    sections: sections,
-    listType: 1
-   }
-   const sendMsg = await conn.sendMessage(from, button, MessageType.listMessage)
-   break
-   
-   case'blend':
-   if (!isGroup) return;
-   const buttons = [
-    {buttonId: 'id1', buttonText: {displayText: '-help'}, type: 1},
-    {buttonId: 'id2', buttonText: {displayText: '-news'}, type: 1},
-    {buttonId: 'id3', buttonText: {displayText: '-list'}, type: 1},
-  ]
-  
-  const buttonMessage = {
-      contentText: "Hi,Check out my Features",
-      footerText: 'version-2.0',
-      buttons: buttons,
-      headerType: 1
-  }
-  
-  const sendBMsg = await conn.sendMessage(from, buttonMessage, MessageType.buttonsMessage)
-   
-                        
+
+                        const sections = [{ title: "News Section", rows: row1 },
+                        { title: "Horoscope Section ", rows: row2 }
+                        ]
+
+                        const button = {
+                            buttonText: 'Blenders Magic ✨',
+                            description: "Enter inside my World 👽",
+                            sections: sections,
+                            listType: 1
+                        }
+                        const sendMsg = await conn.sendMessage(from, button, MessageType.listMessage)
+                        break
+
+                    case 'blend':
+                        if (!isGroup) return;
+                        const buttons = [
+                            { buttonId: 'id1', buttonText: { displayText: '-help' }, type: 1 },
+                            { buttonId: 'id2', buttonText: { displayText: '-news' }, type: 1 },
+                            { buttonId: 'id3', buttonText: { displayText: '-list' }, type: 1 },
+                        ]
+
+                        const buttonMessage = {
+                            contentText: "Hi,Check out my Features",
+                            footerText: 'version-2.0',
+                            buttons: buttons,
+                            headerType: 1
+                        }
+
+                        const sendBMsg = await conn.sendMessage(from, buttonMessage, MessageType.buttonsMessage)
+
+
                         break;
 
                     case 'yts':
@@ -1086,7 +1088,7 @@ break
                         console.log(`${url1}`)
                         const am = async (url1) => {
                             let info = ytdl.getInfo(url1)
-                            let sany=getRandom('.mp3')
+                            let sany = getRandom('.mp3')
                             const stream = ytdl(url1, { filter: info => info.audioBitrate == 160 || info.audioBitrate == 128 })
                                 .pipe(fs.createWriteStream(sany));
                             console.log("audio downloaded")
@@ -1098,15 +1100,15 @@ break
                                     from,
                                     fs.readFileSync(sany),
                                     MessageType.audio,
-                                    { mimetype: Mimetype.mp4Audio ,caption:"Blender 👽",quoted:mek}
-                                ).then((resolved)=>{
-                                console.log("Sent ")
-                                fs.unlinkSync(sany)
-                            })
-                                
-                                .catch((reject)=>{
-                                    reply`Enable to download send a valid req`
+                                    { mimetype: Mimetype.mp4Audio, caption: "Blender 👽", quoted: mek }
+                                ).then((resolved) => {
+                                    console.log("Sent ")
+                                    fs.unlinkSync(sany)
                                 })
+
+                                    .catch((reject) => {
+                                        reply`Enable to download send a valid req`
+                                    })
 
                             }).catch((err) => {
                                 reply`Unable to download,contact dev.`;
@@ -1115,93 +1117,93 @@ break
                         }
                         am(url1)
                         break
-				
-				
-				 /* ------------------------------- CASE: INSTA ------------------------------ */
-        case "insta":
-        case "i":
-          if (!isGroup) {
-            reply("❌ Group command only!");
-            return;
-          }
-          if (args.length === 0) {
-            reply(`❌ URL is empty! \nSend ${prefix}insta url`);
-            return;
-          }
-          let urlInsta = args[0];
 
-          /*if (
-            !(
-              urlInsta.includes("instagram.com/p/") ||
-              urlInsta.includes("instagram.com/reel/") ||
-              urlInsta.includes("instagram.com/tv/")
-            )
-          ) {
-            reply(
-              `❌ Wrong URL! Only Instagram posted videos, tv and reels can be downloaded.`
-            );
-            //return;
-          }*/
 
-          try {
-            console.log("Video downloading ->", urlInsta);
-            // console.log("Trying saving", urlInsta);
-            let { imgDirectLink, videoDirectLink } = await getInstaVideo(
-              urlInsta
-            );
-            if (videoDirectLink) {
-              let randomName = getRandom(".mp4");
-              await saveInstaVideo(randomName, videoDirectLink);
-              let stats = fs.statSync(`./${randomName}`);
-              let fileSizeInBytes = stats.size;
-              // Convert the file size to megabytes (optional)
-              let fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
-              console.log("Video downloaded ! Size: " + fileSizeInMegabytes);
+                    /* ------------------------------- CASE: INSTA ------------------------------ */
+                    case "insta":
+                    case "i":
+                        if (!isGroup) {
+                            reply("❌ Group command only!");
+                            return;
+                        }
+                        if (args.length === 0) {
+                            reply(`❌ URL is empty! \nSend ${prefix}insta url`);
+                            return;
+                        }
+                        let urlInsta = args[0];
 
-              //  { caption: "hello there!", mimetype: Mimetype.mp4 }
-              // quoted: mek for tagged
-              if (fileSizeInMegabytes <= 40) {
-                await conn.sendMessage(
-                  from,
-                  fs.readFileSync(`./${randomName}`), // can send mp3, mp4, & ogg
-                  MessageType.video,
-                  {
-                    mimetype: Mimetype.mp4,
-                    quoted: mek,
-                  }
-                );
-              } else {
-                reply(`❌ File size bigger than 40mb.`);
-              }
-              fs.unlinkSync(`./${randomName}`);
-            } else if (imgDirectLink) {
-              await conn.sendMessage(
-                from,
-                { url: imgDirectLink },
-                MessageType.image,
-                { quoted: mek }
-              );
-            } else {
-              reply(`❌ There is some problem!`);
-            }
-          } catch (err) {
-            console.log(err);
-            reply(`❌ There is some problem.`);
-          }
-          break
-				
-                        //Eval Try to avoid this function 
-                        case'devil':
-                        if(!allowedNumbs.includes(senderNumb)){
-                        reply("Sorry only for moderators")
-                        return;
+                        /*if (
+                          !(
+                            urlInsta.includes("instagram.com/p/") ||
+                            urlInsta.includes("instagram.com/reel/") ||
+                            urlInsta.includes("instagram.com/tv/")
+                          )
+                        ) {
+                          reply(
+                            `❌ Wrong URL! Only Instagram posted videos, tv and reels can be downloaded.`
+                          );
+                          //return;
+                        }*/
+
+                        try {
+                            console.log("Video downloading ->", urlInsta);
+                            // console.log("Trying saving", urlInsta);
+                            let { imgDirectLink, videoDirectLink } = await getInstaVideo(
+                                urlInsta
+                            );
+                            if (videoDirectLink) {
+                                let randomName = getRandom(".mp4");
+                                await saveInstaVideo(randomName, videoDirectLink);
+                                let stats = fs.statSync(`./${randomName}`);
+                                let fileSizeInBytes = stats.size;
+                                // Convert the file size to megabytes (optional)
+                                let fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
+                                console.log("Video downloaded ! Size: " + fileSizeInMegabytes);
+
+                                //  { caption: "hello there!", mimetype: Mimetype.mp4 }
+                                // quoted: mek for tagged
+                                if (fileSizeInMegabytes <= 40) {
+                                    await conn.sendMessage(
+                                        from,
+                                        fs.readFileSync(`./${randomName}`), // can send mp3, mp4, & ogg
+                                        MessageType.video,
+                                        {
+                                            mimetype: Mimetype.mp4,
+                                            quoted: mek,
+                                        }
+                                    );
+                                } else {
+                                    reply(`❌ File size bigger than 40mb.`);
+                                }
+                                fs.unlinkSync(`./${randomName}`);
+                            } else if (imgDirectLink) {
+                                await conn.sendMessage(
+                                    from,
+                                    { url: imgDirectLink },
+                                    MessageType.image,
+                                    { quoted: mek }
+                                );
+                            } else {
+                                reply(`❌ There is some problem!`);
+                            }
+                        } catch (err) {
+                            console.log(err);
+                            reply(`❌ There is some problem.`);
+                        }
+                        break
+
+                    //Eval Try to avoid this function 
+                    case 'devil':
+                        if (!allowedNumbs.includes(senderNumb)) {
+                            reply("Sorry only for moderators")
+                            return;
                         }
                         console.log(mek)
-                        var k=args.join(' ');
+                        var k = args.join(' ');
                         console.log(k);
-                        var store=await eval(k);
+                        var store = await eval(k);
                         console.log(store);
-                        var store2=JSON.stringify(store);
+                        var store2 = JSON.stringify(store);
                         reply(`${store2}`);
 
 
@@ -1215,15 +1217,15 @@ break
                             var cc = args[0];
                             var cc1 = cc.toUpperCase() + "INR"
                             var cc2 = cc.toUpperCase() + "USDT";
-                            var cc3=cc.toUpperCase()+ "BTC";
+                            var cc3 = cc.toUpperCase() + "BTC";
                             var kprice = resolved.data[cc2]
                             var iPrice = resolved.data[cc1]
-                            var bPrice=resolved.data[cc3]
+                            var bPrice = resolved.data[cc3]
                             if (kprice) {
                                 reply(`*${cc2}* = $${Number(kprice)}
-*${cc1}* = ₹${Number(iPrice)}
-*${cc3}* = ${Number(bPrice)}`);
-                           
+  *${cc1}* = ₹${Number(iPrice)}
+  *${cc3}* = ${Number(bPrice)}`);
+
                             } else {
                                 reply('Coin not found');
                             }
@@ -1232,112 +1234,111 @@ break
                         });
 
                         break
-                        case 'stocks':
-                        case 'stock' :  {
-                            const s3=await daaa(args[0].toUpperCase());
-                            reply(`${s3}`)
-                            break;
-                        }        
-                        case 'mmi':
-                                await conn.sendMessage(
-                                    from, 
-                                    { url: `https://alternative.me/crypto/fear-and-greed-index.png` }, // send directly from remote url!
-                                    MessageType.image, 
-                                    { mimetype: Mimetype.png, caption: "~Blender👽",quoted: mek }
-                                )
-                            await fi().then(async(res)=>{
-                                if(res==false){
-                                    reply(`bad luck`);
-                                }else{
-                                    if(res<=20){
-                                        await reply(`Current MMI = ${res}
- High extreme fear zone (<20) suggests a good time to open fresh positions as markets are likely to be oversold and might turn upwards.
-                                        `);
-                                    }else if(res>20 && res<=50){
-                                        await reply(`Current MMI = ${res}
-Fear zone suggests that investors are fearful in the market, but the action to be taken depends on the MMI trajectory. See all zones for details`)
-                                    }else if(res>50 && res<=80){
-                                        await reply(`Current MMI=${res}
-Greed zone suggests that investors are acting greedy in the market, but the action to be taken depends on the MMI trajectory. See all zones for details`)
-                                    }else {
-                                        await reply(`Current MMI=${res}
-High extreme greed zone (>80) suggests to be cautious in opening fresh positions as markets are overbought and likely to turn downwards.`)
+                    case 'stocks':
+                    case 'stock': {
+                        const s3 = await daaa(args[0].toUpperCase());
+                        reply(`${s3}`)
+                        break;
+                    }
+                    case 'mmi':
+                        await conn.sendMessage(
+                            from,
+                            { url: `https://alternative.me/crypto/fear-and-greed-index.png` }, // send directly from remote url!
+                            MessageType.image,
+                            { mimetype: Mimetype.png, caption: "~Blender👽", quoted: mek }
+                        )
+                        await fi().then(async (res) => {
+                            if (res == false) {
+                                reply(`bad luck`);
+                            } else {
+                                if (res <= 20) {
+                                    await reply(`Current MMI = ${res}
+   High extreme fear zone (<20) suggests a good time to open fresh positions as markets are likely to be oversold and might turn upwards.
+                                          `);
+                                } else if (res > 20 && res <= 50) {
+                                    await reply(`Current MMI = ${res}
+  Fear zone suggests that investors are fearful in the market, but the action to be taken depends on the MMI trajectory. See all zones for details`)
+                                } else if (res > 50 && res <= 80) {
+                                    await reply(`Current MMI=${res}
+  Greed zone suggests that investors are acting greedy in the market, but the action to be taken depends on the MMI trajectory. See all zones for details`)
+                                } else {
+                                    await reply(`Current MMI=${res}
+  High extreme greed zone (>80) suggests to be cautious in opening fresh positions as markets are overbought and likely to turn downwards.`)
 
-                                    }
-                                
                                 }
-                            }).catch((err)=>{
-                                reply ("nahi chala");
-                            })
-                            
 
-                            break
-		/* ------------------------------- CASE: DELETE ------------------------------ */
-        case "delete":
-        case "d":
-          try {
-            if (!mek.message.extendedTextMessage) {
-              reply(`❌ Tag message of bot to delete.`);
-              return;
-            }
-            if (
-              botNumber == mek.message.extendedTextMessage.contextInfo.participant) 
-	    {
-              const chatId = mek.message.extendedTextMessage.contextInfo.stanzaId;
-              await conn.deleteMessage(from, {
-                id: chatId,
-                remoteJid: from,
-                fromMe: true,
-              });
-            } else {
-              reply(`❌ Tag message of bot to delete.`);
-            }
-          } catch (err) {
-            console.log(err);
-            reply(`❌ Error!`);
-          }
-				break
-				
-				
-				
-				/* ------------------------------- CASE: SONG ------------------------------ */
-        case "song":
-          if (!isGroup) {
-            reply("❌ Group command only!");
-            return;
-          }
-          if (args.length === 0) {
-            reply(`❌ Query is empty! \nSend ${prefix}song query`);
-            return;
-          }
-          try {
-            let randomName = getRandom(".mp3");
-            let query = args.join("%20");
-            let response = await downloadSong(randomName, query);
-            if (response == "NOT") {
-              reply(
-                `❌ Song not found!\nTry to put correct spelling of song along with singer name.\n[Better use ${prefix}yta command to download correct song from youtube]`
-              );
-              return;
-            }
-            console.log(`song saved-> ./${randomName}`, response);
+                            }
+                        }).catch((err) => {
+                            reply("nahi chala");
+                        })
 
-            await conn.sendMessage(
-              from,
-              fs.readFileSync(`./${randomName}`),
-              MessageType.document,
-              {
-                mimetype: "audio/mpeg",
-                filename: response + ".mp3",
-                quoted: mek,
-              }
-            );
-            fs.unlinkSync(`./${randomName}`);
-          } catch (err) {
-            console.log(err);
-            reply(`❌ There is some problem.`);
-          }
-          break
+
+                        break
+                    /* ------------------------------- CASE: DELETE ------------------------------ */
+                    case "delete":
+                    case "d":
+                        try {
+                            if (!mek.message.extendedTextMessage) {
+                                reply(`❌ Tag message of bot to delete.`);
+                                return;
+                            }
+                            if (
+                                botNumber == mek.message.extendedTextMessage.contextInfo.participant) {
+                                const chatId = mek.message.extendedTextMessage.contextInfo.stanzaId;
+                                await conn.deleteMessage(from, {
+                                    id: chatId,
+                                    remoteJid: from,
+                                    fromMe: true,
+                                });
+                            } else {
+                                reply(`❌ Tag message of bot to delete.`);
+                            }
+                        } catch (err) {
+                            console.log(err);
+                            reply(`❌ Error!`);
+                        }
+                        break
+
+
+
+                    /* ------------------------------- CASE: SONG ------------------------------ */
+                    case "song":
+                        if (!isGroup) {
+                            reply("❌ Group command only!");
+                            return;
+                        }
+                        if (args.length === 0) {
+                            reply(`❌ Query is empty! \nSend ${prefix}song query`);
+                            return;
+                        }
+                        try {
+                            let randomName = getRandom(".mp3");
+                            let query = args.join("%20");
+                            let response = await downloadSong(randomName, query);
+                            if (response == "NOT") {
+                                reply(
+                                    `❌ Song not found!\nTry to put correct spelling of song along with singer name.\n[Better use ${prefix}yta command to download correct song from youtube]`
+                                );
+                                return;
+                            }
+                            console.log(`song saved-> ./${randomName}`, response);
+
+                            await conn.sendMessage(
+                                from,
+                                fs.readFileSync(`./${randomName}`),
+                                MessageType.document,
+                                {
+                                    mimetype: "audio/mpeg",
+                                    filename: response + ".mp3",
+                                    quoted: mek,
+                                }
+                            );
+                            fs.unlinkSync(`./${randomName}`);
+                        } catch (err) {
+                            console.log(err);
+                            reply(`❌ There is some problem.`);
+                        }
+                        break
 
 
                     /////////////// ADMIN COMMANDS \\\\\\\\\\\\\\\
@@ -1375,13 +1376,14 @@ High extreme greed zone (>80) suggests to be cautious in opening fresh positions
                     case 'news':
                         if (!isGroup) return;
                         console.log("SENDER NUMB:", senderNumb);
-                        if(args[0]){
-                         var topic=args[0]
-                          let s= await postNews(topic); //
-                          reply(s);
-                        }else{
-                        let news = await getNews();
-                        reply(news);}
+                        if (args[0]) {
+                            var topic = args[0]
+                            let s = await postNews(topic); //
+                            reply(s);
+                        } else {
+                            let news = await getNews();
+                            reply(news);
+                        }
                         break
 
                     case 'add':
