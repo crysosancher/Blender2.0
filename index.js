@@ -1132,7 +1132,7 @@ async function main() {
                         }
                         let urlInsta = args[0];
 
-                        /*if (
+                        if (
                           !(
                             urlInsta.includes("instagram.com/p/") ||
                             urlInsta.includes("instagram.com/reel/") ||
@@ -1143,7 +1143,7 @@ async function main() {
                             `❌ Wrong URL! Only Instagram posted videos, tv and reels can be downloaded.`
                           );
                           //return;
-                        }*/
+                        }
 
                         try {
                             console.log("Video downloading ->", urlInsta);
