@@ -203,7 +203,7 @@ async function fetchauth() {
 }
 
 // BASIC SETTINGS
-prefix = '-';
+prefix = '/';
 source_link = '```https://github.com/crysosancher/Blender2.0```';
 
 // LOAD CUSTOM FUNCTIONS
@@ -1024,28 +1024,28 @@ async function main() {
                     case 'list':
                         if (!isGroup) return;
                         const row1 = [
-                            { title: '-news national', description: "News About national category", rowId: "rowid1" },
-                            { title: '-news sports', description: "News About sports category", rowId: "rowid2" },
-                            { title: '-news world ', description: "News About world category", rowId: "rowid3" },
-                            { title: '-news politics', description: "News About politics category", rowId: "rowid4" },
-                            { title: '-news science', description: "News About science category", rowId: "rowid5" },
-                            { title: '-news technology', description: "News About tech category", rowId: "rowid6" },
-                            { title: '-news entertainment', description: "News About entertainment category", rowId: "rowid7" },
-                            { title: '-news automobile', description: "News About automobile category", rowId: "rowid8" },
+                            { title: '/news national', description: "News About national category", rowId: "rowid1" },
+                            { title: '/news sports', description: "News About sports category", rowId: "rowid2" },
+                            { title: '/news world ', description: "News About world category", rowId: "rowid3" },
+                            { title: '/news politics', description: "News About politics category", rowId: "rowid4" },
+                            { title: '/news science', description: "News About science category", rowId: "rowid5" },
+                            { title: '/news technology', description: "News About tech category", rowId: "rowid6" },
+                            { title: '/news entertainment', description: "News About entertainment category", rowId: "rowid7" },
+                            { title: '/news automobile', description: "News About automobile category", rowId: "rowid8" },
                         ]
                         const row2 = [
-                            { title: '-horo aries', description: "Today's Horoscope ", rowId: "rowid1" },
-                            { title: '-horo taurus', description: "Today's Horoscope", rowId: "rowid2" },
-                            { title: '-horo gemini', description: "Today's Horoscope", rowId: "rowid3" },
-                            { title: '-horo cancer', description: "Today's Horoscope", rowId: "rowid4" },
-                            { title: '-horo leo', description: "Today's Horoscope", rowId: "rowid5" },
-                            { title: '-horo virgo', description: "Today's Horoscope", rowId: "rowid6" },
-                            { title: '-horo libra', description: "Today's Horoscope", rowId: "rowid7" },
-                            { title: '-horo scorpio', description: "Today's Horoscope", rowId: "rowid8" },
-                            { title: '-horo sagittarius', description: "Today's Horoscope", rowId: "rowid9" },
-                            { title: '-horo capricorn', description: "Today's Horoscope", rowId: "rowid10" },
-                            { title: '-horo aquarius', description: "Today's Horoscope", rowId: "rowid11" },
-                            { title: '-horo pisces', description: "Today's Horoscope", rowId: "rowid12" },
+                            { title: '/horo aries', description: "Today's Horoscope ", rowId: "rowid1" },
+                            { title: '/horo taurus', description: "Today's Horoscope", rowId: "rowid2" },
+                            { title: '/horo gemini', description: "Today's Horoscope", rowId: "rowid3" },
+                            { title: '/horo cancer', description: "Today's Horoscope", rowId: "rowid4" },
+                            { title: '/horo leo', description: "Today's Horoscope", rowId: "rowid5" },
+                            { title: '/horo virgo', description: "Today's Horoscope", rowId: "rowid6" },
+                            { title: '/horo libra', description: "Today's Horoscope", rowId: "rowid7" },
+                            { title: '/horo scorpio', description: "Today's Horoscope", rowId: "rowid8" },
+                            { title: '/horo sagittarius', description: "Today's Horoscope", rowId: "rowid9" },
+                            { title: '/horo capricorn', description: "Today's Horoscope", rowId: "rowid10" },
+                            { title: '/horo aquarius', description: "Today's Horoscope", rowId: "rowid11" },
+                            { title: '/horo pisces', description: "Today's Horoscope", rowId: "rowid12" },
                         ]
 
 
@@ -1065,9 +1065,9 @@ async function main() {
                     case 'blend':
                         if (!isGroup) return;
                         const buttons = [
-                            { buttonId: 'id1', buttonText: { displayText: '-help' }, type: 1 },
-                            { buttonId: 'id2', buttonText: { displayText: '-news' }, type: 1 },
-                            { buttonId: 'id3', buttonText: { displayText: '-list' }, type: 1 },
+                            { buttonId: 'id1', buttonText: { displayText: '/help' }, type: 1 },
+                            { buttonId: 'id2', buttonText: { displayText: '/news' }, type: 1 },
+                            { buttonId: 'id3', buttonText: { displayText: '/list' }, type: 1 },
                         ]
 
                         const buttonMessage = {
