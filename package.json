@@ -13,7 +13,7 @@
   "author": "harsh and virat",
   "license": "ISC",
   "dependencies": {
-    "@adiwajshing/baileys": "github:adiwajshing/baileys",
+    "@adiwajshing/baileys": "github:adiwajshing/Baileys#pull/804/head",
     "async": "^3.2.0",
     "axios": "^0.21.1",
     "child_process": "^1.0.2",
