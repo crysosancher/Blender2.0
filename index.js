@@ -262,17 +262,17 @@ const adminHelp = (prefix, groupName) => {
       _or ${prefix}news <any category>_
       _Use ${prefix}list for whole valid list_
       _category could be sports,business or anything_
-  *${prefix} score*
+  *${prefix}score*
        _fetch live ipl scores_
        eg:${prefix}score
-  *${prefix} idp*
+  *${prefix}idp*
        _download Instagram private profile picture_
        eg:${prefix}idp username
-  *${prefix} insta*
+  *${prefix}insta*
       _download Instagram media_
       eg:${prefix}insta linkadress     
        
-  *${prefix} yt*
+  *${prefix}yt*
       _download youTube video in best quality_
       eg:${prefix}yt linkadress
   *${prefix}yts*
@@ -952,12 +952,12 @@ async function main() {
                         } else {
                             const callhoro = await gethoro(h_Low);
                             reply(`*Date Range*:-${callhoro.date_range}
-  *Nature Hold's For you*:-${callhoro.description}
-  *Compatibility*:-${callhoro.compatibility}
-  *Mood*:-${callhoro.mood}
-  *color*:-${callhoro.color}
-  *Lucky Number*:-${callhoro.lucky_number}
-  *Lucky time*:-${callhoro.lucky_time}                       `)
+                                   *Nature Hold's For you*:-${callhoro.description}
+                                   *Compatibility*:-${callhoro.compatibility}
+                                   *Mood*:-${callhoro.mood}
+                                   *color*:-${callhoro.color}
+                                   *Lucky Number*:-${callhoro.lucky_number}
+                                   *Lucky time*:-${callhoro.lucky_time}                       `)
                         }
                         break
 
@@ -1042,7 +1042,7 @@ async function main() {
                             { title: '-horo virgo', description: "Today's Horoscope", rowId: "rowid6" },
                             { title: '-horo libra', description: "Today's Horoscope", rowId: "rowid7" },
                             { title: '-horo scorpio', description: "Today's Horoscope", rowId: "rowid8" },
-                            { title: '-oro sagittarius', description: "Today's Horoscope", rowId: "rowid9" },
+                            { title: '-horo sagittarius', description: "Today's Horoscope", rowId: "rowid9" },
                             { title: '-horo capricorn', description: "Today's Horoscope", rowId: "rowid10" },
                             { title: '-horo aquarius', description: "Today's Horoscope", rowId: "rowid11" },
                             { title: '-horo pisces', description: "Today's Horoscope", rowId: "rowid12" },
