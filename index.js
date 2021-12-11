@@ -952,12 +952,12 @@ async function main() {
                         } else {
                             const callhoro = await gethoro(h_Low);
                             reply(`*Date Range*:-${callhoro.date_range}
-                            *Nature Hold's For you*:-${callhoro.description}
-                            *Compatibility*:-${callhoro.compatibility}
-                            *Mood*:-${callhoro.mood}
-                            *color*:-${callhoro.color}
-                            *Lucky Number*:-${callhoro.lucky_number}
-                            *Lucky time*:-${callhoro.lucky_time}                       `)
+*Nature Hold's For you*:-${callhoro.description}
+*Compatibility*:-${callhoro.compatibility}
+*Mood*:-${callhoro.mood}
+*color*:-${callhoro.color}
+*Lucky Number*:-${callhoro.lucky_number}
+*Lucky time*:-${callhoro.lucky_time}                       `)
                         }
                         break
 
