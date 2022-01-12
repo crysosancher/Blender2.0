@@ -403,7 +403,7 @@ async function getPrice() {
 module.exports = {
     getPrice
 }
-//song name
+/*//song name
 const fsun = async (sname) => {
     const yts = require('yt-search')
     const r = await yts(`${sname}`)
@@ -438,7 +438,7 @@ const instadp = async (url3) => {
     })
     //console.log(dp.data.graphql.user.profile_pic_url_hd)
     return dp.data.graphql.user.profile_pic_url_hd
-}
+}*/
 //Hroroscope function
 async function gethoro(sunsign) {
     var mainconfig = {
