@@ -85,10 +85,10 @@ const getInstaVideo = async (url) => {
         });
         // console.log(res.data);
 
-        if (res.status == 200 && res.data.graphql.shortcode_media.is_video) {
-            videoDirectLink = res.data.graphql.shortcode_media.video_url;
+        if (res.status == 200 && res.data.items[0].video_versions) {
+            videoDirectLink = res.data.items[0].video_versions[0].url;
         }
-        imgDirectLink = res.data.graphql.shortcode_media.display_url;
+        imgDirectLink = res.data.items[0].image_versions2.candidates[0].url;
     } catch (err) {
         console.log(err);
     }
