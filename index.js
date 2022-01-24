@@ -1,3 +1,18 @@
+
+const axios = require("axios");
+
+const getGender = async (name) => {
+  try {
+    let url = "https://api.genderize.io/?name=" + name;
+    let { data } = await axios.get(url);
+    let genderText = `${data.name} is ${data.gender} with ${data.probability} probability`;
+    return genderText;
+  } catch (err) {
+    console.log(err);
+    return "ERROR";
+  }
+};
+
 /* ---------------------------------- SONG ---------------------------------- */
 const downloadSong = async (randomName, query) => {
     try {
@@ -972,6 +987,28 @@ async function main() {
   *Meaning*: ${dick.meanings[0].definitions[0].definition}
   *Example*: ${dick.meanings[0].definitions[0].example}`)
                         break
+                        
+                        
+                        /* ------------------------------- CASE: GENDER ------------------------------ */
+        case "gender":
+          if (!isGroup) {
+            reply("❌ Group command only!");
+            return;
+          }
+          if (args.length === 0) {
+            reply(`❌ Name is not given! \nSend ${prefix}gender firstname`);
+            return;
+          }
+          let namePerson = args[0];
+          if (namePerson.includes("@")) {
+            reply(`❌ Don't tag! \nSend ${prefix}gender firstname`);
+            return;
+          }
+          let genderText = await getGender(namePerson);
+          reply(genderText);
+          break;
+                        
+                        
                     case 'yt':
                         if (!isGroup) return;
                         var url = args[0];
