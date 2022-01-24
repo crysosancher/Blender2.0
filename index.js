@@ -285,7 +285,9 @@ const adminHelp = (prefix, groupName) => {
        eg:${prefix}idp username
   *${prefix}insta*
       _download Instagram media_
-      eg:${prefix}insta linkadress     
+      eg:${prefix}insta linkadress
+  *${prefix}gender FirstName*
+      _get gender % from name_
        
   *${prefix}yt*
       _download youTube video in best quality_
