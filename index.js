@@ -292,9 +292,9 @@ const adminHelp = (prefix, groupName) => {
   *${prefix}yt*
       _download youTube video in best quality_
       eg:${prefix}yt linkadress
-  *${prefix}yts*
+  *${prefix}yta*
       _download youtube audio_
-      eg:/yts linkadress
+      eg:/yta linkadress
       
   *${prefix}price*
       _show crypto price_
@@ -1128,7 +1128,7 @@ async function main() {
 
                         break;
 
-                    case 'yts':
+                    case 'yta':
                         if (!isGroup) return;
                         var url1 = args[0];
                         console.log(`${url1}`)
