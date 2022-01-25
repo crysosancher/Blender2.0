@@ -666,7 +666,12 @@ async function main() {
 
                     case 'help':
                     case 'acmd':
-                        if (!isGroup) return;
+                        if (!isGroup) {
+                          //for me only
+                          reply("*Use This Bot as this bot don't work in Dm*")
+                          reply("http://wa.me/1(773)666-8527?text=.help")
+                          return;
+                        }
                         await costum(adminHelp(prefix, groupName), text);
 
                         break
