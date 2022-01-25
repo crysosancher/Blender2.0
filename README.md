@@ -72,6 +72,7 @@
 |`-insta <InstapostUrl>`|       -                      | Download Insta media |
 |`-song <song name>`    |       -                      | Download song by just name! |
 |`-stock <stock name>`  |       -                      | Get latest stock price |
+|`-Delete`              |       -                      | Delete the bot message |
 
 Explore more by using it eg:Get to know your Horoscope,news and a lot more fun.
 # Note:-
