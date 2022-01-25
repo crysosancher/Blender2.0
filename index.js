@@ -1015,6 +1015,7 @@ async function main() {
                         if (!isGroup) return;
                         var url = args[0];
                         console.log(`${url}`)
+                    try{
                         const dm = async (url) => {
                             let info = ytdl.getInfo(url)
                             let rany = getRandom('.mp4')
@@ -1039,8 +1040,14 @@ async function main() {
                             });
 
                         }
-                        dm(url)
-                        break
+                        dm(url)}
+                        catch(err)
+                        {
+                          console.log(err);
+                          reply(`❌ There is some problem.`);
+                        }
+                    break
+                    
                     case 'category':
                         if (!isGroup) return;
                         reply(` *Use this options as category* :
