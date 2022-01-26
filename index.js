@@ -1,16 +1,14 @@
-
-//const axios = require("axios");
-
+/*------------------------- GENDER ----------------------------------------------*/
 const getGender = async (name) => {
-  try {
-    let url = "https://api.genderize.io/?name=" + name;
-    let { data } = await axios.get(url);
-    let genderText = `${data.name} is ${data.gender} with ${data.probability} probability`;
-    return genderText;
-  } catch (err) {
-    console.log(err);
-    return "ERROR";
-  }
+    try {
+        let url = "https://api.genderize.io/?name=" + name;
+        let { data } = await axios.get(url);
+        let genderText = `${data.name} is ${data.gender} with ${data.probability} probability`;
+        return genderText;
+    } catch (err) {
+        console.log(err);
+        return "ERROR";
+    }
 };
 
 /* ---------------------------------- SONG ---------------------------------- */
@@ -19,12 +17,10 @@ const downloadSong = async (randomName, query) => {
         const INFO_URL = "https://slider.kz/vk_auth.php?q=";
         const DOWNLOAD_URL = "https://slider.kz/download/";
         let { data } = await axios.get(INFO_URL + query);
-
         if (data["audios"][""].length <= 1) {
             console.log("==[ SONG NOT FOUND! ]==");
             return "NOT";
         }
-
         //avoid remix,revisited,mix
         let i = 0;
         let track = data["audios"][""][i];
@@ -36,14 +32,12 @@ const downloadSong = async (randomName, query) => {
         if (!track) {
             track = data["audios"][""][0];
         }
-
         let link = DOWNLOAD_URL + track.id + "/";
         link = link + track.duration + "/";
         link = link + track.url + "/";
         link = link + track.tit_art + ".mp3" + "?extra=";
         link = link + track.extra;
         link = encodeURI(link); //to replace unescaped characters from link
-
         let songName = track.tit_art;
         songName =
             songName =
@@ -229,38 +223,71 @@ const getGroupAdmins = (participants) => {
     }
     return admins
 }
-const adminHelp = (prefix, groupName) => {
+
+const more = String.fromCharCode(8206);
+const readMore = more.repeat(4001);
+
+//admin list
+const adminList = (prefix, groupName) => {
     return `
-  ─「 *${groupName} Admin Commands* 」─
-  *${prefix}blend*
-   _For GUI interface_
-  *${prefix}list*
-   _For Automated Commands_
-  *${prefix}song*
-   _For Downloading songs by name_
-       Eg:${prefix}song tum hi ho
+    ─「 *${groupName} Admin Commands* 」─
+    ${readMore}
   *${prefix}add <phone number>*
       _Add any new member!_
+
   *${prefix}ban <@mention>*
       _Kick any member out from group!_
       _Alias with ${prefix}remove, ${prefix}kick_
-    
-  *${prefix}delete*
-      _delete message send by bot_
-      _Alias ${prefix}d, ${prefix}delete_
+
   *${prefix}promote <@mention>*
       _Give admin permission to a member!_
+
   *${prefix}demote <@mention>*
       _Remove admin permission of a member!_
+
   *${prefix}rename <new-subject>*
       _Change group subject!_
+
   *${prefix}chat <on/off>*
       _Enable/disable group chat_
       _${prefix}chat on - for everyone!_
       _${prefix}chat off - for admin only!_
+
+  *${prefix}removebot*
+      _Remove bot from group!_
+
+  *${prefix}tagall*
+      _For attendance alert_(Testing phase)`
+}
+//user list
+const userHelp = (prefix, groupName) => {
+    return `
+  ─「 *${groupName} User Commands* 」─
+  ${readMore}
+  *${prefix}blend*
+   _For GUI interface_
+
+  *${prefix}list*
+   _For Automated Commands_
+
+   *${prefix}admin*
+   _For Admin Commands List_
+
+   *${prefix}stock*
+   _For Stock Commands List_
+
+  *${prefix}song*
+   _For Downloading songs by name_
+       Eg:${prefix}song tum hi ho
+
+  *${prefix}delete*
+      _delete message send by bot_
+      _Alias ${prefix}d, ${prefix}delete_
+
   *${prefix}link*
       _Get group invite link!_
       _Alias with ${prefix}getlink, ${prefix}grouplink_
+
   *${prefix}sticker*
       _Create a sticker from different media types!_
       *Properties of sticker:*
@@ -272,30 +299,61 @@ const adminHelp = (prefix, groupName) => {
           _${prefix}sticker pack Blender author bot_
           _${prefix}sticker crop_
           _${prefix}sticker nometadata_
+
   *${prefix}news*
       _Show Tech News_
       _or ${prefix}news <any category>_
       _Use ${prefix}list for whole valid list_
       _category could be sports,business or anything_
+
   *${prefix}score*
        _fetch live ipl scores_
        eg:${prefix}score
+
   *${prefix}idp*
        _download Instagram private profile picture_
        eg:${prefix}idp username
+
   *${prefix}insta*
       _download Instagram media_
       eg:${prefix}insta linkadress
+
   *${prefix}gender FirstName*
       _get gender % from name_
-       
+
   *${prefix}yt*
       _download youTube video in best quality_
+
       eg:${prefix}yt linkadress
   *${prefix}yta*
       _download youtube audio_
       eg:/yta linkadress
-      
+ 
+  *${prefix}horo*
+      _show horoscope_
+      eg:${prefix}horo pisces    
+  
+  *${prefix}tts*
+      _Changes Text to Sticker_
+      eg:- ${prefix}tts we Love Dev
+
+  *${prefix}ud*
+      _Show Meaning of your name_
+      eg:${prefix}ud ram
+
+  *${prefix}dic*
+      _A classic Dictionary_
+      eg:${prefix}ud ram
+
+  *${prefix}source*
+      _Get the source code!_
+  Made with love,use with love ♥️`
+}
+
+const StockList = (prefix, groupName) => {
+    return `
+    ─「 *${groupName} User Stocks Commands* 」─
+    ${readMore}
   *${prefix}price*
       _show crypto price_
       eg:vprice btc
@@ -305,31 +363,8 @@ const adminHelp = (prefix, groupName) => {
       for _BSI_ use *bo* as suffix
       for _NSI_ use *ns* as suffix
   *${prefix}mmi*
-    _show MMi status_
-    with advice      
-      
-  *${prefix}horo*
-      _show horoscope_
-      eg:${prefix}horo pisces    
-  *${prefix}tagall*
-      _For attendance alert_(Testing phase)
-  *${prefix}tts*
-      _Changes Text to Sticker_
-      eg:- ${prefix}tts we Love Dev
-          
-  *${prefix}ud*
-      _Show Meaning of your name_
-      eg:${prefix}ud ram
-  *${prefix}dic*
-      _A classic Dictionary_
-      eg:${prefix}ud ram   
-  *${prefix}removebot*
-      _Remove bot from group!_
-      
-      
-  *${prefix}source*
-      _Get the source code!_
-  Made with love,use with love ♥️`
+      _show MMi status_
+      with advice`
 }
 
 
@@ -620,12 +655,6 @@ async function main() {
             let senderNumb = sender.split('@')[0];
             //console.log("SENDER NUMB:", senderNumb);
 
-                if (!isGroup) {
-                          //for me only
-                          reply("*Use This Bot as this bot don't work in Dm*")
-                          reply("http://wa.me/1(773)666-8527?text=.help")
-                        }
-          
             if (isCmd) {
                 console.log('[COMMAND]', command, '[FROM]', sender.split('@')[0], '[IN]', groupName, 'type=', typeof (args), hou, minu, sex)
 
@@ -637,8 +666,15 @@ async function main() {
                     case 'help':
                     case 'acmd':
                         if (!isGroup) return;
-                        await costum(adminHelp(prefix, groupName), text);
-
+                        await costum(userHelp(prefix, groupName), text);
+                        break
+                    case 'admin':
+                        if (!isGroup) return;
+                        await costum(adminList(prefix, groupName), text);
+                        break
+                    case 'stock':
+                        if (!isGroup) return;
+                        await costum(StockList(prefix, groupName), text);
                         break
 
                     case 'link':
@@ -959,33 +995,32 @@ async function main() {
   *Meaning*: ${dick.meanings[0].definitions[0].definition}
   *Example*: ${dick.meanings[0].definitions[0].example}`)
                         break
-                        
-                        
-                        /* ------------------------------- CASE: GENDER ------------------------------ */
-        case "gender":
-          if (!isGroup) {
-            reply("❌ Group command only!");
-            return;
-          }
-          if (args.length === 0) {
-            reply(`❌ Name is not given! \nSend ${prefix}gender firstname`);
-            return;
-          }
-          let namePerson = args[0];
-          if (namePerson.includes("@")) {
-            reply(`❌ Don't tag! \nSend ${prefix}gender firstname`);
-            return;
-          }
-          let genderText = await getGender(namePerson);
-          reply(genderText);
-          break;
-                        
-                        
+
+
+                    /* ------------------------------- CASE: GENDER ------------------------------ */
+                    case "gender":
+                        if (!isGroup) {
+                            reply("❌ Group command only!");
+                            return;
+                        }
+                        if (args.length === 0) {
+                            reply(`❌ Name is not given! \nSend ${prefix}gender firstname`);
+                            return;
+                        }
+                        let namePerson = args[0];
+                        if (namePerson.includes("@")) {
+                            reply(`❌ Don't tag! \nSend ${prefix}gender firstname`);
+                            return;
+                        }
+                        let genderText = await getGender(namePerson);
+                        reply(genderText);
+                        break;
+
+
                     case 'yt':
                         if (!isGroup) return;
                         var url = args[0];
                         console.log(`${url}`)
-                    try{
                         const dm = async (url) => {
                             let info = ytdl.getInfo(url)
                             let rany = getRandom('.mp4')
@@ -1010,14 +1045,8 @@ async function main() {
                             });
 
                         }
-                        dm(url)}
-                        catch(err)
-                        {
-                          console.log(err);
-                          reply(`❌ There is some problem.`);
-                        }
-                    break
-                    
+                        dm(url)
+                        break
                     case 'category':
                         if (!isGroup) return;
                         reply(` *Use this options as category* :
@@ -1098,7 +1127,7 @@ async function main() {
 
                         break;
 
-                    case 'yta':
+                    case 'yts':
                         if (!isGroup) return;
                         var url1 = args[0];
                         console.log(`${url1}`)
@@ -1149,16 +1178,16 @@ async function main() {
                         let urlInsta = args[0];
 
                         if (
-                          !(
-                            urlInsta.includes("instagram.com/p/") ||
-                            urlInsta.includes("instagram.com/reel/") ||
-                            urlInsta.includes("instagram.com/tv/")
-                          )
+                            !(
+                                urlInsta.includes("instagram.com/p/") ||
+                                urlInsta.includes("instagram.com/reel/") ||
+                                urlInsta.includes("instagram.com/tv/")
+                            )
                         ) {
-                          reply(
-                            `❌ Wrong URL! Only Instagram posted videos, tv and reels can be downloaded.`
-                          );
-                          //return;
+                            reply(
+                                `❌ Wrong URL! Only Instagram posted videos, tv and reels can be downloaded.`
+                            );
+                            //return;
                         }
 
                         try {
