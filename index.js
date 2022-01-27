@@ -1,3 +1,69 @@
+// WEB SERVER
+const express = require('express')
+const server = express()
+const axios = require('axios');
+const ud = require('urban-dictionary')
+const inshorts = require('inshorts-api');
+const fs = require('fs');
+const ytdl = require('ytdl-core');
+const yahooStockPrices = require('yahoo-stock-prices');
+const port = process.env.PORT || 8000;
+server.get('/', (req, res) => { res.send('V-Bot server running...') })
+server.listen(port, () => {
+    console.clear()
+    console.log('\nWeb-server running!\n')
+})
+
+// LOAD Baileys
+const {
+    WAConnection,
+    MessageType,
+    Presence,
+    Mimetype,
+    GroupSettingChange,
+    MessageOptions,
+    WALocationMessage,
+    WA_MESSAGE_STUB_TYPES,
+    ReconnectMode,
+    ProxyAgent,
+    waChatKey,
+    mentionedJid,
+    processTime,
+} = require('@adiwajshing/baileys')
+
+// LOAD DB CONNECTION
+const db = require('./database');
+
+// LOAD ADDITIONAL NPM PACKAGES
+//const fs = require('fs')//file module
+const ffmpeg = require('fluent-ffmpeg')//sticker module
+const WSF = require('wa-sticker-formatter')//sticker module
+
+async function fetchauth() {
+    try {
+        auth_result = await db.query('select * from auth;');//checking auth table
+        console.log('Fetching login data...')
+        auth_row_count = await auth_result.rowCount;
+        if (auth_row_count == 0) {
+            console.log('No login data found!')
+        } else {
+            console.log('Login data found!')
+            auth_obj = {
+                clientID: auth_result.rows[0].clientid,
+                serverToken: auth_result.rows[0].servertoken,
+                clientToken: auth_result.rows[0].clienttoken,
+                encKey: auth_result.rows[0].enckey,
+                macKey: auth_result.rows[0].mackey
+            }
+        }
+    } catch {
+        console.log('Creating database...')//if login fail create a db
+        await db.query('CREATE TABLE auth(clientID text, serverToken text, clientToken text, encKey text, macKey text);');
+        await fetchauth();
+    }
+
+}
+
 /*------------------------- GENDER ----------------------------------------------*/
 const getGender = async (name) => {
     try {
@@ -140,76 +206,6 @@ const saveInstaVideo = async (randomName, videoDirectLink) => {
         writer.on("error", reject);
     });
 };
-
-
-
-
-
-// WEB SERVER
-const express = require('express')
-const server = express()
-const axios = require('axios');
-const ud = require('urban-dictionary')
-const inshorts = require('inshorts-api');
-const fs = require('fs');
-const ytdl = require('ytdl-core');
-const yahooStockPrices = require('yahoo-stock-prices');
-const port = process.env.PORT || 8000;
-server.get('/', (req, res) => { res.send('V-Bot server running...') })
-server.listen(port, () => {
-    console.clear()
-    console.log('\nWeb-server running!\n')
-})
-
-// LOAD Baileys
-const {
-    WAConnection,
-    MessageType,
-    Presence,
-    Mimetype,
-    GroupSettingChange,
-    MessageOptions,
-    WALocationMessage,
-    WA_MESSAGE_STUB_TYPES,
-    ReconnectMode,
-    ProxyAgent,
-    waChatKey,
-    mentionedJid,
-    processTime,
-} = require('@adiwajshing/baileys')
-
-// LOAD DB CONNECTION
-const db = require('./database');
-
-// LOAD ADDITIONAL NPM PACKAGES
-//const fs = require('fs')//file module
-const ffmpeg = require('fluent-ffmpeg')//sticker module
-const WSF = require('wa-sticker-formatter')//sticker module
-
-async function fetchauth() {
-    try {
-        auth_result = await db.query('select * from auth;');//checking auth table
-        console.log('Fetching login data...')
-        auth_row_count = await auth_result.rowCount;
-        if (auth_row_count == 0) {
-            console.log('No login data found!')
-        } else {
-            console.log('Login data found!')
-            auth_obj = {
-                clientID: auth_result.rows[0].clientid,
-                serverToken: auth_result.rows[0].servertoken,
-                clientToken: auth_result.rows[0].clienttoken,
-                encKey: auth_result.rows[0].enckey,
-                macKey: auth_result.rows[0].mackey
-            }
-        }
-    } catch {
-        console.log('Creating database...')//if login fail create a db
-        await db.query('CREATE TABLE auth(clientID text, serverToken text, clientToken text, encKey text, macKey text);');
-        await fetchauth();
-    }
-
-}
 
 // BASIC SETTINGS
 prefix = '-';
@@ -655,7 +651,9 @@ async function main() {
             let senderNumb = sender.split('@')[0];
             //console.log("SENDER NUMB:", senderNumb);
 
-            if(!isGroup) reply("`*Bakka*,Don't Work in DMs. Use This Bot -> http://wa.me/1(773)666-8527?text=.help`"); //halder DMs
+            if (!isGroup) {
+                reply(`*Bakka*,Don't Work in DMs. Use This Bot -> http://wa.me/1(773)666-8527?text=.help `);
+            }
             if (isCmd) {
                 console.log('[COMMAND]', command, '[FROM]', sender.split('@')[0], '[IN]', groupName, 'type=', typeof (args), hou, minu, sex)
 
@@ -1571,8 +1569,8 @@ async function main() {
                         break;
 
                     default:
-                        if(isGroup)
-                        reply(`*Bakka*,Grow Up,I'll not always be there for you.Use *-blend* for Assistance`)//Please Enter the valid commands,Like *-blend*
+                        if (isGroup)
+                            reply(`*Bakka*,Grow Up,I'll not always be there for you.Use *-blend* for Assistance`)//Please Enter the valid commands,Like */blend*
                         break;
                 }
             }
