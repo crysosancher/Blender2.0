@@ -655,6 +655,7 @@ async function main() {
             let senderNumb = sender.split('@')[0];
             //console.log("SENDER NUMB:", senderNumb);
 
+            if(!isGroup) reply("`*Bakka*,Don't Work in DMs. Use This Bot -> http://wa.me/1(773)666-8527?text=.help `"); //halder DMs
             if (isCmd) {
                 console.log('[COMMAND]', command, '[FROM]', sender.split('@')[0], '[IN]', groupName, 'type=', typeof (args), hou, minu, sex)
 
