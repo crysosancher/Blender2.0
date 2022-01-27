@@ -1571,7 +1571,7 @@ async function main() {
                         break;
 
                     default:
-                        if(!isGroup)
+                        if(isGroup)
                         reply(`*Bakka*,Grow Up,I'll not always be there for you.Use *-blend* for Assistance`)//Please Enter the valid commands,Like *-blend*
                         break;
                 }
