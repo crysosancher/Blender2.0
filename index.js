@@ -1126,7 +1126,7 @@ async function main() {
 
                         break;
 
-                    case 'yts':
+                    case 'yta':
                         if (!isGroup) return;
                         var url1 = args[0];
                         console.log(`${url1}`)
