@@ -1022,7 +1022,7 @@ async function main() {
                         console.log(`${url}`)
                         const dm = async (url) => {
                             let info = ytdl.getInfo(url)
-                            let titleYt=info.videoDetails.title;
+                            let titleYt=info.title;
                             let rany = getRandom('.mp4')
                             const stream = ytdl(url, { filter: info => info.itag == 22 || info.itag == 18 })
                                 .pipe(fs.createWriteStream(rany));
@@ -1133,7 +1133,7 @@ async function main() {
                         console.log(`${url1}`)
                         const am = async (url1) => {
                             let info = ytdl.getInfo(url1)
-                            let titleYta=info.videoDetails.title;
+                            let titleYta=info.title;
                             let sany = getRandom('.mp3')
                             const stream = ytdl(url1, { filter: info => info.audioBitrate == 160 || info.audioBitrate == 128 })
                                 .pipe(fs.createWriteStream(sany));
