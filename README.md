@@ -67,12 +67,12 @@
 | `-removebot`          |       -                      | Remove bot from group |
 | `-source`             |       -                      | Get the bot source |
 | `-yt <YOutube Link>`  |       -                      | Download youtube videos|
-| `-yts <YOutube Link>` |       -                      | Download youtube audios|
+| `-yta <YOutube Link>` |       -                      | Download youtube audios|
 | `-idp <InstaHandle>`  |       -                      | Download Insta profile picture of your crush 😜 |
 |`-insta <InstapostUrl>`|       -                      | Download Insta media |
 |`-song <song name>`    |       -                      | Download song by just name! |
 |`-stock <stock name>`  |       -                      | Get latest stock price |
-|`-Delete`              |       -                      | Delete the bot message |
+|`-delete`              |       -                      | Delete the bot message |
 
 Explore more by using it eg:Get to know your Horoscope,news and a lot more fun.
 # Note:-
