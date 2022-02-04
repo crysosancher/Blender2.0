@@ -1130,7 +1130,7 @@ async function main() {
                     case 'yta':
                         if (!isGroup) return;
                         var url1 = args[0];
-                        let titleYt=url.videoDetails.title;
+                        let titleYta=url.videoDetails.title;
                         console.log(`${url1}`)
                         const am = async (url1) => {
                             let info = ytdl.getInfo(url1)
@@ -1146,7 +1146,7 @@ async function main() {
                                     from,
                                     fs.readFileSync(sany),
                                     MessageType.audio,
-                                    { mimetype: Mimetype.mp4Audio, caption: `${titleYt}`, quoted: mek }
+                                    { mimetype: Mimetype.mp4Audio, caption: `${titleYta}`, quoted: mek }
                                 ).then((resolved) => {
                                     console.log("Sent ")
                                     fs.unlinkSync(sany)
