@@ -1018,11 +1018,11 @@ async function main() {
 
                     case 'yt':
                         if (!isGroup) return;
-                        var url = args[0];
-                        let titleYt=url.videoDetails.title;
+                        var url = args[0]; 
                         console.log(`${url}`)
                         const dm = async (url) => {
                             let info = ytdl.getInfo(url)
+                            let titleYt=info.videoDetails.title;
                             let rany = getRandom('.mp4')
                             const stream = ytdl(url, { filter: info => info.itag == 22 || info.itag == 18 })
                                 .pipe(fs.createWriteStream(rany));
@@ -1130,10 +1130,10 @@ async function main() {
                     case 'yta':
                         if (!isGroup) return;
                         var url1 = args[0];
-                        let titleYta=url.videoDetails.title;
                         console.log(`${url1}`)
                         const am = async (url1) => {
                             let info = ytdl.getInfo(url1)
+                            let titleYta=info.videoDetails.title;
                             let sany = getRandom('.mp3')
                             const stream = ytdl(url1, { filter: info => info.audioBitrate == 160 || info.audioBitrate == 128 })
                                 .pipe(fs.createWriteStream(sany));
