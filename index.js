@@ -1035,7 +1035,7 @@ async function main() {
                                     from,
                                     fs.readFileSync(rany),
                                     MessageType.video,
-                                    { mimetype: Mimetype.mp4, caption: `&{titleYt}`, quoted: mek }
+                                    { mimetype: Mimetype.mp4, caption: `${titleYt}`, quoted: mek }
                                 )
                                 console.log("Sent ")
                                 fs.unlinkSync(rany)
@@ -1146,7 +1146,7 @@ async function main() {
                                     from,
                                     fs.readFileSync(sany),
                                     MessageType.audio,
-                                    { mimetype: Mimetype.mp4Audio, caption: `&{titleYt}`, quoted: mek }
+                                    { mimetype: Mimetype.mp4Audio, caption: `${titleYt}`, quoted: mek }
                                 ).then((resolved) => {
                                     console.log("Sent ")
                                     fs.unlinkSync(sany)
