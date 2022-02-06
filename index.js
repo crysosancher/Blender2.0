@@ -676,6 +676,11 @@ async function main() {
                         await costum(StockList(prefix, groupName), text);
                         break
 
+                    case 'a':
+                    case 'alive:
+                        if(!isGroup) return;
+                        reply("Yes vro");
+                        break
                     case 'link':
                     case 'getlink':
                     case 'grouplink':
