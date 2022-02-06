@@ -677,7 +677,7 @@ async function main() {
                         break
 
                     case 'a':
-                    case 'alive:
+                    case 'alive':
                         if(!isGroup) return;
                         reply("Yes vro");
                         break
