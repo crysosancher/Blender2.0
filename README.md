@@ -90,3 +90,6 @@ Explore more by using it eg:Get to know your Horoscope,news and a lot more fun.
 - ## [Node js](https://github.com/nodejs/node)
 
 
+# Note:-
+Due to  busy schedule this repo is now being maintain by 
+- ## [Node js](https://github.com/jacktheboss220)
