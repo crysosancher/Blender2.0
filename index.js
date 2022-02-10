@@ -1,141 +1,3 @@
-/* ---------------------------------- SONG ---------------------------------- */
-const downloadSong = async (randomName, query) => {
-    try {
-        const INFO_URL = "https://slider.kz/vk_auth.php?q=";
-        const DOWNLOAD_URL = "https://slider.kz/download/";
-        let { data } = await axios.get(INFO_URL + query);
-
-        if (data["audios"][""].length <= 1) {
-            console.log("==[ SONG NOT FOUND! ]==");
-            return "NOT";
-        }
-
-        //avoid remix,revisited,mix
-        let i = 0;
-        let track = data["audios"][""][i];
-        while (/remix|revisited|mix/i.test(track.tit_art)) {
-            i += 1;
-            track = data["audios"][""][i];
-        }
-        //if reach the end then select the first song
-        if (!track) {
-            track = data["audios"][""][0];
-        }
-
-        let link = DOWNLOAD_URL + track.id + "/";
-        link = link + track.duration + "/";
-        link = link + track.url + "/";
-        link = link + track.tit_art + ".mp3" + "?extra=";
-        link = link + track.extra;
-        link = encodeURI(link); //to replace unescaped characters from link
-
-        let songName = track.tit_art;
-        songName =
-            songName =
-            songName =
-            songName.replace(/\?|<|>|\*|"|:|\||\/|\\/g, ""); //removing special characters which are not allowed in file name
-        // console.log(link);
-        // download(songName, link);
-        const res = await axios({
-            method: "GET",
-            url: link,
-            responseType: "stream",
-        });
-        data = res.data;
-        const path = `./${randomName}`;
-        const writer = fs.createWriteStream(path);
-        data.pipe(writer);
-        return new Promise((resolve, reject) => {
-            writer.on("finish", () => resolve(songName));
-            writer.on("error", () => reject);
-        });
-    } catch (err) {
-        console.log(err);
-        return "ERROR";
-    }
-};
-
-const getInstaVideo = async (url) => {
-    // const getInstaVideo = async (url) => {
-    let imgDirectLink = "",
-        videoDirectLink = "";
-    try {
-        if (url.includes("?")) url = url.slice(0, url.search("\\?"));
-        const res = await axios.get(url + "?__a=1", {
-            headers: {
-                accept:
-                    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9",
-                "accept-language": "en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7",
-                "cache-control": "max-age=0",
-                "sec-ch-ua":
-                    '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
-                "sec-ch-ua-mobile": "?1",
-                "sec-fetch-dest": "document",
-                "sec-fetch-mode": "navigate",
-                "sec-fetch-site": "none",
-                "sec-fetch-user": "?1",
-                "upgrade-insecure-requests": "1",
-                cookie:
-                    'mid=YSEC4AALAAF5bk0tas41HCJDdxtP; ig_did=B2AB4361-90CF-41D5-B36E-03E66EEE1AA1; ig_nrcb=1; fbm_124024574287414=base_domain=.instagram.com; csrftoken=rhAkB2pduDbm5MTbyIofl0UrbR7Jr3AE; ds_user_id=4274094922; sessionid=4274094922%3Ay2mh0rvpQWd74X%3A19; shbid="17689\\0544274094922\\0541661437335:01f71a0599f6f1fdd84afc93ceb82193825b09ee67cdb74f25a8f1b14b2d3acd3cc89283"; shbts="1629901335\\0544274094922\\0541661437335:01f7ad7ac6485740dfe51c33ba803579ce09dad43e3b5dbc1f73c8bc8b41a5f734a9c458"; fbsr_124024574287414=veflxUzvfnSZgJ06Av5OS7EeCnhBb8Qs9bS57QEcvYY.eyJ1c2VyX2lkIjoiMTAwMDAzMDkxMzYxODk1IiwiY29kZSI6IkFRQzlPTzlES0ZDUk5pZ0QwQUZFa1ljeE14ME15MnVtdE5UeXVLdk95R1VibUdMVVdaWm95c1k3cDA5eXNsSmlBbjUtQkh3WWZnNGlwU0lnOWNPUzNVeVdwMU9sa0tLRU51SjBic3hldTRBNFphcDU3QzFkLXdxVVJveXlTREs2eWlYWFg3WXhuaTdseGRvdTEySFgyUFhjbV83Ul9QR2IzU2RMbTMyRUdZYjBNQ1JXSGxMVElfTWdMT0pBT3BpYTV0c3E5ZXBZc19mbG5fSU9PRnZURjhoWlF4MEVpT2c3YU9tb01uZF91b0Q5SHhzX0lreG85dHRuSjc4dWp6NzJsN3I1UEdHMXFWV25pQnVnTVJNczY1c0wtSTVvVmRkM0dZM1Q2MWoySi1VRVdlTy1OSENuVmtqTmNsdDNQUkowZGtSQkd2cGhZdUZ2NVBpWnZoLXRqdUVlIiwib2F1dGhfdG9rZW4iOiJFQUFCd3pMaXhuallCQUUxNnhEMkh5bHFaQU9sQ0xvbWI2b3NnS0I2dVlNVER4NVl3YlVJb0FZQ2t5ZjdPclZjZ2tpVFVGd1J0SVgxWkFhY1h4Z3dYQ3Z3aEJ6NjhmTWJmRGNrVVBqaUFoaWpxTVpCZzg5QUxpYjYzbXZMZlB5TWRrQkg4NU1BVkt0RXhnb1V2Q0hzd3g0S3V4WE9PTmUzcWZDVmJaQWViSGY5endhWkJyNVd6UCIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNjI5OTI1ODA3fQ; rur="LLA\\0544274094922\\0541661461817:01f7d8ba9ccfea9b57dbe7964bccfad9730064d4820485744c887fce9e53db3b4bf43c9f"',
-            },
-            referrerPolicy: "strict-origin-when-cross-origin",
-            body: null,
-            method: "GET",
-            mode: "cors",
-        });
-        // console.log(res.data);
-
-        if (res.status == 200 && res.data.graphql.shortcode_media.is_video) {
-            videoDirectLink = res.data.graphql.shortcode_media.video_url;
-        }
-        imgDirectLink = res.data.graphql.shortcode_media.display_url;
-    } catch (err) {
-        console.log(err);
-    }
-    // console.log({ imgDirectLink, videoDirectLink });
-    return { imgDirectLink, videoDirectLink };
-};
-
-
-/* ------------------------------------ INSTA -----------------------------------  */
-const saveInstaVideo = async (randomName, videoDirectLink) => {
-    const response = await axios({
-        url: videoDirectLink,
-        method: "GET",
-        responseType: "stream",
-        headers: {
-            accept:
-                "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9",
-            "accept-language": "en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7",
-            "cache-control": "max-age=0",
-            "sec-ch-ua":
-                '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
-            "sec-ch-ua-mobile": "?1",
-            "sec-fetch-dest": "document",
-            "sec-fetch-mode": "navigate",
-            "sec-fetch-site": "none",
-            "sec-fetch-user": "?1",
-            "upgrade-insecure-requests": "1",
-        },
-        referrerPolicy: "strict-origin-when-cross-origin",
-        body: null,
-        method: "GET",
-        mode: "cors",
-    });
-
-    const path = `./${randomName}`;
-    const writer = fs.createWriteStream(path);
-    response.data.pipe(writer);
-    return new Promise((resolve, reject) => {
-        writer.on("finish", resolve);
-        writer.on("error", reject);
-    });
-};
-
-
-
-
-
 // WEB SERVER
 const express = require('express')
 const server = express()
@@ -202,8 +64,151 @@ async function fetchauth() {
 
 }
 
+/*------------------------- GENDER ----------------------------------------------*/
+const getGender = async (name) => {
+    try {
+        let url = "https://api.genderize.io/?name=" + name;
+        let { data } = await axios.get(url);
+        let genderText = `${data.name} is ${data.gender} with ${data.probability} probability`;
+        return genderText;
+    } catch (err) {
+        console.log(err);
+        return "ERROR";
+    }
+};
+
+/* ---------------------------------- SONG ---------------------------------- */
+const downloadSong = async (randomName, query) => {
+    try {
+        const INFO_URL = "https://slider.kz/vk_auth.php?q=";
+        const DOWNLOAD_URL = "https://slider.kz/download/";
+        let { data } = await axios.get(INFO_URL + query);
+        if (data["audios"][""].length <= 1) {
+            console.log("==[ SONG NOT FOUND! ]==");
+            return "NOT";
+        }
+        //avoid remix,revisited,mix
+        let i = 0;
+        let track = data["audios"][""][i];
+        while (/remix|revisited|mix/i.test(track.tit_art)) {
+            i += 1;
+            track = data["audios"][""][i];
+        }
+        //if reach the end then select the first song
+        if (!track) {
+            track = data["audios"][""][0];
+        }
+        let link = DOWNLOAD_URL + track.id + "/";
+        link = link + track.duration + "/";
+        link = link + track.url + "/";
+        link = link + track.tit_art + ".mp3" + "?extra=";
+        link = link + track.extra;
+        link = encodeURI(link); //to replace unescaped characters from link
+        let songName = track.tit_art;
+        songName =
+            songName =
+            songName =
+            songName.replace(/\?|<|>|\*|"|:|\||\/|\\/g, ""); //removing special characters which are not allowed in file name
+        // console.log(link);
+        // download(songName, link);
+        const res = await axios({
+            method: "GET",
+            url: link,
+            responseType: "stream",
+        });
+        data = res.data;
+        const path = `./${randomName}`;
+        const writer = fs.createWriteStream(path);
+        data.pipe(writer);
+        return new Promise((resolve, reject) => {
+            writer.on("finish", () => resolve(songName));
+            writer.on("error", () => reject);
+        });
+    } catch (err) {
+        console.log(err);
+        return "ERROR";
+    }
+};
+
+const getInstaVideo = async (url) => {
+    // const getInstaVideo = async (url) => {
+    let imgDirectLink = "",
+        videoDirectLink = "";
+    try {
+        if (url.includes("?")) url = url.slice(0, url.search("\\?"));
+        const res = await axios.get(url + "?__a=1", {
+            headers: {
+                accept:
+                    "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                "accept-language": "en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7",
+                "cache-control": "max-age=0",
+                "sec-ch-ua":
+                    '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
+                "sec-ch-ua-mobile": "?1",
+                "sec-fetch-dest": "document",
+                "sec-fetch-mode": "navigate",
+                "sec-fetch-site": "none",
+                "sec-fetch-user": "?1",
+                "upgrade-insecure-requests": "1",
+                cookie:
+                    'ig_did=305179C0-CE28-4DCD-847A-2F28A98B7DBF; ig_nrcb=1; mid=YQBN3wAEAAGfSSDsZYS9nf2a5MHO; csrftoken=KItbBYAsObQgmJU2CsfqfiRFtk8JXwgm; sessionid=29386738134%3A8NwzjrA3jruVB4%3A23; ds_user_id=29386738134; fbm_124024574287414=base_domain=.instagram.com; shbid="18377\05429386738134\0541672337811:01f700b907e4989b1e3262de3bf81611179bfac4b92f2e183e834051100ec169c2a27039"; shbts="1640801811\05429386738134\0541672337811:01f7823ea6b0b20d524c813a3be696cdcdb776accb2e3386302ac5bd36016a084769fb24"; fbsr_124024574287414=ZuSqU7FvOCJ6FX51JBQpBFYMI9zNCVKgWT67wB9wwWQ.eyJ1c2VyX2lkIjoiMTAwMDA5NDY1ODIwODQyIiwiY29kZSI6IkFRRG55ZXNxSXdYVFlsQzhkSVlIZF9aYU5KT1ZBMnRjU3loZENMRmlZSlhtM2FqZHoyWDh3bnlNeXdSN0ZTcUN0MGdCMnNzTnRvX0RZV1RnS2xPRnBjSGFrTHZicjdvakYyUnJsWkYzRXdLUWhlM2Y4UFdsUF81dVVNOTF1YXY5azIyZnAyNVBWZlBKbm5LbkpPcTV5Q243anFRc3FBWkxzVjJDbUlsN0pJSmhmQkY1MVYtd09WdGR2ajNscmREcENIajkwMlpfN3BMSncxeUNFU2tULU9WbHRLYWwxYTBVUFMxNmhuN0p2bkhwUlNpZHc3WVZoenBRRE5yZV90bWlGVFhaTU5iR19CeWRTQ2hNU3hUcGNLenpRNVU2UV9uYlcweGZFajZHNFJCbzVjTmNsakRMdGhFNFdGSllFNWd6c2VNVURWMVROQnUtMlQ5dWNDOWVWYTNFIiwib2F1dGhfdG9rZW4iOiJFQUFCd3pMaXhuallCQU85YkR5QlZoWkJTWHMyYTQ3dW5jWDY0ekRrelNBN1pCWkNUWG5Ub2F0bU9jUVpCTFVaQmxaQWdSb2hpMmo4UGp4dkd1Z3JvOWJZc3I4cWRzZjdBMm9LNDhJS3h2d3p2bHFJSXVZVUhUUzBjU0M3czYycGZaQVAwcWE1ZVpBbnF0TEpFTHI0WkMyQ25iSzRWWHdaQTNFam5CSjhJRGcxcmV6VWNFbUpCVnJPeGJtcnRjOUdidWhlZjRaRCIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNjQwOTYyNDMyfQ; rur="VLL\05429386738134\0541672498460:01f7979132597968399c78c68b32a649c53f7f51a3343d84ab7b3754d769843033697756"',
+            },
+            referrerPolicy: "strict-origin-when-cross-origin",
+            body: null,
+            method: "GET",
+            mode: "cors",
+        });
+        // console.log(res.data);
+
+        if (res.status == 200 && res.data.items[0].video_versions) {
+            videoDirectLink = res.data.items[0].video_versions[0].url;
+        }
+        imgDirectLink = res.data.items[0].image_versions2.candidates[0].url;
+    } catch (err) {
+        console.log(err);
+    }
+    // console.log({ imgDirectLink, videoDirectLink });
+    return { imgDirectLink, videoDirectLink };
+};
+
+
+/* ------------------------------------ INSTA -----------------------------------  */
+const saveInstaVideo = async (randomName, videoDirectLink) => {
+    const response = await axios({
+        url: videoDirectLink,
+        method: "GET",
+        responseType: "stream",
+        headers: {
+            accept:
+                "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9",
+            "accept-language": "en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7",
+            "cache-control": "max-age=0",
+            "sec-ch-ua":
+                '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
+            "sec-ch-ua-mobile": "?1",
+            "sec-fetch-dest": "document",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-site": "none",
+            "sec-fetch-user": "?1",
+            "upgrade-insecure-requests": "1",
+        },
+        referrerPolicy: "strict-origin-when-cross-origin",
+        body: null,
+        method: "GET",
+        mode: "cors",
+    });
+
+    const path = `./${randomName}`;
+    const writer = fs.createWriteStream(path);
+    response.data.pipe(writer);
+    return new Promise((resolve, reject) => {
+        writer.on("finish", resolve);
+        writer.on("error", reject);
+    });
+};
+
 // BASIC SETTINGS
-prefix = '/';
+prefix = '-';
 source_link = '```https://github.com/crysosancher/Blender2.0```';
 
 // LOAD CUSTOM FUNCTIONS
@@ -214,38 +219,71 @@ const getGroupAdmins = (participants) => {
     }
     return admins
 }
-const adminHelp = (prefix, groupName) => {
+
+const more = String.fromCharCode(8206);
+const readMore = more.repeat(4001);
+
+//admin list
+const adminList = (prefix, groupName) => {
     return `
-  ─「 *${groupName} Admin Commands* 」─
-  *${prefix}blend*
-   _For GUI interface_
-  *${prefix}list*
-   _For Automated Commands_
-  *${prefix}song*
-   _For Downloading songs by name_
-       Eg:${prefix}song tum hi ho
+    ─「 *${groupName} Admin Commands* 」─
+    ${readMore}
   *${prefix}add <phone number>*
       _Add any new member!_
+
   *${prefix}ban <@mention>*
       _Kick any member out from group!_
       _Alias with ${prefix}remove, ${prefix}kick_
-    
-  *${prefix}delete*
-      _delete message send by bot_
-      _Alias ${prefix}d, ${prefix}delete_
+
   *${prefix}promote <@mention>*
       _Give admin permission to a member!_
+
   *${prefix}demote <@mention>*
       _Remove admin permission of a member!_
+
   *${prefix}rename <new-subject>*
       _Change group subject!_
+
   *${prefix}chat <on/off>*
       _Enable/disable group chat_
       _${prefix}chat on - for everyone!_
       _${prefix}chat off - for admin only!_
+
+  *${prefix}removebot*
+      _Remove bot from group!_
+
+  *${prefix}tagall*
+      _For attendance alert_(Testing phase)`
+}
+//user list
+const userHelp = (prefix, groupName) => {
+    return `
+  ─「 *${groupName} User Commands* 」─
+  ${readMore}
+  *${prefix}blend*
+   _For GUI interface_
+
+  *${prefix}list*
+   _For Automated Commands_
+
+   *${prefix}admin*
+   _For Admin Commands List_
+
+   *${prefix}stock*
+   _For Stock Commands List_
+
+  *${prefix}song*
+   _For Downloading songs by name_
+       Eg:${prefix}song tum hi ho
+
+  *${prefix}delete*
+      _delete message send by bot_
+      _Alias ${prefix}d, ${prefix}delete_
+
   *${prefix}link*
       _Get group invite link!_
       _Alias with ${prefix}getlink, ${prefix}grouplink_
+
   *${prefix}sticker*
       _Create a sticker from different media types!_
       *Properties of sticker:*
@@ -257,28 +295,61 @@ const adminHelp = (prefix, groupName) => {
           _${prefix}sticker pack Blender author bot_
           _${prefix}sticker crop_
           _${prefix}sticker nometadata_
+
   *${prefix}news*
       _Show Tech News_
       _or ${prefix}news <any category>_
       _Use ${prefix}list for whole valid list_
       _category could be sports,business or anything_
+
   *${prefix}score*
        _fetch live ipl scores_
        eg:${prefix}score
+
   *${prefix}idp*
        _download Instagram private profile picture_
        eg:${prefix}idp username
+
   *${prefix}insta*
       _download Instagram media_
-      eg:${prefix}insta linkadress     
-       
+      eg:${prefix}insta linkadress
+
+  *${prefix}gender FirstName*
+      _get gender % from name_
+
   *${prefix}yt*
       _download youTube video in best quality_
+
       eg:${prefix}yt linkadress
-  *${prefix}yts*
+  *${prefix}yta*
       _download youtube audio_
-      eg:/yts linkadress
-      
+      eg:/yta linkadress
+ 
+  *${prefix}horo*
+      _show horoscope_
+      eg:${prefix}horo pisces    
+  
+  *${prefix}tts*
+      _Changes Text to Sticker_
+      eg:- ${prefix}tts we Love Dev
+
+  *${prefix}ud*
+      _Show Meaning of your name_
+      eg:${prefix}ud ram
+
+  *${prefix}dic*
+      _A classic Dictionary_
+      eg:${prefix}ud ram
+
+  *${prefix}source*
+      _Get the source code!_
+  Made with love,use with love ♥️`
+}
+
+const StockList = (prefix, groupName) => {
+    return `
+    ─「 *${groupName} User Stocks Commands* 」─
+    ${readMore}
   *${prefix}price*
       _show crypto price_
       eg:vprice btc
@@ -288,31 +359,8 @@ const adminHelp = (prefix, groupName) => {
       for _BSI_ use *bo* as suffix
       for _NSI_ use *ns* as suffix
   *${prefix}mmi*
-    _show MMi status_
-    with advice      
-      
-  *${prefix}horo*
-      _show horoscope_
-      eg:${prefix}horo pisces    
-  *${prefix}tagall*
-      _For attendance alert_(Testing phase)
-  *${prefix}tts*
-      _Changes Text to Sticker_
-      eg:- ${prefix}tts we Love Dev
-          
-  *${prefix}ud*
-      _Show Meaning of your name_
-      eg:${prefix}ud ram
-  *${prefix}dic*
-      _A classic Dictionary_
-      eg:${prefix}ud ram   
-  *${prefix}removebot*
-      _Remove bot from group!_
-      
-      
-  *${prefix}source*
-      _Get the source code!_
-  Made with love,use with love ♥️`
+      _show MMi status_
+      with advice`
 }
 
 
@@ -402,42 +450,6 @@ async function getPrice() {
 }
 module.exports = {
     getPrice
-}
-//song name
-const fsun = async (sname) => {
-    const yts = require('yt-search')
-    const r = await yts(`${sname}`)
-
-    const videos = r.videos.slice(0, 3)
-    let st = videos[0].url;
-    return st;
-}
-//insatdp
-const instadp = async (url3) => {
-    const dp = await axios.get(url3, {
-        headers: {
-            accept:
-                'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9',
-            'accept-language': 'en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7',
-            'cache-control': 'max-age=0',
-            'sec-ch-ua':
-                '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
-            'sec-ch-ua-mobile': '?1',
-            'sec-fetch-dest': 'document',
-            'sec-fetch-mode': 'navigate',
-            'sec-fetch-site': 'none',
-            'sec-fetch-user': '?1',
-            'upgrade-insecure-requests': '1',
-            cookie:
-                'mid=YSEC4AALAAF5bk0tas41HCJDdxtP; ig_did=B2AB4361-90CF-41D5-B36E-03E66EEE1AA1; ig_nrcb=1; fbm_124024574287414=base_domain=.instagram.com; csrftoken=rhAkB2pduDbm5MTbyIofl0UrbR7Jr3AE; ds_user_id=4274094922; sessionid=4274094922%3Ay2mh0rvpQWd74X%3A19; shbid="17689\\0544274094922\\0541661437335:01f71a0599f6f1fdd84afc93ceb82193825b09ee67cdb74f25a8f1b14b2d3acd3cc89283"; shbts="1629901335\\0544274094922\\0541661437335:01f7ad7ac6485740dfe51c33ba803579ce09dad43e3b5dbc1f73c8bc8b41a5f734a9c458"; fbsr_124024574287414=veflxUzvfnSZgJ06Av5OS7EeCnhBb8Qs9bS57QEcvYY.eyJ1c2VyX2lkIjoiMTAwMDAzMDkxMzYxODk1IiwiY29kZSI6IkFRQzlPTzlES0ZDUk5pZ0QwQUZFa1ljeE14ME15MnVtdE5UeXVLdk95R1VibUdMVVdaWm95c1k3cDA5eXNsSmlBbjUtQkh3WWZnNGlwU0lnOWNPUzNVeVdwMU9sa0tLRU51SjBic3hldTRBNFphcDU3QzFkLXdxVVJveXlTREs2eWlYWFg3WXhuaTdseGRvdTEySFgyUFhjbV83Ul9QR2IzU2RMbTMyRUdZYjBNQ1JXSGxMVElfTWdMT0pBT3BpYTV0c3E5ZXBZc19mbG5fSU9PRnZURjhoWlF4MEVpT2c3YU9tb01uZF91b0Q5SHhzX0lreG85dHRuSjc4dWp6NzJsN3I1UEdHMXFWV25pQnVnTVJNczY1c0wtSTVvVmRkM0dZM1Q2MWoySi1VRVdlTy1OSENuVmtqTmNsdDNQUkowZGtSQkd2cGhZdUZ2NVBpWnZoLXRqdUVlIiwib2F1dGhfdG9rZW4iOiJFQUFCd3pMaXhuallCQUUxNnhEMkh5bHFaQU9sQ0xvbWI2b3NnS0I2dVlNVER4NVl3YlVJb0FZQ2t5ZjdPclZjZ2tpVFVGd1J0SVgxWkFhY1h4Z3dYQ3Z3aEJ6NjhmTWJmRGNrVVBqaUFoaWpxTVpCZzg5QUxpYjYzbXZMZlB5TWRrQkg4NU1BVkt0RXhnb1V2Q0hzd3g0S3V4WE9PTmUzcWZDVmJaQWViSGY5endhWkJyNVd6UCIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNjI5OTI1ODA3fQ; rur="LLA\\0544274094922\\0541661461817:01f7d8ba9ccfea9b57dbe7964bccfad9730064d4820485744c887fce9e53db3b4bf43c9f"',
-        },
-        referrerPolicy: 'strict-origin-when-cross-origin',
-        body: null,
-        method: 'GET',
-        mode: 'cors',
-    })
-    //console.log(dp.data.graphql.user.profile_pic_url_hd)
-    return dp.data.graphql.user.profile_pic_url_hd
 }
 //Hroroscope function
 async function gethoro(sunsign) {
@@ -639,6 +651,9 @@ async function main() {
             let senderNumb = sender.split('@')[0];
             //console.log("SENDER NUMB:", senderNumb);
 
+            if (!isGroup) {
+                reply(`*Bakka*,Don't Work in DMs. Use This Bot -> http://wa.me/1(773)666-8527?text=.help `);
+            }
             if (isCmd) {
                 console.log('[COMMAND]', command, '[FROM]', sender.split('@')[0], '[IN]', groupName, 'type=', typeof (args), hou, minu, sex)
 
@@ -650,10 +665,22 @@ async function main() {
                     case 'help':
                     case 'acmd':
                         if (!isGroup) return;
-                        await costum(adminHelp(prefix, groupName), text);
-
+                        await costum(userHelp(prefix, groupName), text);
+                        break
+                    case 'admin':
+                        if (!isGroup) return;
+                        await costum(adminList(prefix, groupName), text);
+                        break
+                    case 'stock':
+                        if (!isGroup) return;
+                        await costum(StockList(prefix, groupName), text);
                         break
 
+                    case 'a':
+                    case 'alive':
+                        if(!isGroup) return;
+                        reply("Yes vro");
+                        break
                     case 'link':
                     case 'getlink':
                     case 'grouplink':
@@ -694,7 +721,7 @@ async function main() {
                             var id;
 
                             for (let i of groupMembers) {
-                                mesaj += '⟪ @' + i.id.split('@')[0] + ' ⟫ \n';
+                                mesaj += '⟪ @' + i.id.split('@')[0] + ' \n';
                                 jids.push(i.id.replace('c.us', 's.whatsapp.net'));
                             }
                             let tx = "xyz"
@@ -891,7 +918,7 @@ async function main() {
                                 'sec-fetch-user': '?1',
                                 'upgrade-insecure-requests': '1',
                                 cookie:
-                                    'mid=YSEC4AALAAF5bk0tas41HCJDdxtP; ig_did=B2AB4361-90CF-41D5-B36E-03E66EEE1AA1; ig_nrcb=1; fbm_124024574287414=base_domain=.instagram.com; csrftoken=rhAkB2pduDbm5MTbyIofl0UrbR7Jr3AE; ds_user_id=4274094922; sessionid=4274094922%3Ay2mh0rvpQWd74X%3A19; shbid="17689\\0544274094922\\0541661437335:01f71a0599f6f1fdd84afc93ceb82193825b09ee67cdb74f25a8f1b14b2d3acd3cc89283"; shbts="1629901335\\0544274094922\\0541661437335:01f7ad7ac6485740dfe51c33ba803579ce09dad43e3b5dbc1f73c8bc8b41a5f734a9c458"; fbsr_124024574287414=veflxUzvfnSZgJ06Av5OS7EeCnhBb8Qs9bS57QEcvYY.eyJ1c2VyX2lkIjoiMTAwMDAzMDkxMzYxODk1IiwiY29kZSI6IkFRQzlPTzlES0ZDUk5pZ0QwQUZFa1ljeE14ME15MnVtdE5UeXVLdk95R1VibUdMVVdaWm95c1k3cDA5eXNsSmlBbjUtQkh3WWZnNGlwU0lnOWNPUzNVeVdwMU9sa0tLRU51SjBic3hldTRBNFphcDU3QzFkLXdxVVJveXlTREs2eWlYWFg3WXhuaTdseGRvdTEySFgyUFhjbV83Ul9QR2IzU2RMbTMyRUdZYjBNQ1JXSGxMVElfTWdMT0pBT3BpYTV0c3E5ZXBZc19mbG5fSU9PRnZURjhoWlF4MEVpT2c3YU9tb01uZF91b0Q5SHhzX0lreG85dHRuSjc4dWp6NzJsN3I1UEdHMXFWV25pQnVnTVJNczY1c0wtSTVvVmRkM0dZM1Q2MWoySi1VRVdlTy1OSENuVmtqTmNsdDNQUkowZGtSQkd2cGhZdUZ2NVBpWnZoLXRqdUVlIiwib2F1dGhfdG9rZW4iOiJFQUFCd3pMaXhuallCQUUxNnhEMkh5bHFaQU9sQ0xvbWI2b3NnS0I2dVlNVER4NVl3YlVJb0FZQ2t5ZjdPclZjZ2tpVFVGd1J0SVgxWkFhY1h4Z3dYQ3Z3aEJ6NjhmTWJmRGNrVVBqaUFoaWpxTVpCZzg5QUxpYjYzbXZMZlB5TWRrQkg4NU1BVkt0RXhnb1V2Q0hzd3g0S3V4WE9PTmUzcWZDVmJaQWViSGY5endhWkJyNVd6UCIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNjI5OTI1ODA3fQ; rur="LLA\\0544274094922\\0541661461817:01f7d8ba9ccfea9b57dbe7964bccfad9730064d4820485744c887fce9e53db3b4bf43c9f"',
+                                    'ig_did=305179C0-CE28-4DCD-847A-2F28A98B7DBF; ig_nrcb=1; mid=YQBN3wAEAAGfSSDsZYS9nf2a5MHO; csrftoken=KItbBYAsObQgmJU2CsfqfiRFtk8JXwgm; sessionid=29386738134%3A8NwzjrA3jruVB4%3A23; ds_user_id=29386738134; fbm_124024574287414=base_domain=.instagram.com; shbid="18377\05429386738134\0541672337811:01f700b907e4989b1e3262de3bf81611179bfac4b92f2e183e834051100ec169c2a27039"; shbts="1640801811\05429386738134\0541672337811:01f7823ea6b0b20d524c813a3be696cdcdb776accb2e3386302ac5bd36016a084769fb24"; fbsr_124024574287414=ZuSqU7FvOCJ6FX51JBQpBFYMI9zNCVKgWT67wB9wwWQ.eyJ1c2VyX2lkIjoiMTAwMDA5NDY1ODIwODQyIiwiY29kZSI6IkFRRG55ZXNxSXdYVFlsQzhkSVlIZF9aYU5KT1ZBMnRjU3loZENMRmlZSlhtM2FqZHoyWDh3bnlNeXdSN0ZTcUN0MGdCMnNzTnRvX0RZV1RnS2xPRnBjSGFrTHZicjdvakYyUnJsWkYzRXdLUWhlM2Y4UFdsUF81dVVNOTF1YXY5azIyZnAyNVBWZlBKbm5LbkpPcTV5Q243anFRc3FBWkxzVjJDbUlsN0pJSmhmQkY1MVYtd09WdGR2ajNscmREcENIajkwMlpfN3BMSncxeUNFU2tULU9WbHRLYWwxYTBVUFMxNmhuN0p2bkhwUlNpZHc3WVZoenBRRE5yZV90bWlGVFhaTU5iR19CeWRTQ2hNU3hUcGNLenpRNVU2UV9uYlcweGZFajZHNFJCbzVjTmNsakRMdGhFNFdGSllFNWd6c2VNVURWMVROQnUtMlQ5dWNDOWVWYTNFIiwib2F1dGhfdG9rZW4iOiJFQUFCd3pMaXhuallCQU85YkR5QlZoWkJTWHMyYTQ3dW5jWDY0ekRrelNBN1pCWkNUWG5Ub2F0bU9jUVpCTFVaQmxaQWdSb2hpMmo4UGp4dkd1Z3JvOWJZc3I4cWRzZjdBMm9LNDhJS3h2d3p2bHFJSXVZVUhUUzBjU0M3czYycGZaQVAwcWE1ZVpBbnF0TEpFTHI0WkMyQ25iSzRWWHdaQTNFam5CSjhJRGcxcmV6VWNFbUpCVnJPeGJtcnRjOUdidWhlZjRaRCIsImFsZ29yaXRobSI6IkhNQUMtU0hBMjU2IiwiaXNzdWVkX2F0IjoxNjQwOTYyNDMyfQ; rur="VLL\05429386738134\0541672498460:01f7979132597968399c78c68b32a649c53f7f51a3343d84ab7b3754d769843033697756"',
                             },
                             referrerPolicy: 'strict-origin-when-cross-origin',
                             body: null,
@@ -972,9 +999,31 @@ async function main() {
   *Meaning*: ${dick.meanings[0].definitions[0].definition}
   *Example*: ${dick.meanings[0].definitions[0].example}`)
                         break
+
+
+                    /* ------------------------------- CASE: GENDER ------------------------------ */
+                    case "gender":
+                        if (!isGroup) {
+                            reply("❌ Group command only!");
+                            return;
+                        }
+                        if (args.length === 0) {
+                            reply(`❌ Name is not given! \nSend ${prefix}gender firstname`);
+                            return;
+                        }
+                        let namePerson = args[0];
+                        if (namePerson.includes("@")) {
+                            reply(`❌ Don't tag! \nSend ${prefix}gender firstname`);
+                            return;
+                        }
+                        let genderText = await getGender(namePerson);
+                        reply(genderText);
+                        break;
+
+
                     case 'yt':
                         if (!isGroup) return;
-                        var url = args[0];
+                        var url = args[0]; 
                         console.log(`${url}`)
                         const dm = async (url) => {
                             let info = ytdl.getInfo(url)
@@ -990,7 +1039,7 @@ async function main() {
                                     from,
                                     fs.readFileSync(rany),
                                     MessageType.video,
-                                    { mimetype: Mimetype.mp4, caption: "Blender 👽", quoted: mek }
+                                    { mimetype: Mimetype.mp4, caption: `😪😪`, quoted: mek }
                                 )
                                 console.log("Sent ")
                                 fs.unlinkSync(rany)
@@ -1024,28 +1073,28 @@ async function main() {
                     case 'list':
                         if (!isGroup) return;
                         const row1 = [
-                            { title: '/news national', description: "News About national category", rowId: "rowid1" },
-                            { title: '/news sports', description: "News About sports category", rowId: "rowid2" },
-                            { title: '/news world ', description: "News About world category", rowId: "rowid3" },
-                            { title: '/news politics', description: "News About politics category", rowId: "rowid4" },
-                            { title: '/news science', description: "News About science category", rowId: "rowid5" },
-                            { title: '/news technology', description: "News About tech category", rowId: "rowid6" },
-                            { title: '/news entertainment', description: "News About entertainment category", rowId: "rowid7" },
-                            { title: '/news automobile', description: "News About automobile category", rowId: "rowid8" },
+                            { title: '-news national', description: "News About national category", rowId: "rowid1" },
+                            { title: '-news sports', description: "News About sports category", rowId: "rowid2" },
+                            { title: '-news world ', description: "News About world category", rowId: "rowid3" },
+                            { title: '-news politics', description: "News About politics category", rowId: "rowid4" },
+                            { title: '-news science', description: "News About science category", rowId: "rowid5" },
+                            { title: '-news technology', description: "News About tech category", rowId: "rowid6" },
+                            { title: '-news entertainment', description: "News About entertainment category", rowId: "rowid7" },
+                            { title: '-news automobile', description: "News About automobile category", rowId: "rowid8" },
                         ]
                         const row2 = [
-                            { title: '/horo aries', description: "Today's Horoscope ", rowId: "rowid1" },
-                            { title: '/horo taurus', description: "Today's Horoscope", rowId: "rowid2" },
-                            { title: '/horo gemini', description: "Today's Horoscope", rowId: "rowid3" },
-                            { title: '/horo cancer', description: "Today's Horoscope", rowId: "rowid4" },
-                            { title: '/horo leo', description: "Today's Horoscope", rowId: "rowid5" },
-                            { title: '/horo virgo', description: "Today's Horoscope", rowId: "rowid6" },
-                            { title: '/horo libra', description: "Today's Horoscope", rowId: "rowid7" },
-                            { title: '/horo scorpio', description: "Today's Horoscope", rowId: "rowid8" },
-                            { title: '/horo sagittarius', description: "Today's Horoscope", rowId: "rowid9" },
-                            { title: '/horo capricorn', description: "Today's Horoscope", rowId: "rowid10" },
-                            { title: '/horo aquarius', description: "Today's Horoscope", rowId: "rowid11" },
-                            { title: '/horo pisces', description: "Today's Horoscope", rowId: "rowid12" },
+                            { title: '-horo aries', description: "Today's Horoscope ", rowId: "rowid1" },
+                            { title: '-horo taurus', description: "Today's Horoscope", rowId: "rowid2" },
+                            { title: '-horo gemini', description: "Today's Horoscope", rowId: "rowid3" },
+                            { title: '-horo cancer', description: "Today's Horoscope", rowId: "rowid4" },
+                            { title: '-horo leo', description: "Today's Horoscope", rowId: "rowid5" },
+                            { title: '-horo virgo', description: "Today's Horoscope", rowId: "rowid6" },
+                            { title: '-horo libra', description: "Today's Horoscope", rowId: "rowid7" },
+                            { title: '-horo scorpio', description: "Today's Horoscope", rowId: "rowid8" },
+                            { title: '-horo sagittarius', description: "Today's Horoscope", rowId: "rowid9" },
+                            { title: '-horo capricorn', description: "Today's Horoscope", rowId: "rowid10" },
+                            { title: '-horo aquarius', description: "Today's Horoscope", rowId: "rowid11" },
+                            { title: '-horo pisces', description: "Today's Horoscope", rowId: "rowid12" },
                         ]
 
 
@@ -1065,9 +1114,9 @@ async function main() {
                     case 'blend':
                         if (!isGroup) return;
                         const buttons = [
-                            { buttonId: 'id1', buttonText: { displayText: '/help' }, type: 1 },
-                            { buttonId: 'id2', buttonText: { displayText: '/news' }, type: 1 },
-                            { buttonId: 'id3', buttonText: { displayText: '/list' }, type: 1 },
+                            { buttonId: 'id1', buttonText: { displayText: '-help' }, type: 1 },
+                            { buttonId: 'id2', buttonText: { displayText: '-news' }, type: 1 },
+                            { buttonId: 'id3', buttonText: { displayText: '-list' }, type: 1 },
                         ]
 
                         const buttonMessage = {
@@ -1082,7 +1131,7 @@ async function main() {
 
                         break;
 
-                    case 'yts':
+                    case 'yta':
                         if (!isGroup) return;
                         var url1 = args[0];
                         console.log(`${url1}`)
@@ -1100,7 +1149,7 @@ async function main() {
                                     from,
                                     fs.readFileSync(sany),
                                     MessageType.audio,
-                                    { mimetype: Mimetype.mp4Audio, caption: "Blender 👽", quoted: mek }
+                                    { mimetype: Mimetype.mp4Audio, caption: `😪😪`, quoted: mek }
                                 ).then((resolved) => {
                                     console.log("Sent ")
                                     fs.unlinkSync(sany)
@@ -1133,16 +1182,16 @@ async function main() {
                         let urlInsta = args[0];
 
                         if (
-                          !(
-                            urlInsta.includes("instagram.com/p/") ||
-                            urlInsta.includes("instagram.com/reel/") ||
-                            urlInsta.includes("instagram.com/tv/")
-                          )
+                            !(
+                                urlInsta.includes("instagram.com/p/") ||
+                                urlInsta.includes("instagram.com/reel/") ||
+                                urlInsta.includes("instagram.com/tv/")
+                            )
                         ) {
-                          reply(
-                            `❌ Wrong URL! Only Instagram posted videos, tv and reels can be downloaded.`
-                          );
-                          //return;
+                            reply(
+                                `❌ Wrong URL! Only Instagram posted videos, tv and reels can be downloaded.`
+                            );
+                            //return;
                         }
 
                         try {
@@ -1525,7 +1574,8 @@ async function main() {
                         break;
 
                     default:
-                        reply(`*Bakka*,Grow Up,I'll not always be there for you.Use *-blend* for Assistance`)//Please Enter the valid commands,Like */blend*
+                        if (isGroup)
+                            reply(`*Bakka*,Grow Up,I'll not always be there for you.Use *-blend* for Assistance`)//Please Enter the valid commands,Like */blend*
                         break;
                 }
             }

@@ -47,31 +47,32 @@
 
 # Features:-
 
-## Default prefix : `/`
+## Default prefix : `-`
 
 ## Commands :
 
 |  Commands             |       Alias                  |       Description        |
 | :--------:            |       :----:                 | :----------------------: |
-|   `/blend`            |                              |   Shows buttons          |
-|     `/list`           |                              |  Open whole pannel of commands|
-|   `/help`             |       `/acmd`                |  Display help message    |
-|    `/add`             |       -                      |    Add member to group    |
-|   `/kick`             |       `/ban, /remove`        |   Remove member from group    |
-|  `/promote`           |       -                      |  Make member admin in group  |
-|  `/demote`            |       -                      |  Remove member from admin in group |
-|  `/rename`            |       -                      |  Change group subject |
-|   `/chat <on/off>`    |       -                      |  Enable/disable group chat |
-|   `/link`             |       `/getlink, /grouplink` |  Get invite link of group |
-|   `/sticker`          |       -                      |  Create a sticker from different media types |
-| `/removebot`          |       -                      | Remove bot from group |
-| `/source`             |       -                      | Get the bot source |
-| `/yt <YOutube Link>`  |       -                      | Download youtube videos|
-| `/yts <YOutube Link>` |       -                      | Download youtube audios|
-| `/idp <InstaHandle>`  |       -                      | Download Insta profile picture of your crush 😜 |
-|`/insta <InstapostUrl>`|       -                      | Download Insta media |
-|`/song <song name>`    |       -                      | Download song by just name! |
-|`/stock <stock name>`  |       -                      | Get latest stock price |
+|   `-blend`            |                              |   Shows buttons          |
+|     `-list`           |                              |  Open whole pannel of commands|
+|   `-help`             |       `-acmd`                |  Display help message    |
+|    `-add`             |       -                      |    Add member to group    |
+|   `-kick`             |       `-ban, -remove`        |   Remove member from group    |
+|  `-promote`           |       -                      |  Make member admin in group  |
+|  `-demote`            |       -                      |  Remove member from admin in group |
+|  `-rename`            |       -                      |  Change group subject |
+|   `-chat <on/off>`    |       -                      |  Enable/disable group chat |
+|   `-link`             |       `-getlink, -grouplink` |  Get invite link of group |
+|   `-sticker`          |       -                      |  Create a sticker from different media types |
+| `-removebot`          |       -                      | Remove bot from group |
+| `-source`             |       -                      | Get the bot source |
+| `-yt <YOutube Link>`  |       -                      | Download youtube videos|
+| `-yta <YOutube Link>` |       -                      | Download youtube audios|
+| `-idp <InstaHandle>`  |       -                      | Download Insta profile picture of your crush 😜 |
+|`-insta <InstapostUrl>`|       -                      | Download Insta media |
+|`-song <song name>`    |       -                      | Download song by just name! |
+|`-stock <stock name>`  |       -                      | Get latest stock price |
+|`-delete`              |       -                      | Delete the bot message |
 
 Explore more by using it eg:Get to know your Horoscope,news and a lot more fun.
 # Note:-

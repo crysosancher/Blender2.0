@@ -23,7 +23,7 @@
     "pg": "^8.5.1",
     "urban-dictionary": "^3.0.2",
     "wa-sticker-formatter": "^3.6.0",
-    "ytdl-core": "^4.9.1",
+    "ytdl-core": "github:fent/node-ytdl-core#pull/1022/head",
     "fluent-ffmpeg": "^2.1.2",
     "yt-search": "^2.10.1",
     "yahoo-stock-prices": "^1.1.0"
