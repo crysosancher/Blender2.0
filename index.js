@@ -1058,7 +1058,7 @@ async function main() {
                             const stream1 = ytdl(url1, { quality: 'highest' })
                                 .pipe(fs.createWriteStream(rany1));
                             console.log("Video downloaded")
-                            await new Promise1((resolve, reject) => {
+                            await new Promise((resolve, reject) => {
                                 stream1.on('error', reject)
                                 stream1.on('finish', resolve)
                             }).then(async (res) => {
