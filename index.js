@@ -8,7 +8,6 @@ const fs = require('fs');
 const ytdl = require('ytdl-core');
 const cp = require('child_process');
 const readline = require('readline');
-const ffmpeg = require('ffmpeg-static');
 const yahooStockPrices = require('yahoo-stock-prices');
 const port = process.env.PORT || 8000;
 server.get('/', (req, res) => { res.send('V-Bot server running...') })
