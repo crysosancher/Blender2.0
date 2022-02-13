@@ -1048,6 +1048,35 @@ async function main() {
                         }
                         dm(url)
                         break
+                        case 'yth':
+                        if (!isGroup) return;
+                        var url1 = args[0];
+                        console.log(`${url1}`)
+                        const hm = async (url1) => {
+                            let info1 = ytdl.getInfo(url)
+                            let rany1 = getRandom('.mp4')
+                            const stream1 = ytdl(url, { quality: 'highest' })
+                                .pipe(fs.createWriteStream(rany1));
+                            console.log("Video downloaded")
+                            await new Promise1((resolve, reject) => {
+                                stream1.on('error', reject)
+                                stream1.on('finish', resolve)
+                            }).then(async (res) => {
+                                await conn.sendMessage(
+                                    from,
+                                    fs.readFileSync(rany1),
+                                    MessageType.video,
+                                    { mimetype: Mimetype.mp4, caption: `😪😪`, quoted: mek }
+                                )
+                                console.log("Sent ")
+                                fs.unlinkSync(rany)
+                            }).catch((err) => {
+                                reply('Unable to download,contact dev.');
+                            });
+
+                        }
+                        hm(url)
+                        break
                     case 'category':
                         if (!isGroup) return;
                         reply(` *Use this options as category* :
