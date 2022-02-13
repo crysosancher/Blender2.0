@@ -1053,9 +1053,9 @@ async function main() {
                         var url1 = args[0];
                         console.log(`${url1}`)
                         const hm = async (url1) => {
-                            let info1 = ytdl.getInfo(url)
+                            let info1 = ytdl.getInfo(url1)
                             let rany1 = getRandom('.mp4')
-                            const stream1 = ytdl(url, { quality: 'highest' })
+                            const stream1 = ytdl(url1, { quality: 'highest' })
                                 .pipe(fs.createWriteStream(rany1));
                             console.log("Video downloaded")
                             await new Promise1((resolve, reject) => {
