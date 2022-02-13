@@ -1075,7 +1075,7 @@ async function main() {
                             });
 
                         }
-                        hm(url)
+                        hm(url1)
                         break
                     case 'category':
                         if (!isGroup) return;
