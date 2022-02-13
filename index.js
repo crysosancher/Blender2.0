@@ -1120,9 +1120,6 @@ async function main() {
                             )
                             console.log("Sent ")
                             fs.unlinkSync('out.mkv')
-                        }).catch((err) => {
-                            reply('Video is more then 40mb try -yt to download');
-                        });
                         break
                     case 'yt':
                         if (!isGroup) return;
