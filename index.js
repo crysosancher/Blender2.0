@@ -1025,9 +1025,8 @@ async function main() {
 
                     case 'yth':
                         if (!isGroup) return;
-                        const ref = args[0];
-                        console.log(`${url}`)
-
+                        var ref = args[0];
+                        console.log(`${ref}`)
                         // Global constants
                         const tracker = {
                             start: Date.now(),
@@ -1112,7 +1111,7 @@ async function main() {
                         break
                     case 'yt':
                         if (!isGroup) return;
-                        const ref = args[0];
+                        var url = args[0];
                         console.log(`${url}`)
                         const dm = async (url) => {
                             let info = ytdl.getInfo(url)
