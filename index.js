@@ -158,8 +158,8 @@ const getInstaVideo = async (url) => {
             method: "GET",
             mode: "cors",
         });
-        if (res.status == 200 && res.data.items[0].video_versions) {
-            videoDirectLink = res.data.items[0].video_versions[0].url;
+        if (res.status == 200 && res.data.items[0].carousel_media.video_versions) {
+            videoDirectLink = res.data.items[0].carousel_media.video_versions[0].url;
         }
         imgDirectLink = res.data.items[0].carousel_media.image_versions2.candidates[0].url;
        /* if (res.status == 200 && res.data.graphql.shortcode_media.is_video) {
@@ -169,7 +169,7 @@ const getInstaVideo = async (url) => {
     } catch (err) {
         console.log(err);
     }
-    //console.log({ imgDirectLink, videoDirectLink });
+    console.log({ imgDirectLink, videoDirectLink });
     return { imgDirectLink, videoDirectLink };
 };
 
