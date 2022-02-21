@@ -738,7 +738,7 @@ async function main() {
 
                     case 'joke':
                         if(!allowedNumbs)return;
-                        let url2="https://v2.jokeapi.dev/joke/"+ args[0] + "?/" + args[1];
+                        let url2="https://v2.jokeapi.dev/joke/"+ args[0] + "?type=" + args[1];
                         let {data1} = await axios.get(url2);
                         let joke=`${data1.joke}`;
                         console.log(joke);
