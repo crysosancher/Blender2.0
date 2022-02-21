@@ -717,7 +717,8 @@ async function main() {
 
                         if (allowedNumbs.includes(senderNumb) || isGroupAdmins) {
                             let jids = [];
-                            let mesaj = mek.message.extendedTextMessage;
+                            let mesaj = mek.message.extendedTextMessage.text;
+                            mesaj+='\n';
                             var id;
 
                             for (let i of groupMembers) {
