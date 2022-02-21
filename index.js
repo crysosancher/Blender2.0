@@ -718,7 +718,7 @@ async function main() {
 
                         if (allowedNumbs.includes(senderNumb) || isGroupAdmins) {
                             let jids = [];
-                            let mesaj = (!args[0]) ? '': ev+'\n';
+                            let mesaj = (!args[0]) ? '': ev+'\n\n';
                             var id;
 
                             for (let i of groupMembers) {
