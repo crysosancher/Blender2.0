@@ -161,7 +161,7 @@ const getInstaVideo = async (url) => {
         if (res.status == 200 && res.data.items[0].video_versions) {
             videoDirectLink = res.data.items[0].video_versions[0].url;
         }
-        imgDirectLink = res.data.items[0].image_versions2.candidates[0].url;
+        imgDirectLink = res.data.items[0].carousel_media.image_versions2.candidates[0].url;
        /* if (res.status == 200 && res.data.graphql.shortcode_media.is_video) {
             videoDirectLink = res.data.graphql.shortcode_media.video_url;
         }
