@@ -751,21 +751,21 @@ async function main() {
                             console.log("\n");
                             res.on("data", chunk => {
                                 // On data received, convert it to a JSON object
+                                let mess;
                                 let randomJoke = JSON.parse(chunk.toString());
-
                                 if (randomJoke.type == "single") {
                                     // If type == "single", the joke only has the "joke" property
-                                    reply(randomJoke.joke);
-                                    console.log("\n");
+                                    mess=randomJoke.joke;
+                                    reply(mess);
                                 }
                                 else {
                                     // If type == "twopart", the joke has the "setup" and "delivery" properties
                                     let mess = randomJoke.setup + '\n' +  randomJoke.delivery;
                                     reply(mess);
-                                    console.log("\n");
                                 }
+                                console.log("Categories => ",categories);
+                                console.log("Joke => ",mess);
                             });
-
                             res.on("error", err => {
                                 // On error, log to console
                                 replay("Error!! Try again Later");
