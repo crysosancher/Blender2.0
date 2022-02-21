@@ -745,7 +745,7 @@ async function main() {
                     case 'joke':
                         if (!isGroup) return;
                         const baseURL = "https://v2.jokeapi.dev";
-                        const categories = (!args[0])?args[0]:"Any";
+                        const categories = (!args[0])?"Any":args[0];
                         const params = "blacklistFlags=religious,racist";
                             https.get(`${baseURL}/joke/${categories}?${params}`, res => {
                             console.log("\n");
