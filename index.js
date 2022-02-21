@@ -287,6 +287,11 @@ const userHelp = (prefix, groupName) => {
   *${prefix}link*
       _Get group invite link!_
       _Alias with ${prefix}getlink, ${prefix}grouplink_
+      
+  *${prefix}joke*
+      _Get a Random joke_
+      _${prefix}joke categories_
+      _Categories : ["Programming", "Misc", "Pun", "Spooky", "Christmas", "Dark"]_
 
   *${prefix}sticker*
       _Create a sticker from different media types!_
@@ -738,15 +743,11 @@ async function main() {
                         break;
 
                     case 'joke':
-                        if (!allowedNumbs) return;
+                        if (!isGroup) return;
                         const baseURL = "https://v2.jokeapi.dev";
-                        const categories = args[0];//["Programming", "Misc", "Pun", "Spooky", "Christmas"];
-                        const params = [
-                            "blacklistFlags=nsfw,religious,racist",
-                            "idRange=0-100"
-                        ];
-
-                        https.get(`${baseURL}/joke/${categories}?${params.join("&")}`, res => {
+                        const categories = (!args[0])?args[0]:"Any";
+                        const params = "blacklistFlags=religious,racist";
+                            https.get(`${baseURL}/joke/${categories}?${params}`, res => {
                             console.log("\n");
                             res.on("data", chunk => {
                                 // On data received, convert it to a JSON object
@@ -754,22 +755,20 @@ async function main() {
 
                                 if (randomJoke.type == "single") {
                                     // If type == "single", the joke only has the "joke" property
-                                    console.log(randomJoke.joke);
                                     reply(randomJoke.joke);
                                     console.log("\n");
                                 }
                                 else {
                                     // If type == "twopart", the joke has the "setup" and "delivery" properties
-                                    console.log(randomJoke.setup);
-                                    console.log(randomJoke.delivery);
-                                    reply(randomJoke.setup);
-                                    reply(randomJoke.delivery);
+                                    let mess = randomJoke.setup + '\n' +  randomJoke.delivery;
+                                    reply(mess);
                                     console.log("\n");
                                 }
                             });
 
                             res.on("error", err => {
                                 // On error, log to console
+                                replay("Error!! Try again Later");
                                 console.error(`Error: ${err}`);
                             });
                         });
