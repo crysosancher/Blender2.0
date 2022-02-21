@@ -1,7 +1,6 @@
 // WEB SERVER
 const express = require('express')
 const server = express()
-const JokeAPI = require('sv443-joke-api');
 const axios = require('axios');
 const ud = require('urban-dictionary')
 const inshorts = require('inshorts-api');
@@ -739,12 +738,10 @@ async function main() {
 
                     case 'joke':
                         if(!allowedNumbs)return;
-                        JokeAPI.getJokes()
-                            .then((res) => res.json())
-                            .then((data) => {
-                            console.log(data)
-                            reply(data)
-                        })
+                        let url='https://v2.jokeapi.dev/joke/'+args[0]+'?/'+args[1];
+                        let {data} = await axios.get(url);
+                        let joke=`${data.joke}`;
+                        reply(joke);
                         break
                         
                         
