@@ -73,7 +73,7 @@ const getJoke = async (cat,type) => {
     let mh;
     await axios.request(geturl).then((res) => {
         mh=res.data.joke;
-    }}.catch((err) => {
+    }).catch((err) => {
         return;
     })
     return mh;
