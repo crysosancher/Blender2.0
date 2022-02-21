@@ -253,7 +253,8 @@ const adminList = (prefix, groupName) => {
       _Remove bot from group!_
 
   *${prefix}tagall*
-      _For attendance alert_(Testing phase)`
+      _For attendance alert_(Testing phase)
+      _Eg: ${prefix}tagall message!_`
 }
 //user list
 const userHelp = (prefix, groupName) => {
@@ -717,7 +718,7 @@ async function main() {
 
                         if (allowedNumbs.includes(senderNumb) || isGroupAdmins) {
                             let jids = [];
-                            let mesaj = args[0]+'\n';//mek.message.extendedTextMessage.text;
+                            let mesaj = (!args[0]) ? '': args[0]+'\n';
                             var id;
 
                             for (let i of groupMembers) {
