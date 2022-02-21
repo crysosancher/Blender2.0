@@ -64,6 +64,22 @@ async function fetchauth() {
 
 }
 
+
+const getJoke = async (cat,type) => {
+    var geturl = {
+        method: 'GET',
+        url: 'https://v2.jokeapi.dev/joke/${cat}?type=${type}'
+    }
+    let mh;
+    await axios.request(geturl).then((res) => {
+        mh=res.data.joke;
+    }}.catch((err) => {
+        return;
+    })
+    return mh;
+    }
+
+
 /*------------------------- GENDER ----------------------------------------------*/
 const getGender = async (name) => {
     try {
@@ -740,12 +756,13 @@ async function main() {
                         if(!allowedNumbs)return;
                         console.log(args[0]);
                         console.log(args[1]);
-                        let url2="https://v2.jokeapi.dev/joke/"+ args[0] + "?type=" + args[1];
+                        let jok=await getJoke(args[0],args[1]);
+                        /*let url2="https://v2.jokeapi.dev/joke/"+ args[0] + "?type=" + args[1];
                         console.log("url :",url2)
                         let {data1} = await axios.get(url2);
-                        let joke=`${data1.joke}`;
-                        console.log(joke);
-                        reply(joke);
+                        let joke=`${data1.joke}`;*/
+                        console.log(jok);
+                        reply(jok);
                         break
                         
                         
