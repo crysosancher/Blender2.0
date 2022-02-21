@@ -1,6 +1,7 @@
 // WEB SERVER
 const express = require('express')
 const server = express()
+const JokeAPI = require('sv443-joke-api');
 const axios = require('axios');
 const ud = require('urban-dictionary')
 const inshorts = require('inshorts-api');
@@ -736,7 +737,17 @@ async function main() {
                         }
                         break;
 
-
+                    case 'joke':
+                        if(!allowedNumbs)return;
+                        JokeAPI.getJokes()
+                            .then((res) => res.json())
+                            .then((data) => {
+                            console.log(data)
+                            replay(data)
+                        })
+                        break
+                        
+                        
                     case 'sticker':
                         if (!isGroup) return;
 
