@@ -746,7 +746,7 @@ async function main() {
                             "idRange=0-100"
                         ];
 
-                        https.get(`${baseURL}/joke/${categories.join(",")}?${params.join("&")}`, res => {
+                        https.get(`${baseURL}/joke/${categories}?${params.join("&")}`, res => {
                             console.log("\n");
                             res.on("data", chunk => {
                                 // On data received, convert it to a JSON object
