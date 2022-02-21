@@ -743,7 +743,7 @@ async function main() {
                             .then((res) => res.json())
                             .then((data) => {
                             console.log(data)
-                            replay(data)
+                            reply(data)
                         })
                         break
                         
