@@ -2,6 +2,7 @@
 const express = require('express')
 const server = express()
 const axios = require('axios');
+const https = require("https");
 const ud = require('urban-dictionary')
 const inshorts = require('inshorts-api');
 const fs = require('fs');
@@ -63,22 +64,6 @@ async function fetchauth() {
     }
 
 }
-
-
-const getJoke = async (cat,type) => {
-    var geturl = {
-        method: 'GET',
-        url: 'https://v2.jokeapi.dev/joke/${cat}?type=${type}'
-    }
-    let mh;
-    await axios.request(geturl).then((res) => {
-        mh=res.data.joke;
-    }).catch((err) => {
-        return;
-    })
-    return mh;
-    }
-
 
 /*------------------------- GENDER ----------------------------------------------*/
 const getGender = async (name) => {
@@ -178,10 +163,10 @@ const getInstaVideo = async (url) => {
             videoDirectLink = res.data.items[0].carousel_media.video_versions[0].url;
         }
         imgDirectLink = res.data.items[0].carousel_media.image_versions2.candidates[0].url;
-       /* if (res.status == 200 && res.data.graphql.shortcode_media.is_video) {
-            videoDirectLink = res.data.graphql.shortcode_media.video_url;
-        }
-        imgDirectLink = res.data.graphql.shortcode_media.display_url;*/
+        /* if (res.status == 200 && res.data.graphql.shortcode_media.is_video) {
+             videoDirectLink = res.data.graphql.shortcode_media.video_url;
+         }
+         imgDirectLink = res.data.graphql.shortcode_media.display_url;*/
     } catch (err) {
         console.log(err);
     }
@@ -736,7 +721,7 @@ async function main() {
 
                         if (allowedNumbs.includes(senderNumb) || isGroupAdmins) {
                             let jids = [];
-                            let mesaj = (!args[0]) ? '': ev+'\n\n';
+                            let mesaj = (!args[0]) ? '' : ev + '\n\n';
                             var id;
 
                             for (let i of groupMembers) {
@@ -753,19 +738,44 @@ async function main() {
                         break;
 
                     case 'joke':
-                        if(!allowedNumbs)return;
-                        console.log(args[0]);
-                        console.log(args[1]);
-                        let jok=await getJoke(args[0],args[1]);
-                        /*let url2="https://v2.jokeapi.dev/joke/"+ args[0] + "?type=" + args[1];
-                        console.log("url :",url2)
-                        let {data1} = await axios.get(url2);
-                        let joke=`${data1.joke}`;*/
-                        console.log(jok);
-                        reply(jok);
+                        if (!allowedNumbs) return;
+                        const baseURL = "https://v2.jokeapi.dev";
+                        const categories = args[0];//["Programming", "Misc", "Pun", "Spooky", "Christmas"];
+                        const params = [
+                            "blacklistFlags=nsfw,religious,racist",
+                            "idRange=0-100"
+                        ];
+
+                        https.get(`${baseURL}/joke/${categories.join(",")}?${params.join("&")}`, res => {
+                            console.log("\n");
+                            res.on("data", chunk => {
+                                // On data received, convert it to a JSON object
+                                let randomJoke = JSON.parse(chunk.toString());
+
+                                if (randomJoke.type == "single") {
+                                    // If type == "single", the joke only has the "joke" property
+                                    console.log(randomJoke.joke);
+                                    reply(randomJoke.joke);
+                                    console.log("\n");
+                                }
+                                else {
+                                    // If type == "twopart", the joke has the "setup" and "delivery" properties
+                                    console.log(randomJoke.setup);
+                                    console.log(randomJoke.delivery);
+                                    reply(randomJoke.setup);
+                                    reply(randomJoke.delivery);
+                                    console.log("\n");
+                                }
+                            });
+
+                            res.on("error", err => {
+                                // On error, log to console
+                                console.error(`Error: ${err}`);
+                            });
+                        });
                         break
-                        
-                        
+
+
                     case 'sticker':
                         if (!isGroup) return;
 
