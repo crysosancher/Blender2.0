@@ -604,7 +604,7 @@ async function main() {
             }
             const command = body.slice(1).trim().split(/ +/).shift().toLowerCase()
             const args = body.trim().split(/ +/).slice(1)
-            const ev = body.trim().split(/ +/).slice(1).join('')
+            const ev = body.trim().split(/ +/).slice(1).join(' ')
             const isCmd = body.startsWith(prefix)
 
             errors = {
@@ -718,7 +718,7 @@ async function main() {
 
                         if (allowedNumbs.includes(senderNumb) || isGroupAdmins) {
                             let jids = [];
-                            let mesaj = (!args[0]) ? '': args[0]+'\n';
+                            let mesaj = (!args[0]) ? '': ev+'\n';
                             var id;
 
                             for (let i of groupMembers) {
