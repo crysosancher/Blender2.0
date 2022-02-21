@@ -679,7 +679,7 @@ async function main() {
                     case 'a':
                     case 'alive':
                         if (!isGroup) return;
-                        reply("Yes vro");
+                        reply("```Yes vro!!!```");
                         break
                     case 'link':
                     case 'getlink':
@@ -717,8 +717,7 @@ async function main() {
 
                         if (allowedNumbs.includes(senderNumb) || isGroupAdmins) {
                             let jids = [];
-                            let mesaj = mek.message.extendedTextMessage.text;
-                            mesaj+='\n';
+                            let mesaj = args[0]+'\n';//mek.message.extendedTextMessage.text;
                             var id;
 
                             for (let i of groupMembers) {
