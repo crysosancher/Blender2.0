@@ -752,15 +752,14 @@ async function main() {
                             res.on("data", chunk => {
                                 // On data received, convert it to a JSON object
                                 let randomJoke = JSON.parse(chunk.toString());
-                                let mess='Category : ' + randomJoke.category + '\n\n';
                                 if (randomJoke.type == "single") {
                                     // If type == "single", the joke only has the "joke" property
-                                    mess=randomJoke.joke;
+                                    mess = 'Categories => ' + randomJoke.category + '\n\n' + randomJoke.joke;
                                     reply(mess);
                                 }
                                 else {
                                     // If type == "twopart", the joke has the "setup" and "delivery" properties
-                                    let mess = randomJoke.setup + '\n' +  randomJoke.delivery;
+                                    mess = 'Categories => ' + randomJoke.category + '\n\n' + randomJoke.setup + '\n' + randomJoke.delivery;
                                     reply(mess);
                                 }
                                 console.log("Categories => ",categories);
