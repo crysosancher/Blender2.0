@@ -63,6 +63,7 @@
 |  `-rename`            |       -                      |  Change group subject |
 |   `-chat <on/off>`    |       -                      |  Enable/disable group chat |
 |   `-link`             |       `-getlink, -grouplink` |  Get invite link of group |
+|   `-joke Categories`  |                              | Get a random joke or by Categories |
 |   `-sticker`          |       -                      |  Create a sticker from different media types |
 | `-removebot`          |       -                      | Remove bot from group |
 | `-source`             |       -                      | Get the bot source |
