@@ -747,7 +747,7 @@ async function main() {
 
                     case 'tts':
                         if (!isGroup) return;
-                        
+                        let randomtts = getRandom(".mp3");
                         let text=args.join("%20");
                         try {
                         const downloadtts = async (randomtts, text) => {
@@ -783,7 +783,6 @@ async function main() {
                             return "ERROR";
                         };
                         try {
-                        let randomtts = getRandom(".mp3");
                         let response = await downloadtts(randomtts, text);
                         await conn.sendMessage(
                                 from,
