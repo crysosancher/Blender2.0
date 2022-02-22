@@ -708,18 +708,21 @@ async function main() {
                         var take = args[0];
                         for (i = 1; i < args.length; i++) {
                             take += " " + args[i];
-
-                        }
-                        console.log(take, "=tts message");
-                        await axios.get('https://api.xteam.xyz/attp?file&text=' + take, { responseType: 'arraybuffer' }).then(async (res) => {
-                            await conn.sendMessage(from, Buffer.from(res.data), MessageType.sticker, { mimetype: Mimetype.webp })
-                        }).catch((err) => {
-                            reply("Icons are not supported")
-                        })
-
-
-
+                        } 
+                        console.log(take, " =tts message");
+                        let uri = encodeURI(take);
+                        let ttinullimage = await axios.get(
+                            "https://api.xteam.xyz/attp?file&text=" + uri,
+                            { responseType: "arraybuffer" }
+                        );
+                        await conn.sendMessage(
+                            from,
+                            Buffer.from(ttinullimage.data),
+                            MessageType.sticker,
+                            { mimetype: Mimetype.webp }
+                        );
                         break;
+
                     case 'tagall':
                         if (!isGroup) return;
                         console.log("SENDER NUMB:", senderNumb);
@@ -745,9 +748,9 @@ async function main() {
                     case 'joke':
                         if (!isGroup) return;
                         const baseURL = "https://v2.jokeapi.dev";
-                        const categories = (!args[0])?"Any":args[0];
+                        const categories = (!args[0]) ? "Any" : args[0];
                         const params = "blacklistFlags=religious,racist";
-                            https.get(`${baseURL}/joke/${categories}?${params}`, res => {
+                        https.get(`${baseURL}/joke/${categories}?${params}`, res => {
                             console.log("\n");
                             res.on("data", chunk => {
                                 // On data received, convert it to a JSON object
@@ -762,7 +765,7 @@ async function main() {
                                     mess = 'Category => ' + randomJoke.category + '\n\n' + randomJoke.setup + '\n' + randomJoke.delivery;
                                     reply(mess);
                                 }
-                                console.log("Categories => ",categories);
+                                console.log("Categories => ", categories);
                             });
                             res.on("error", err => {
                                 // On error, log to console
