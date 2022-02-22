@@ -749,7 +749,7 @@ async function main() {
                         if (!isGroup) return;
                         
                         let text=args.join("%20");
-                        try{
+                        try {
                         const downloadtts = async (randomtts, text) => {
                         var options = {
                              method: 'GET',
@@ -777,10 +777,10 @@ async function main() {
                             writer.on("finish", () => resolve(ttsName));
                             writer.on("error", () => reject);
                         });
+                        }
                         }catch (err) {
                             console.log(err);
                             return "ERROR";
-                        } 
                         };
                         try {
                         let randomtts = getRandom(".mp3");
@@ -796,10 +796,10 @@ async function main() {
                                 }
                             );
                             fs.unlinkSync(`./${randomtts}`);
-                        }catch (err) {
+                        } catch (err) {
                             console.log(err);
                             reply(`❌ There is some problem.`);
-                        }g
+                        }
                         break
 
 
