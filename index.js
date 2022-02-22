@@ -703,13 +703,13 @@ async function main() {
                         })
                         break;
 
-                    case 'tts':
+                    case 'attp':
                         if (!isGroup) return;
                         var take = args[0];
                         for (i = 1; i < args.length; i++) {
                             take += " " + args[i];
-                        } 
-                        console.log(take, " =tts message");
+                        }
+                        console.log(take, " =attp message");
                         let uri = encodeURI(take);
                         let ttinullimage = await axios.get(
                             "https://api.xteam.xyz/attp?file&text=" + uri,
@@ -744,6 +744,64 @@ async function main() {
                             reply("No Permission!,Contact Developer!")
                         }
                         break;
+
+                    case 'tts':
+                        if (!isGroup) return;
+                        
+                        let text=args.join("%20");
+                        try{
+                        const downloadtts = async (randomtts, text) => {
+                        var options = {
+                             method: 'GET',
+                            url: 'https://voicerss-text-to-speech.p.rapidapi.com/',
+                            params: {
+                                key: '78be37622e514375bc0da7487400cb6b',
+                                src: text,
+                                hl: 'en-us',
+                                r: '0',
+                                c: 'mp3',
+                                f: '8khz_8bit_mono'
+                            },
+                        };
+                        let ttsName='';
+                        const res = await axios({
+                            method: "GET",
+                            url: options,
+                            responseType: "stream",
+                        });
+                        data = res.data;
+                        const path = `./${randomtts}`;
+                        const writer = fs.createWriteStream(path);
+                        data.pipe(writer);
+                        return new Promise((resolve, reject) => {
+                            writer.on("finish", () => resolve(ttsName));
+                            writer.on("error", () => reject);
+                        });
+                        }catch (err) {
+                            console.log(err);
+                            return "ERROR";
+                        } 
+                        };
+                        try {
+                        let randomtts = getRandom(".mp3");
+                        let response = await downloadtts(randomtts, text);
+                        await conn.sendMessage(
+                                from,
+                                fs.readFileSync(`./${randomtts}`),
+                                MessageType.document,
+                                {
+                                    mimetype: "audio/mpeg",
+                                    filename: response + ".mp3",
+                                    quoted: mek,
+                                }
+                            );
+                            fs.unlinkSync(`./${randomtts}`);
+                        }catch (err) {
+                            console.log(err);
+                            reply(`❌ There is some problem.`);
+                        }g
+                        break
+
 
                     case 'joke':
                         if (!isGroup) return;
