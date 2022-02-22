@@ -748,11 +748,9 @@ async function main() {
                     case 'tts':
                         if (!isGroup) return;
                         let randomtts = getRandom(".mp3");
-                        let text=args.join("%20");
-                        try {
-                        const downloadtts = async (randomtts, text) => {
-                        var options = {
-                             method: 'GET',
+                        let text=ev;
+                        const options = {
+                            method: 'GET',
                             url: 'https://voicerss-text-to-speech.p.rapidapi.com/',
                             params: {
                                 key: '78be37622e514375bc0da7487400cb6b',
@@ -762,43 +760,22 @@ async function main() {
                                 c: 'mp3',
                                 f: '8khz_8bit_mono'
                             },
+                            headers: {
+                                'x-rapidapi-host': 'voicerss-text-to-speech.p.rapidapi.com',
+                                'x-rapidapi-key': 'a75b851f51msh26f81c9d0911ebdp1806b6jsn00717e884a9f'
+                            }
                         };
-                        let ttsName='';
-                        const res = await axios({
-                            method: "GET",
-                            url: options,
-                            responseType: "stream",
-                        });
-                        data = res.data;
-                        const path = `./${randomtts}`;
-                        const writer = fs.createWriteStream(path);
-                        data.pipe(writer);
-                        return new Promise((resolve, reject) => {
-                            writer.on("finish", () => resolve(ttsName));
-                            writer.on("error", () => reject);
-                        });
-                        }
-                        }catch (err) {
-                            console.log(err);
-                            return "ERROR";
-                        };
-                        try {
-                        let response = await downloadtts(randomtts, text);
-                        await conn.sendMessage(
+                        axios.request(options).then(function (response) {
+                            await conn.sendMessage(
                                 from,
-                                fs.readFileSync(`./${randomtts}`),
-                                MessageType.document,
-                                {
+                                MessageType.document,{
                                     mimetype: "audio/mpeg",
-                                    filename: response + ".mp3",
+                                    filename: response.data + ".mp3",
                                     quoted: mek,
-                                }
-                            );
-                            fs.unlinkSync(`./${randomtts}`);
-                        } catch (err) {
-                            console.log(err);
-                            reply(`❌ There is some problem.`);
-                        }
+                                });
+                        }).catch(function (error) {
+                            console.error(error);
+                        });
                         break
 
 
