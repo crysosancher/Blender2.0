@@ -708,8 +708,8 @@ async function main() {
                         var take = args[0];
                         for (i = 1; i < args.length; i++) {
                             take += " " + args[i];
-
-                        }
+                        } 
+                        console.log(take, " =tts message");
                         let uri = encodeURI(take);
                         let ttinullimage = await axios.get(
                             "https://api.xteam.xyz/attp?file&text=" + uri,
