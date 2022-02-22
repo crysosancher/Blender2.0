@@ -710,7 +710,7 @@ async function main() {
                             take += " " + args[i];
 
                         }
-                        let uri = encodeURI(text);
+                        let uri = encodeURI(take);
                         let ttinullimage = await axios.get(
                             "https://api.xteam.xyz/attp?file&text=" + uri,
                             { responseType: "arraybuffer" }
