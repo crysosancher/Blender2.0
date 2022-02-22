@@ -17,6 +17,12 @@
 ## Git Setup
 ### Download and install git from (https://git-scm.com/downloads)
 
+# Easy way to deploy:- :rocket:
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/jacktheboss220/Blender2.0)
+
+Your bot will be deployed on heroku but still you need to install heroku locally to scan QR code
+
 ## Heroku Setup
 
 1. Create account on heroku. (https://signup.heroku.com/)
