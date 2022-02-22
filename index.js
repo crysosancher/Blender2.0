@@ -754,12 +754,12 @@ async function main() {
                                 let randomJoke = JSON.parse(chunk.toString());
                                 if (randomJoke.type == "single") {
                                     // If type == "single", the joke only has the "joke" property
-                                    mess = 'Categories => ' + randomJoke.category + '\n\n' + randomJoke.joke;
+                                    mess = 'Category => ' + randomJoke.category + '\n\n' + randomJoke.joke;
                                     reply(mess);
                                 }
                                 else {
                                     // If type == "twopart", the joke has the "setup" and "delivery" properties
-                                    mess = 'Categories => ' + randomJoke.category + '\n\n' + randomJoke.setup + '\n' + randomJoke.delivery;
+                                    mess = 'Category => ' + randomJoke.category + '\n\n' + randomJoke.setup + '\n' + randomJoke.delivery;
                                     reply(mess);
                                 }
                                 console.log("Categories => ",categories);
