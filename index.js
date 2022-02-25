@@ -40,6 +40,7 @@ const db = require('./database');
 // LOAD ADDITIONAL NPM PACKAGES
 //const fs = require('fs')//file module
 const ffmpeg = require('fluent-ffmpeg')//sticker module
+const ffmpeg1 = require('ffmpeg-static');
 const WSF = require('wa-sticker-formatter')//sticker module
 
 async function fetchauth() {
@@ -1133,7 +1134,7 @@ async function main() {
             };
 
             // Start the ffmpeg child process
-            const ffmpegProcess = cp.spawn(ffmpeg, [
+            const ffmpegProcess = cp.spawn(ffmpeg1, [
               // Remove ffmpeg's console spamming
               '-loglevel', '8', '-hide_banner',
               // Redirect/Enable progress messages
