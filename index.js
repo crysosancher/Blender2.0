@@ -1183,7 +1183,7 @@ async function main() {
                 try {
                   await conn.sendMessage(
                   from,
-                  fs.readFileSync('out.mkv'),
+                  fs.readFileSync("out.mkv"),
                   MessageType.video,
                   { mimetype: Mimetype.mp4, caption: `😪😪`, quoted: mek }
                 )
@@ -1191,7 +1191,7 @@ async function main() {
                     console.log(err);
                         reply('File Bigger then 64mb');
                 }
-                fs.unlinkSync('out.mkv')
+                fs.unlinkSync("out.mkv")
             break
 
 
