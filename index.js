@@ -1098,8 +1098,7 @@ async function main() {
                     console.log(`${url11}`)
                     try
                     {
-                      ytdl(url)
-                        .pipe(fs.createWriteStream('video.mp4'));
+                      ytdl(url11).pipe(fs.createWriteStream('video.mp4'));
                       await conn.sendMessage(
                                     from,
                                     fs.readFileSync('video.mp4'),
