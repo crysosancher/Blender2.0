@@ -1061,7 +1061,7 @@ async function main() {
                         let genderText = await getGender(namePerson);
                         reply(genderText);
                         break;
-                    
+                    //, { filter: info => info.itag == 22 || info.itag == 18 })
                     case 'yt':
                         if (!isGroup) return;
                         var url = args[0];
@@ -1069,7 +1069,7 @@ async function main() {
                         const dm = async (url) => {
                             let info = ytdl.getInfo(url)
                             let rany = getRandom('.mp4')
-                            const stream = ytdl(url, { filter: info => info.itag == 22 || info.itag == 18 })
+                            const stream = ytdl(url)
                                 .pipe(fs.createWriteStream(rany));
                             console.log("Video downloaded")
                             await new Promise((resolve, reject) => {
@@ -1091,29 +1091,6 @@ async function main() {
                         }
                         dm(url)
                         break
-                    
-                  case 'ytf':
-                    if (!isGroup) return;
-                    const url11=args[0];
-                    console.log(`${url11}`)
-                    try
-                    {
-                      ytdl(url11).pipe(fs.createWriteStream('video.mp4'));
-                      await conn.sendMessage(
-                                    from,
-                                    fs.readFileSync('video.mp4'),
-                                    MessageType.video,
-                                    { mimetype: Mimetype.mp4, caption: `😪😪`, quoted: mek }
-                                )
-                                console.log("Sent ")
-                                fs.unlinkSync('video.mp4')
-                    }catch (err)
-                    {
-                      console.log(err);
-                    }
-                    break
-                    
-                    
                     case 'category':
                         if (!isGroup) return;
                         reply(` *Use this options as category* :
