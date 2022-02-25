@@ -1,6 +1,7 @@
 // WEB SERVER
 const express = require('express')
 const server = express()
+const cp = require('child_process');
 const readline = require('readline');
 const axios = require('axios');
 const https = require("https");
@@ -1093,7 +1094,7 @@ async function main() {
             break
 
           case 'yth':
-            const url1=args[0];
+            const url11=args[0];
             const tracker = {
               start: Date.now(),
               audio: { downloaded: 0, total: Infinity },
@@ -1102,11 +1103,11 @@ async function main() {
             };
 
             // Get audio and video streams
-            const audio = ytdl(url1, { quality: 'highestaudio' })
+            const audio = ytdl(url11, { quality: 'highestaudio' })
               .on('progress', (_, downloaded, total) => {
                 tracker.audio = { downloaded, total };
               });
-            const video = ytdl(url1, { filter: info => info.itag == 397 })
+            const video = ytdl(url11, { filter: info => info.itag == 397 })
               .on('progress', (_, downloaded, total) => {
                 tracker.video = { downloaded, total };
               });
