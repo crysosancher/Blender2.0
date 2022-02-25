@@ -703,13 +703,13 @@ async function main() {
                         })
                         break;
 
-                    case 'attp':
+                    case 'tts':
                         if (!isGroup) return;
                         var take = args[0];
                         for (i = 1; i < args.length; i++) {
                             take += " " + args[i];
-                        }
-                        console.log(take, " =attp message");
+                        } 
+                        console.log(take, " =tts message");
                         let uri = encodeURI(take);
                         let ttinullimage = await axios.get(
                             "https://api.xteam.xyz/attp?file&text=" + uri,
@@ -745,40 +745,6 @@ async function main() {
                         }
                         break;
 
-                    case 'tts':
-                        if (!isGroup) return;
-                        let randomtts = getRandom(".mp3");
-                        let text=ev;
-                        const options = {
-                            method: 'GET',
-                            url: 'https://voicerss-text-to-speech.p.rapidapi.com/',
-                            params: {
-                                key: '78be37622e514375bc0da7487400cb6b',
-                                src: text,
-                                hl: 'en-us',
-                                r: '0',
-                                c: 'mp3',
-                                f: '8khz_8bit_mono'
-                            },
-                            headers: {
-                                'x-rapidapi-host': 'voicerss-text-to-speech.p.rapidapi.com',
-                                'x-rapidapi-key': 'a75b851f51msh26f81c9d0911ebdp1806b6jsn00717e884a9f'
-                            }
-                        };
-                        axios.request(options).then(function (response) {
-                            await conn.sendMessage(
-                                from,
-                                MessageType.document,{
-                                    mimetype: "audio/mpeg",
-                                    filename: response.data + ".mp3",
-                                    quoted: mek,
-                                });
-                        }).catch(function (error) {
-                            console.error(error);
-                        });
-                        break
-
-
                     case 'joke':
                         if (!isGroup) return;
                         const baseURL = "https://v2.jokeapi.dev";
@@ -791,12 +757,12 @@ async function main() {
                                 let randomJoke = JSON.parse(chunk.toString());
                                 if (randomJoke.type == "single") {
                                     // If type == "single", the joke only has the "joke" property
-                                    mess = 'Categories => ' + randomJoke.category + '\n\n' + randomJoke.joke;
+                                    mess = 'Category => ' + randomJoke.category + '\n\n' + randomJoke.joke;
                                     reply(mess);
                                 }
                                 else {
                                     // If type == "twopart", the joke has the "setup" and "delivery" properties
-                                    mess = 'Categories => ' + randomJoke.category + '\n\n' + randomJoke.setup + '\n' + randomJoke.delivery;
+                                    mess = 'Category => ' + randomJoke.category + '\n\n' + randomJoke.setup + '\n' + randomJoke.delivery;
                                     reply(mess);
                                 }
                                 console.log("Categories => ", categories);
