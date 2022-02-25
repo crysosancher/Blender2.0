@@ -40,7 +40,7 @@ const db = require('./database');
 // LOAD ADDITIONAL NPM PACKAGES
 //const fs = require('fs')//file module
 const ffmpeg = require('fluent-ffmpeg')//sticker module
-const ffmpeg1 = require('ffmpeg-static');
+const ffmpeg1 = require('ffmpeg');
 const WSF = require('wa-sticker-formatter')//sticker module
 
 async function fetchauth() {
