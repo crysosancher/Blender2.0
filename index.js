@@ -1003,6 +1003,7 @@ async function main() {
                         break
 
                     case 'fact':
+                        if (!isGroup) return;
                         const factURL = "https://nekos.life/api/v2/fact";
                         https.get(`${factURL}`, getfact => {
                             getfact.on("data", chunk => {
