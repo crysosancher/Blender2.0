@@ -1002,6 +1002,18 @@ async function main() {
 
                         break
 
+                    case 'fact':
+                        const factURL = "https://nekos.life/api/v2/fact";
+                        https.get(`${factURL}`, getfact => {
+                            getfact.on("data", chunk => {
+                                let Fact = JSON.parse(chunk.toString());
+                                reply(Fact.fact)
+                            });
+                            getfact.on("error", err => {
+                                console.error(`Error: ${err}`);
+                            });
+                        });
+                        break
                     case 'dice':
                         if (!isGroup) return;
                         let upper = 6
