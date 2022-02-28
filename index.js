@@ -137,7 +137,7 @@ const getInstaVideo = async (url) => {
         videoDirectLink = "";
     try {
         if (url.includes("?")) url = url.slice(0, url.search("\\?"));
-        const res = await axios.get(url + "?__a=1", {
+        /*const res = await axios.get(url + "?__a=1", {
             headers: {
                 accept:
                     "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -163,10 +163,16 @@ const getInstaVideo = async (url) => {
             videoDirectLink = res.data.graphql.shortcode_media.video_url;
         }
         imgDirectLink = res.data.graphql.shortcode_media.display_url;
-        /* if (res.status == 200 && res.data.graphql.shortcode_media.is_video) {
+        if (res.status == 200 && res.data.graphql.shortcode_media.is_video) {
              videoDirectLink = res.data.graphql.shortcode_media.video_url;
          }
          imgDirectLink = res.data.graphql.shortcode_media.display_url;*/
+    const res = await axios.get(`https://api.neoxr.eu.org/api/ig?url=${url}&apikey=yourkey`);
+    if (res.data.data[0].type === "mp4") {
+      videoDirectLink = res.data.data[0].url;
+    } else if (res.data.data[0].type === "jpg") {
+      imgDirectLink = res.data.data[0].url;
+    }
     } catch (err) {
         console.log(err);
     }
@@ -1061,7 +1067,6 @@ async function main() {
                         let genderText = await getGender(namePerson);
                         reply(genderText);
                         break;
-                    //, { filter: info => info.itag == 22 || info.itag == 18 })
                     case 'yt':
                         if (!isGroup) return;
                         var url = args[0];
@@ -1069,7 +1074,7 @@ async function main() {
                         const dm = async (url) => {
                             let info = ytdl.getInfo(url)
                             let rany = getRandom('.mp4')
-                            const stream = ytdl(url)
+                            const stream = ytdl(url, { filter: info => info.itag == 22 || info.itag == 18 })
                                 .pipe(fs.createWriteStream(rany));
                             console.log("Video downloaded")
                             await new Promise((resolve, reject) => {
