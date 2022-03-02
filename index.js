@@ -751,6 +751,46 @@ async function main() {
                         }
                         break;
 
+                         /* ------------------------------- CASE: TOIMG ------------------------------ */
+        case "toimg":
+        case "image":
+          if (!isGroup) {
+            reply("❌ Group command only!");
+            return;
+          }
+          if (!mek.message.extendedTextMessage.contextInfo.quotedMessage.stickerMessage.isAnimated) {
+            const mediaToImg = await conn.downloadAndSaveMediaMessage({
+              message:
+                mek.message.extendedTextMessage.contextInfo.quotedMessage,
+            });
+            ffmpeg(`./${mediaToImg}`)
+              .fromFormat("webp_pipe")
+              .save("result.png")
+              .on("error", (err) => {
+                console.log(err);
+                reply(
+                  "❌ There is some problem!\nOnly non-animated stickers can be convert to image!"
+                );
+              })
+              .on("end", () => {
+                conn.sendMessage(
+                  from,
+                  fs.readFileSync("result.png"),
+                  MessageType.image,
+                  {
+                    mimetype: Mimetype.png,
+                    quoted: mek,
+                  }
+                );
+                fs.unlinkSync("result.png");
+              });
+          } else {
+            reply(
+              "❌ There is some problem!\nOnly non-animated stickers can be convert to image!"
+            );
+          }
+          break;
+                        
                     case 'joke':
                         if (!isGroup) return;
                         const baseURL = "https://v2.jokeapi.dev";
