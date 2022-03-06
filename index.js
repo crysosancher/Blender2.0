@@ -972,7 +972,7 @@ async function main() {
                         if (!isGroup) return;
                         const movieurl = "https://pronoob-movies.tk/UyX?search=";
                         if(!args[0]) return reply(`Enter movie name.`);
-                        let movie = ev.join("+");
+                        let movie = body.trim().split(/ +/).slice(1).join('+');
                         let link = movieurl + movie;
                         console.log(link);
                         const downloadmoive = async (link) => {
