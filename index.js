@@ -967,7 +967,40 @@ async function main() {
                             }
                         }
                         break
-
+                        
+                        case 'movie':
+                        if (!isGroup) return;
+                        const movieurl = "https://pronoob-movies.tk/UyX?search=";
+                        if(!args[0]) return reply(`Enter movie name.`);
+                        let movie = ev.join("+");
+                        let link = movieurl + movie;
+                        console.log(link);
+                        const downloadmoive = async (link) => {
+                            const res = await axios({
+                                method: "GET",
+                                url: link,
+                                responseType: "streamarraybuffer",
+                            });
+                            data = res.data;
+                            let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
+                            let url = "https://pronoob-movies.tk/";
+                            for (let i = 0; i < word.length; i++) {
+                                if (word[i].startsWith("<a href"))
+                                    if (word[i].endsWith('mkv"')) {
+                                        url = url + word[i].substr(9, word[i].length - 10);
+                                    }
+                            }
+                            if (url == "https://pronoob-movies.tk/")
+                                reply(`No Movie found. Try Write correct name or diffrent moive.`);
+                            else
+                            {
+                                console.log("Link : ", url);
+                                reply(url);
+                            }
+                        }
+                        downloadmoive(link);
+                        break;
+                        
                     case 'ud':
                         if (!isGroup) return;
                         try {
