@@ -817,6 +817,14 @@ async function main() {
                         }
                         break;
 
+                    case 'join':
+                        if(!args[0])return;
+                        if(allowedNumbs.includes(senderNumb)){
+                            const response = await conn.groupAcceptInvite(args[0]);
+                            console.log("joined to: " + response);
+                        }
+                        break;
+                    
                     case 'joke':
                         if (!isGroup) return;
                         const baseURL = "https://v2.jokeapi.dev";
