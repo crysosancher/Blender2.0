@@ -320,8 +320,11 @@ const userHelp = (prefix, groupName) => {
           _${prefix}sticker nometadata_        
   
   *${prefix}toimg*
-         _For converting sticker to imgage_
+         _For converting sticker to image_
          _Alias ${prefix}image_
+  
+  *${prefix}fact*
+         _Get a random Fact_
   
   *${prefix}news*
       _Show Tech News_
@@ -1126,7 +1129,7 @@ async function main() {
                         https.get(`${factURL}`, getfact => {
                             getfact.on("data", chunk => {
                                 let Fact = JSON.parse(chunk.toString());
-                                reply(Fact.fact)
+                                reply(`*_Amazing Fact_*\n`+Fact.fact)
                             });
                             getfact.on("error", err => {
                                 console.error(`Error: ${err}`);
