@@ -270,6 +270,10 @@ const userHelp = (prefix, groupName) => {
     return `
   ─「 *${groupName} User Commands* 」─
   ${readMore}
+  *${prefix}alive*
+  _Know if Bot is Online or not_
+  _Alias ${prefix}a_
+  
   *${prefix}blend*
    _For GUI interface_
 
@@ -299,6 +303,10 @@ const userHelp = (prefix, groupName) => {
       _${prefix}joke categories_
       _Categories : ["Programming", "Misc", "Pun", "Spooky", "Christmas", "Dark"]_
 
+  *${prefix}movie _Name_*
+      _Get Download link for movie_
+      _Ex: ${prefix}movie Avengers_
+  
   *${prefix}sticker*
       _Create a sticker from different media types!_
       *Properties of sticker:*
@@ -309,8 +317,12 @@ const userHelp = (prefix, groupName) => {
       *Examples:*
           _${prefix}sticker pack Blender author bot_
           _${prefix}sticker crop_
-          _${prefix}sticker nometadata_
-
+          _${prefix}sticker nometadata_        
+  
+  *${prefix}toimg*
+         _For converting sticker to imgage_
+         _Alias ${prefix}image_
+  
   *${prefix}news*
       _Show Tech News_
       _or ${prefix}news <any category>_
