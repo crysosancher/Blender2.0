@@ -847,7 +847,7 @@ async function main() {
 
                     case 'anime':
                         if(!isGroup)return;
-                        var name = ev; //prompt("text : ");
+                        var name = ev;
                         const getAnimeRandom = async (name) => {
                             const AnimeUrl = 'https://animechan.vercel.app/api/';
                             await axios.get(`${AnimeUrl}` + name).then(function (response) {
@@ -861,7 +861,7 @@ async function main() {
                                     reply(mes);
                                 }
                             }).catch(function (error) {
-                                reply(`Anime or Character not found!! Enter right Spelling or defferent Anime or Character.`);
+                                reply(`Anime or Character not found!! Enter right Spelling or different Anime or Character.`);
                                 console.log("Error");
                             });
                         };
