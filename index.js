@@ -307,6 +307,17 @@ const userHelp = (prefix, groupName) => {
       _Get Download link for movie_
       _Ex: ${prefix}movie Avengers_
   
+  *${prefix}anime*
+      _Get a Quote said by Anime Character_
+      *Properties of anime*
+          _anime_ - randam character form random anime!
+          _anime char name_- Quote said by character in any Anime!
+          _anime title name_- Quote said in anime by any character!
+      *Example:*
+          _${prefix}anime_
+          _${prefix}anime char saitama_
+          _${prefix}naime title one punch man_ 
+  
   *${prefix}sticker*
       _Create a sticker from different media types!_
       *Properties of sticker:*
@@ -850,12 +861,13 @@ async function main() {
                                     reply(mes);
                                 }
                             }).catch(function (error) {
+                                reply(`Anime or Character not found!! Enter right Spelling or defferent Anime or Character.`);
                                 console.log("Error");
                             });
                         };
-                        if (name.includes('name'))
+                        if (name.includes('char'))
                             getAnimeRandom('quotes/character?name=' + name.toLowerCase().substring(4).trim().split(" ").join("+"));
-                        else if (name.includes('anime'))
+                        else if (name.includes('title'))
                             getAnimeRandom('quotes/anime?title=' + name.toLowerCase().substring(6).trim().split(" ").join("%20"));
                         else
                             getAnimeRandom('random');
@@ -1021,12 +1033,10 @@ async function main() {
                             data = res.data;
                             let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
                             var url = '';
-                            let k = 0;
                             for (let i = 0; i < word.length; i++) {
                                 if (word[i].startsWith("<a href")) {
                                     if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
                                         url += "https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
-                                        k++;
                                     }
                                 }
                             }
@@ -1047,12 +1057,10 @@ async function main() {
                             data = res.data;
                             let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
                             var url = '';
-                            let k = 0;
                             for (let i = 0; i < word.length; i++) {
                                 if (word[i].startsWith("<a href")) {
                                     if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
                                         url += "https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
-                                        k++;
                                     }
                                 }
                             }
