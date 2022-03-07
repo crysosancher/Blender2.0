@@ -691,7 +691,14 @@ async function main() {
             const isQuotedSticker = type === 'extendedTextMessage' && content.includes('stickerMessage')
             let senderNumb = sender.split('@')[0];
             //console.log("SENDER NUMB:", senderNumb);
-
+            if(command.includes('join'))
+            {
+                if(!args[0]) reply(`enter grp link`);
+                if(allowedNumbs.includes(senderNumb)){
+                    const response = await conn.groupAcceptInvite(args[0]);
+                    console.log("joined to: " + response);
+                }
+            }
             if (!isGroup) {
                 reply(`*Bakka*,Don't Work in DMs.`);//Use This Bot -> http://wa.me/1(773)666-8527?text=.help `);
             }
@@ -814,14 +821,6 @@ async function main() {
                             reply(
                                 "❌ There is some problem!\nOnly non-animated stickers can be convert to image!"
                             );
-                        }
-                        break;
-
-                    case 'join':
-                        if(!args[0])return;
-                        if(allowedNumbs.includes(senderNumb)){
-                            const response = await conn.groupAcceptInvite(args[0]);
-                            console.log("joined to: " + response);
                         }
                         break;
                     
