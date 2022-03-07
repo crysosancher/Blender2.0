@@ -834,6 +834,33 @@ async function main() {
                         break
 
 
+                    case 'anime':
+                        if(!isGroup)return;
+                        var name = ev; //prompt("text : ");
+                        const getAnimeRandom = async (name) => {
+                            const AnimeUrl = 'https://animechan.vercel.app/api/';
+                            await axios.get(`${AnimeUrl}` + name).then(function (response) {
+                                if (name == 'random') {
+                                    let mes = 'Anime : ' + response.data.anime + '\nCharacter : ' + response.data.character + '\nQuote : ' + response.data.quote
+                                    reply(mes);
+                                }
+                                else {
+                                    let i = (response.data.length == 1) ? 0 : Math.floor(Math.random() * 11);
+                                    let mes = 'Anime : ' + response.data[i].anime + '\nCharacter : ' + response.data[i].character + '\nQuote : ' + response.data[i].quote
+                                    reply(mes);
+                                }
+                            }).catch(function (error) {
+                                console.log("Error");
+                            });
+                        };
+                        if (name.includes('name'))
+                            getAnimeRandom('quotes/character?name=' + name.toLowerCase().substring(4).trim().split(" ").join("+"));
+                        else if (name.includes('anime'))
+                            getAnimeRandom('quotes/anime?title=' + name.toLowerCase().substring(6).trim().split(" ").join("%20"));
+                        else
+                            getAnimeRandom('random');
+                        break;
+
                     case 'sticker':
                         if (!isGroup) return;
 
@@ -1005,7 +1032,7 @@ async function main() {
                             }
                             if (url == '') downloadholly(movie);
                             else {
-                                reply(`Here you go => \n`+url.trim());
+                                reply(`Here you go => \n` + url.trim());
                                 console.log(url.trim());
                             }
                         }
@@ -1033,7 +1060,7 @@ async function main() {
                                 reply(`No Movie found. Try Write correct name or diffrent moive.`);
                             }
                             else {
-                                reply(`Here you go => \n`+url.trim());
+                                reply(`Here you go => \n` + url.trim());
                                 console.log(url.trim());
                             }
                         }
