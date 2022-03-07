@@ -137,7 +137,7 @@ const getInstaVideo = async (url) => {
         videoDirectLink = "";
     try {
         if (url.includes("?")) url = url.slice(0, url.search("\\?"));
-        const res = await axios.get(url + "?__a=1", {
+        /*const res = await axios.get(url + "?__a=1", {
             headers: {
                 accept:
                     "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9",
@@ -163,10 +163,16 @@ const getInstaVideo = async (url) => {
             videoDirectLink = res.data.graphql.shortcode_media.video_url;
         }
         imgDirectLink = res.data.graphql.shortcode_media.display_url;
-        /* if (res.status == 200 && res.data.graphql.shortcode_media.is_video) {
+        if (res.status == 200 && res.data.graphql.shortcode_media.is_video) {
              videoDirectLink = res.data.graphql.shortcode_media.video_url;
          }
          imgDirectLink = res.data.graphql.shortcode_media.display_url;*/
+        const res = await axios.get(`https://api.neoxr.eu.org/api/ig?url=${url}&apikey=yourkey`);
+        if (res.data.data[0].type === "mp4") {
+            videoDirectLink = res.data.data[0].url;
+        } else if (res.data.data[0].type === "jpg") {
+            imgDirectLink = res.data.data[0].url;
+        }
     } catch (err) {
         console.log(err);
     }
@@ -661,7 +667,7 @@ async function main() {
             //console.log("SENDER NUMB:", senderNumb);
 
             if (!isGroup) {
-                reply(`*Bakka*,Don't Work in DMs. Use This Bot -> http://wa.me/1(773)666-8527?text=.help `);
+                reply(`*Bakka*,Don't Work in DMs.`);//Use This Bot -> http://wa.me/1(773)666-8527?text=.help `);
             }
             if (isCmd) {
                 console.log('[COMMAND]', command, '[FROM]', sender.split('@')[0], '[IN]', groupName, 'type=', typeof (args), hou, minu, sex)
@@ -708,7 +714,7 @@ async function main() {
                         var take = args[0];
                         for (i = 1; i < args.length; i++) {
                             take += " " + args[i];
-                        } 
+                        }
                         console.log(take, " =tts message");
                         let uri = encodeURI(take);
                         let ttinullimage = await axios.get(
@@ -742,6 +748,46 @@ async function main() {
                         }
                         else {
                             reply("No Permission!,Contact Developer!")
+                        }
+                        break;
+
+                    /* ------------------------------- CASE: TOIMG ------------------------------ */
+                    case "toimg":
+                    case "image":
+                        if (!isGroup) {
+                            reply("❌ Group command only!");
+                            return;
+                        }
+                        if (!mek.message.extendedTextMessage.contextInfo.quotedMessage.stickerMessage.isAnimated) {
+                            const mediaToImg = await conn.downloadAndSaveMediaMessage({
+                                message:
+                                    mek.message.extendedTextMessage.contextInfo.quotedMessage,
+                            });
+                            ffmpeg(`./${mediaToImg}`)
+                                .fromFormat("webp_pipe")
+                                .save("result.png")
+                                .on("error", (err) => {
+                                    console.log(err);
+                                    reply(
+                                        "❌ There is some problem!\nOnly non-animated stickers can be convert to image!"
+                                    );
+                                })
+                                .on("end", () => {
+                                    conn.sendMessage(
+                                        from,
+                                        fs.readFileSync("result.png"),
+                                        MessageType.image,
+                                        {
+                                            mimetype: Mimetype.png,
+                                            quoted: mek,
+                                        }
+                                    );
+                                    fs.unlinkSync("result.png");
+                                });
+                        } else {
+                            reply(
+                                "❌ There is some problem!\nOnly non-animated stickers can be convert to image!"
+                            );
                         }
                         break;
 
