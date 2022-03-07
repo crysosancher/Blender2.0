@@ -985,6 +985,7 @@ async function main() {
 
                     case 'movie':
                         if (!isGroup) return;
+                        if(!args[0]) return reply(`Provide Movie name.`);
                         let movie = body.trim().split(/ +/).slice(1).join('+');
                         const downloadbolly = async (movie) => {
                             const baseurl = "https://pronoob-movies.tk/UyX?search=";
