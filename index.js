@@ -997,13 +997,10 @@ async function main() {
                             data = res.data;
                             let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
                             var url = '';
-                            let k = 0;
                             for (let i = 0; i < word.length; i++) {
                                 if (word[i].startsWith("<a href")) {
-                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
+                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"'))
                                         url += "https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
-                                        k++;
-                                    }
                                 }
                             }
                             if (url == '') downloadholly(movie);
@@ -1023,13 +1020,10 @@ async function main() {
                             data = res.data;
                             let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
                             var url = '';
-                            let k = 0;
                             for (let i = 0; i < word.length; i++) {
                                 if (word[i].startsWith("<a href")) {
-                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
+                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) 
                                         url += "https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
-                                        k++;
-                                    }
                                 }
                             }
                             if (url == '') {
