@@ -1,0 +1,22 @@
+{
+  "name": "BLENDER 2.0",
+  "description": "nodejs baileys based whatsapp bot",
+  "repository": "https://github.com/jacktheboss220/Blender2.0",
+  "keywords": ["whatsapp-bot", "blender-2.0"],
+  "buildpacks": [
+    {
+      "url": "https://github.com/heroku/heroku-buildpack-nodejs.git"
+    },
+    {
+      "url": "https://github.com/jonathanong/heroku-buildpack-ffmpeg-latest.git"
+    }
+  ],
+  "addons": [
+    {
+      "plan": "heroku-postgresql",
+      "options": {
+        "version": "13"
+      }
+    }
+  ]
+}
