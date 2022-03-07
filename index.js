@@ -331,8 +331,11 @@ const userHelp = (prefix, groupName) => {
           _${prefix}sticker nometadata_        
   
   *${prefix}toimg*
-         _For converting sticker to imgage_
+         _For converting sticker to image_
          _Alias ${prefix}image_
+  
+  *${prefix}fact*
+         _Get a random Fact_
   
   *${prefix}news*
       _Show Tech News_
@@ -1021,6 +1024,7 @@ async function main() {
 
                     case 'movie':
                         if (!isGroup) return;
+                        if(!args[0]) return reply(`Provide Movie name.`);
                         let movie = body.trim().split(/ +/).slice(1).join('+');
                         const downloadbolly = async (movie) => {
                             const baseurl = "https://pronoob-movies.tk/UyX?search=";
@@ -1035,9 +1039,9 @@ async function main() {
                             var url = '';
                             for (let i = 0; i < word.length; i++) {
                                 if (word[i].startsWith("<a href")) {
-                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
-                                        url += "https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
-                                    }
+                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"'))
+                                        url += "🎬"+"https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+
                                 }
                             }
                             if (url == '') downloadholly(movie);
@@ -1059,16 +1063,17 @@ async function main() {
                             var url = '';
                             for (let i = 0; i < word.length; i++) {
                                 if (word[i].startsWith("<a href")) {
-                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
-                                        url += "https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
-                                    }
+                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) 
+                                        url += "🎬"+"https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+
                                 }
                             }
                             if (url == '') {
-                                reply(`No Movie found. Try Write correct name or diffrent moive.`);
+                                reply(`No Movie found. Provide correct name or try different moive.`);
                             }
                             else {
-                                reply(`Here you go => \n` + url.trim());
+
+                                reply(`Here you go for ${movie} \n`+url.trim());
                                 console.log(url.trim());
                             }
                         }
@@ -1155,6 +1160,19 @@ async function main() {
 
                         break
 
+                    case 'fact':
+                        if (!isGroup) return;
+                        const factURL = "https://nekos.life/api/v2/fact";
+                        https.get(`${factURL}`, getfact => {
+                            getfact.on("data", chunk => {
+                                let Fact = JSON.parse(chunk.toString());
+                                reply(`*_Amazing Fact_*\n`+Fact.fact)
+                            });
+                            getfact.on("error", err => {
+                                console.error(`Error: ${err}`);
+                            });
+                        });
+                        break
                     case 'dice':
                         if (!isGroup) return;
                         let upper = 6
