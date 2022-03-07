@@ -993,8 +993,8 @@ async function main() {
                             }
                             if (url == '') downloadholly(movie);
                             else {
-                                reply(url);
-                                console.log(url);
+                                reply(`Here you go => \n`+url.trim());
+                                console.log(url.trim());
                             }
                         }
                         const downloadholly = async (movie) => {
@@ -1021,8 +1021,8 @@ async function main() {
                                 reply(`No Movie found. Try Write correct name or diffrent moive.`);
                             }
                             else {
-                                reply(url);
-                                console.log(url);
+                                reply(`Here you go => \n`+url.trim());
+                                console.log(url.trim());
                             }
                         }
                         downloadbolly(movie);
