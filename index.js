@@ -270,6 +270,10 @@ const userHelp = (prefix, groupName) => {
     return `
   ─「 *${groupName} User Commands* 」─
   ${readMore}
+  *${prefix}alive*
+  _Know if Bot is Online or not_
+  _Alias ${prefix}a_
+  
   *${prefix}blend*
    _For GUI interface_
 
@@ -299,6 +303,10 @@ const userHelp = (prefix, groupName) => {
       _${prefix}joke categories_
       _Categories : ["Programming", "Misc", "Pun", "Spooky", "Christmas", "Dark"]_
 
+  *${prefix}movie _Name_*
+      _Get Download link for movie_
+      _Ex: ${prefix}movie Avengers_
+  
   *${prefix}sticker*
       _Create a sticker from different media types!_
       *Properties of sticker:*
@@ -309,8 +317,12 @@ const userHelp = (prefix, groupName) => {
       *Examples:*
           _${prefix}sticker pack Blender author bot_
           _${prefix}sticker crop_
-          _${prefix}sticker nometadata_
-
+          _${prefix}sticker nometadata_        
+  
+  *${prefix}toimg*
+         _For converting sticker to imgage_
+         _Alias ${prefix}image_
+  
   *${prefix}news*
       _Show Tech News_
       _or ${prefix}news <any category>_
@@ -967,6 +979,66 @@ async function main() {
                             }
                         }
                         break
+
+                    case 'movie':
+                        if (!isGroup) return;
+                        let movie = body.trim().split(/ +/).slice(1).join('+');
+                        const downloadbolly = async (movie) => {
+                            const baseurl = "https://pronoob-movies.tk/UyX?search=";
+                            let link = baseurl + movie.toLowerCase().split(" ").join("+");
+                            const res = await axios({
+                                method: "GET",
+                                url: link,
+                                responseType: "streamarraybuffer",
+                            });
+                            data = res.data;
+                            let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
+                            var url = '';
+                            let k = 0;
+                            for (let i = 0; i < word.length; i++) {
+                                if (word[i].startsWith("<a href")) {
+                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
+                                        url += "https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                                        k++;
+                                    }
+                                }
+                            }
+                            if (url == '') downloadholly(movie);
+                            else {
+                                reply(`Here you go => \n`+url.trim());
+                                console.log(url.trim());
+                            }
+                        }
+                        const downloadholly = async (movie) => {
+                            const baseurl = "https://pronoob-movies.tk/wER?search=";
+                            let link = baseurl + movie.toLowerCase().split(" ").join("+");
+                            const res = await axios({
+                                method: "GET",
+                                url: link,
+                                responseType: "streamarraybuffer",
+                            });
+                            data = res.data;
+                            let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
+                            var url = '';
+                            let k = 0;
+                            for (let i = 0; i < word.length; i++) {
+                                if (word[i].startsWith("<a href")) {
+                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
+                                        url += "https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                                        k++;
+                                    }
+                                }
+                            }
+                            if (url == '') {
+                                reply(`No Movie found. Try Write correct name or diffrent moive.`);
+                            }
+                            else {
+                                reply(`Here you go => \n`+url.trim());
+                                console.log(url.trim());
+                            }
+                        }
+                        downloadbolly(movie);
+                        break;
 
                     case 'ud':
                         if (!isGroup) return;
