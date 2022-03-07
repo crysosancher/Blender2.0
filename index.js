@@ -1000,7 +1000,7 @@ async function main() {
                             for (let i = 0; i < word.length; i++) {
                                 if (word[i].startsWith("<a href")) {
                                     if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"'))
-                                        url += "https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                                        url += "🎬"+"https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
                                 }
                             }
                             if (url == '') downloadholly(movie);
@@ -1023,14 +1023,14 @@ async function main() {
                             for (let i = 0; i < word.length; i++) {
                                 if (word[i].startsWith("<a href")) {
                                     if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) 
-                                        url += "https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                                        url += "🎬"+"https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
                                 }
                             }
                             if (url == '') {
-                                reply(`No Movie found. Try Write correct name or diffrent moive.`);
+                                reply(`No Movie found. Provide correct name or try different moive.`);
                             }
                             else {
-                                reply(`Here you go => \n`+url.trim());
+                                reply(`Here you go for ${movie} \n`+url.trim());
                                 console.log(url.trim());
                             }
                         }
