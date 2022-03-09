@@ -15,6 +15,10 @@ server.listen(port, () => {
     console.log('\nWeb-server running!\n')
 })
 
+//loading plugins
+const { getGender } = require('./plugins/done/gender') //gender module
+const { getAnimeRandom } = require('./plugins/anime') //anime module
+
 // LOAD Baileys
 const {
     WAConnection,
@@ -65,18 +69,6 @@ async function fetchauth() {
 
 }
 
-/*------------------------- GENDER ----------------------------------------------*/
-const getGender = async (name) => {
-    try {
-        let url = "https://api.genderize.io/?name=" + name;
-        let { data } = await axios.get(url);
-        let genderText = `${data.name} is ${data.gender} with ${data.probability} probability`;
-        return genderText;
-    } catch (err) {
-        console.log(err);
-        return "ERROR";
-    }
-};
 
 /* ---------------------------------- SONG ---------------------------------- */
 const downloadSong = async (randomName, query) => {
@@ -1104,9 +1096,13 @@ async function main() {
                             reply(`❌ Don't tag! \nSend ${prefix}gender firstname`);
                             return;
                         }
-                        let genderText = await getGender(namePerson);
-                        reply(genderText);
+                        getGender(namePerson).then((message) => {
+                            reply(message);
+                        }).catch((error) => {
+                            reply(error);
+                        });
                         break;
+                        
                     case 'yt':
                         if (!isGroup) return;
                         var url = args[0];
