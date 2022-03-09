@@ -18,6 +18,7 @@ server.listen(port, () => {
 //loading plugins
 const { getGender } = require('./plugins/gender') //gender module
 const { getAnimeRandom } = require('./plugins/anime') //anime module
+const { getFact } = require('./fact') //fact module
 
 // LOAD Baileys
 const {
@@ -1174,16 +1175,11 @@ async function main() {
 
                     case 'fact':
                         if (!isGroup) return;
-                        const factURL = "https://nekos.life/api/v2/fact";
-                        https.get(`${factURL}`, getfact => {
-                            getfact.on("data", chunk => {
-                                let Fact = JSON.parse(chunk.toString());
-                                reply(`*_Amazing Fact_*\n`+Fact.fact)
-                            });
-                            getfact.on("error", err => {
-                                console.error(`Error: ${err}`);
-                            });
-                        });
+                        getFact().then((message) => {
+                            reply(message);
+                        }).catch((Error) => {
+                            reply("Error");
+                        })
                         break
                     case 'dice':
                         if (!isGroup) return;
