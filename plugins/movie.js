@@ -9,11 +9,12 @@ const downloadholly = async (movie) => {
         responseType: "streamarraybuffer",
     });
     data = res.data;
+    let url='';
     let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
     for (let i = 0; i < word.length; i++) {
         if (word[i].startsWith("<a href")) {
             if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
-                let url =url+ " https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                url += " https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
                 // console.log(url);
 
             }
@@ -37,10 +38,11 @@ const downloadbolly = async (movie) => {
     });
     data = res.data;
     let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
+    let url='';
     for (let i = 0; i < word.length; i++) {
         if (word[i].startsWith("<a href")) {
             if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
-                let url =url+ " https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                url+= " https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
                 // console.log(url);
 
             }
@@ -64,10 +66,11 @@ module.exports.downloadAll = async (movie) => {
     });
     data = res.data;
     let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
+    let url='';
     for (let i = 0; i < word.length; i++) {
         if (word[i].startsWith("<a href")) {
             if (word[i].endsWith('mkv"') || (word[i].endsWith('mp4"'))) {
-                let url =url+ " https://pronoob-aio.cf/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                url+= " https://pronoob-aio.cf/" + word[i].substr(9, word[i].length - 10) + "\n\n";
                 // console.log(url);
             }
         }
