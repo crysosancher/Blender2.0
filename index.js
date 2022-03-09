@@ -20,6 +20,7 @@ const { getGender } = require('./plugins/gender') //gender module
 const { getAnimeRandom } = require('./plugins/anime') //anime module
 const { getFact } = require('./plugins/fact') //fact module
 const { downloadAll } = require('./plugins/movie') //movie module
+const { setCountWarning, getCountWarning } = require("./DB/warningDB") // warning module
 
 // LOAD Baileys
 const {
@@ -713,6 +714,84 @@ async function main() {
                         if (!isGroup) return;
                         await costum(adminList(prefix, groupName), text);
                         break
+                    
+                    case "warn":
+          // if (!pvxadminsMem.includes(sender)) {
+          //   reply(`❌ PVX admin only command!`);
+          //   return;
+          // }
+          if (!isGroupAdmins) {
+            reply("❌ Admin command!");
+            return;
+          }
+          if (!mek.message.extendedTextMessage) {
+            reply("❌ Tag someone!");
+            return;
+          }
+          try {
+            let mentioned =
+              mek.message.extendedTextMessage.contextInfo.mentionedJid;
+            if (mentioned) {
+              //when member are mentioned with command
+              if (mentioned.length === 1) {
+                let warnCount = await getCountWarning(mentioned[0], from);
+                let num_split = mentioned[0].split("@s.whatsapp.net")[0];
+                let warnMsg = `@${num_split} ,You have been warned. Warning status (${
+                  warnCount + 1
+                }/3). Don't repeat this type of behaviour again or you'll be banned from the group!`;
+                conn.sendMessage(from, warnMsg, MessageType.extendedText, {
+                  contextInfo: { mentionedJid: mentioned },
+                });
+                await setCountWarning(mentioned[0], from);
+                if (warnCount >= 2) {
+                  if (!isBotGroupAdmins) {
+                    reply("❌ I'm not Admin here!");
+                    return;
+                  }
+                  if (groupAdmins.includes(mentioned[0])) {
+                    reply("❌ Cannot remove admin!");
+                    return;
+                  }
+                  conn.groupRemove(from, mentioned);
+                  reply("✔ Number removed from group!");
+                }
+              } else {
+                //if multiple members are tagged
+                reply("❌ Mention only 1 member!");
+              }
+            } else {
+              //when message is tagged with command
+              let taggedMessageUser = [
+                mek.message.extendedTextMessage.contextInfo.participant,
+              ];
+              let warnCount = await getCountWarning(taggedMessageUser[0], from);
+              let num_split = taggedMessageUser[0].split("@s.whatsapp.net")[0];
+              let warnMsg = `@${num_split} ,Your have been warned. Warning status (${
+                warnCount + 1
+              }/3). Don't repeat this type of behaviour again or you'll be banned from group!`;
+              conn.sendMessage(from, warnMsg, MessageType.extendedText, {
+                contextInfo: { mentionedJid: taggedMessageUser },
+              });
+              await setCountWarning(taggedMessageUser[0], from);
+              if (warnCount >= 2) {
+                if (!isBotGroupAdmins) {
+                  reply("❌ I'm not Admin here!");
+                  return;
+                }
+                if (groupAdmins.includes(taggedMessageUser[0])) {
+                  reply("❌ Cannot remove admin!");
+                  return;
+                }
+                conn.groupRemove(from, taggedMessageUser);
+                reply("✔ Number removed from group!");
+              }
+            }
+          } catch (err) {
+            console.log(err);
+            reply(`❌ Error!`);
+          }
+          break;
+                    
                     case 'stock':
                         if (!isGroup) return;
                         await costum(StockList(prefix, groupName), text);
