@@ -1033,33 +1033,12 @@ async function main() {
                         if (!isGroup) return;
                         if(!args[0]) return reply(`Provide Movie name.`);
                         let movie = body.trim().split(/ +/).slice(1).join('+');
-                        const downloadbolly = async (movie) => {
-                            const baseurl = "https://pronoob-movies.tk/UyX?search=";
-                            let link = baseurl + movie.toLowerCase().split(" ").join("+");
-                            const res = await axios({
-                                method: "GET",
-                                url: link,
-                                responseType: "streamarraybuffer",
-                            });
-                            data = res.data;
-                            let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
-                            var url = '';
-                            for (let i = 0; i < word.length; i++) {
-                                if (word[i].startsWith("<a href")) {
-                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"'))
-                                        url += "🎬"+"https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
-
-                                }
-                            }
-                            if (url == '') downloadholly(movie);
-                            else {
-                                reply(`Here you go => \n` + url.trim());
-                                console.log(url.trim());
-                            }
-                        }
+                        let url = '';
+                        let k = 1;
                         const downloadholly = async (movie) => {
                             const baseurl = "https://pronoob-movies.tk/wER?search=";
-                            let link = baseurl + movie.toLowerCase().split(" ").join("+");
+                            let link = baseurl + movie.toUpperCase().split(" ").join("+");
+                            console.log(link);
                             const res = await axios({
                                 method: "GET",
                                 url: link,
@@ -1067,24 +1046,66 @@ async function main() {
                             });
                             data = res.data;
                             let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
-                            var url = '';
                             for (let i = 0; i < word.length; i++) {
                                 if (word[i].startsWith("<a href")) {
-                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) 
-                                        url += "🎬"+"https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
-
+                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
+                                        url += k + " 🎬 https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                                        k++;
+                                    }
                                 }
                             }
                             if (url == '') {
-                                reply(`No Movie found. Provide correct name or try different moive.`);
+                                console.log("Not Found");
+                                reply(`No Movie found. Try Write correct name or other moive.`);
                             }
                             else {
-
-                                reply(`Here you go for ${movie} \n`+url.trim());
+                                reply(url);
                                 console.log(url.trim());
                             }
                         }
-                        downloadbolly(movie);
+                        const downloadbolly = async (movie) => {
+                            const baseurl = "https://pronoob-movies.tk/UyX?search=";
+                            let link = baseurl + movie.toUpperCase().split(" ").join("+");
+                            console.log(link);
+                            const res = await axios({
+                                method: "GET",
+                                url: link,
+                                responseType: "streamarraybuffer",
+                            });
+                            data = res.data;
+                            let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
+                            for (let i = 0; i < word.length; i++) {
+                                if (word[i].startsWith("<a href")) {
+                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
+                                        url += k + " 🎬 https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                                        k++;
+                                    }
+                                }
+                            }
+                            downloadholly(movie);
+                        }
+                        const downloadAll = async (movie) => {
+                            const baseurl = "https://pronoob-aio.cf/Sct?search=";
+                            let link = baseurl + movie.toUpperCase().split(" ").join("+");
+                            console.log(link);
+                            const res = await axios({
+                                method: "GET",
+                                url: link,
+                                responseType: "streamarraybuffer",
+                            });
+                            data = res.data;
+                            let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
+                            for (let i = 0; i < word.length; i++) {
+                                if (word[i].startsWith("<a href")) {
+                                    if (word[i].endsWith('mkv"') || (word[i].endsWith('mp4"'))) {
+                                        url += k + " 🎬 https://pronoob-aio.cf/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                                        k++;
+                                    }
+                                }
+                            }
+                            downloadbolly(movie);
+                        }
+                        downloadAll(movie);
                         break;
 
                     case 'ud':
