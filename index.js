@@ -15,6 +15,12 @@ server.listen(port, () => {
     console.log('\nWeb-server running!\n')
 })
 
+//loading plugins
+const { getGender } = require('./plugins/gender') //gender module
+const { getAnimeRandom } = require('./plugins/anime') //anime module
+const { getFact } = require('./plugins/fact') //fact module
+const { downloadAll } = require('./plugins/movie') //movie module
+
 // LOAD Baileys
 const {
     WAConnection,
@@ -65,18 +71,6 @@ async function fetchauth() {
 
 }
 
-/*------------------------- GENDER ----------------------------------------------*/
-const getGender = async (name) => {
-    try {
-        let url = "https://api.genderize.io/?name=" + name;
-        let { data } = await axios.get(url);
-        let genderText = `${data.name} is ${data.gender} with ${data.probability} probability`;
-        return genderText;
-    } catch (err) {
-        console.log(err);
-        return "ERROR";
-    }
-};
 
 /* ---------------------------------- SONG ---------------------------------- */
 const downloadSong = async (randomName, query) => {
@@ -858,29 +852,25 @@ async function main() {
                     case 'anime':
                         if(!isGroup)return;
                         var name = ev;
-                        const getAnimeRandom = async (name) => {
-                            const AnimeUrl = 'https://animechan.vercel.app/api/';
-                            await axios.get(`${AnimeUrl}` + name).then(function (response) {
-                                if (name == 'random') {
-                                    let mes = 'Anime : ' + response.data.anime + '\nCharacter : ' + response.data.character + '\nQuote : ' + response.data.quote
-                                    reply(mes);
-                                }
-                                else {
-                                    let i = (response.data.length == 1) ? 0 : Math.floor(Math.random() * 11);
-                                    let mes = 'Anime : ' + response.data[i].anime + '\nCharacter : ' + response.data[i].character + '\nQuote : ' + response.data[i].quote
-                                    reply(mes);
-                                }
-                            }).catch(function (error) {
-                                reply(`Anime or Character not found!! Enter right Spelling or different Anime or Character.`);
-                                console.log("Error");
-                            });
-                        };
-                        if (name.includes('char'))
-                            getAnimeRandom('quotes/character?name=' + name.toLowerCase().substring(4).trim().split(" ").join("+"));
-                        else if (name.includes('title'))
-                            getAnimeRandom('quotes/anime?title=' + name.toLowerCase().substring(6).trim().split(" ").join("%20"));
-                        else
-                            getAnimeRandom('random');
+                        if (name.includes('name')) {
+                            getAnimeRandom('quotes/character?name=' + name.toLowerCase().substring(4).trim().split(" ").join("+")).then((message) => {
+                            reply(message);
+                        }).catch((error) => {
+                            reply(error);
+                        });
+                        } else if (name.includes('title')) {
+                            mess = getAnimeRandom('quotes/anime?title=' + name.toLowerCase().substring(6).trim().split(" ").join("%20")).then((message) => {
+                            reply(message);
+                        }).catch((error) => {
+                            reply(error);
+                        });
+                        } else {
+                            getAnimeRandom('random').then((message) => {
+                                reply(message);
+                            }).catch((error) => {
+                                reply(error);
+                            })
+                        }
                         break;
 
                     case 'sticker':
@@ -1033,75 +1023,11 @@ async function main() {
                         if (!isGroup) return;
                         if(!args[0]) return reply(`Provide Movie name.`);
                         let movie = body.trim().split(/ +/).slice(1).join('+');
-                        let Movieurl = '';
-                        const downloadholly = async (movie) => {
-                            const baseurl = "https://pronoob-movies.tk/wER?search=";
-                            let link = baseurl + movie.toUpperCase().split(" ").join("+");
-                            console.log(link);
-                            const res = await axios({
-                                method: "GET",
-                                url: link,
-                                responseType: "streamarraybuffer",
-                            });
-                            data = res.data;
-                            let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
-                            for (let i = 0; i < word.length; i++) {
-                                if (word[i].startsWith("<a href")) {
-                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
-                                        Movieurl += " 🎬 https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
-                                    }
-                                }
-                            }
-                            if (Movieurl == '') {
-                                console.log("Not Found");
-                                reply(`No Movie found. Try Write correct name or other moive.`);
-                            }
-                            else {
-                                reply(Movieurl);
-                                console.log(Movieurl.trim());
-                            }
-                        }
-                        const downloadbolly = async (movie) => {
-                            const baseurl = "https://pronoob-movies.tk/UyX?search=";
-                            let link = baseurl + movie.toUpperCase().split(" ").join("+");
-                            console.log(link);
-                            const res = await axios({
-                                method: "GET",
-                                url: link,
-                                responseType: "streamarraybuffer",
-                            });
-                            data = res.data;
-                            let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
-                            for (let i = 0; i < word.length; i++) {
-                                if (word[i].startsWith("<a href")) {
-                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
-                                        Movieurl += " 🎬 https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
-                                    }
-                                }
-                            }
-                            downloadholly(movie);
-                        }
-                        const downloadAll = async (movie) => {
-                            const baseurl = "https://pronoob-aio.cf/Sct?search=";
-                            let link = baseurl + movie.toUpperCase().split(" ").join("+");
-                            console.log(link);
-                            const res = await axios({
-                                method: "GET",
-                                url: link,
-                                responseType: "streamarraybuffer",
-                            });
-                            data = res.data;
-                            let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
-                            for (let i = 0; i < word.length; i++) {
-                                if (word[i].startsWith("<a href")) {
-                                    if (word[i].endsWith('mkv"') || (word[i].endsWith('mp4"'))) {
-                                        Movieurl += " 🎬 https://pronoob-aio.cf/" + word[i].substr(9, word[i].length - 10) + "\n\n";
-                                    }
-                                }
-                            }
-                            downloadbolly(movie);
-                        }
-                        downloadAll(movie);
+                        downloadAll(movie).then((Message) => {
+                            reply(Message);
+                        }).catch((Error) => {
+                            reply(Error);
+                        })
                         break;
 
                     case 'ud':
@@ -1186,16 +1112,11 @@ async function main() {
 
                     case 'fact':
                         if (!isGroup) return;
-                        const factURL = "https://nekos.life/api/v2/fact";
-                        https.get(`${factURL}`, getfact => {
-                            getfact.on("data", chunk => {
-                                let Fact = JSON.parse(chunk.toString());
-                                reply(`*_Amazing Fact_*\n`+Fact.fact)
-                            });
-                            getfact.on("error", err => {
-                                console.error(`Error: ${err}`);
-                            });
-                        });
+                        getFact().then((message) => {
+                            reply(message);
+                        }).catch((Error) => {
+                            reply("Error");
+                        })
                         break
                     case 'dice':
                         if (!isGroup) return;
@@ -1253,9 +1174,13 @@ async function main() {
                             reply(`❌ Don't tag! \nSend ${prefix}gender firstname`);
                             return;
                         }
-                        let genderText = await getGender(namePerson);
-                        reply(genderText);
+                        getGender(namePerson).then((message) => {
+                            reply(message);
+                        }).catch((error) => {
+                            reply(error);
+                        });
                         break;
+                        
                     case 'yt':
                         if (!isGroup) return;
                         var url = args[0];
