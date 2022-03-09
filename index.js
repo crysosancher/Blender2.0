@@ -16,7 +16,7 @@ server.listen(port, () => {
 })
 
 //loading plugins
-const { getGender } = require('./plugins/done/gender') //gender module
+const { getGender } = require('./plugins/gender') //gender module
 const { getAnimeRandom } = require('./plugins/anime') //anime module
 
 // LOAD Baileys
