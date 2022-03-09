@@ -1034,7 +1034,6 @@ async function main() {
                         if(!args[0]) return reply(`Provide Movie name.`);
                         let movie = body.trim().split(/ +/).slice(1).join('+');
                         let Movieurl = '';
-                        let k = 1;
                         const downloadholly = async (movie) => {
                             const baseurl = "https://pronoob-movies.tk/wER?search=";
                             let link = baseurl + movie.toUpperCase().split(" ").join("+");
@@ -1049,8 +1048,7 @@ async function main() {
                             for (let i = 0; i < word.length; i++) {
                                 if (word[i].startsWith("<a href")) {
                                     if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
-                                        Movieurl += k + " 🎬 https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
-                                        k++;
+                                        Movieurl += " 🎬 https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
                                     }
                                 }
                             }
@@ -1077,8 +1075,7 @@ async function main() {
                             for (let i = 0; i < word.length; i++) {
                                 if (word[i].startsWith("<a href")) {
                                     if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
-                                        Movieurl += k + " 🎬 https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
-                                        k++;
+                                        Movieurl += " 🎬 https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
                                     }
                                 }
                             }
@@ -1098,8 +1095,7 @@ async function main() {
                             for (let i = 0; i < word.length; i++) {
                                 if (word[i].startsWith("<a href")) {
                                     if (word[i].endsWith('mkv"') || (word[i].endsWith('mp4"'))) {
-                                        Movieurl += k + " 🎬 https://pronoob-aio.cf/" + word[i].substr(9, word[i].length - 10) + "\n\n";
-                                        k++;
+                                        Movieurl += " 🎬 https://pronoob-aio.cf/" + word[i].substr(9, word[i].length - 10) + "\n\n";
                                     }
                                 }
                             }
