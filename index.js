@@ -850,29 +850,25 @@ async function main() {
                     case 'anime':
                         if(!isGroup)return;
                         var name = ev;
-                        const getAnimeRandom = async (name) => {
-                            const AnimeUrl = 'https://animechan.vercel.app/api/';
-                            await axios.get(`${AnimeUrl}` + name).then(function (response) {
-                                if (name == 'random') {
-                                    let mes = 'Anime : ' + response.data.anime + '\nCharacter : ' + response.data.character + '\nQuote : ' + response.data.quote
-                                    reply(mes);
-                                }
-                                else {
-                                    let i = (response.data.length == 1) ? 0 : Math.floor(Math.random() * 11);
-                                    let mes = 'Anime : ' + response.data[i].anime + '\nCharacter : ' + response.data[i].character + '\nQuote : ' + response.data[i].quote
-                                    reply(mes);
-                                }
-                            }).catch(function (error) {
-                                reply(`Anime or Character not found!! Enter right Spelling or different Anime or Character.`);
-                                console.log("Error");
-                            });
-                        };
-                        if (name.includes('char'))
-                            getAnimeRandom('quotes/character?name=' + name.toLowerCase().substring(4).trim().split(" ").join("+"));
-                        else if (name.includes('title'))
-                            getAnimeRandom('quotes/anime?title=' + name.toLowerCase().substring(6).trim().split(" ").join("%20"));
-                        else
-                            getAnimeRandom('random');
+                        if (name.includes('name')) {
+                            getAnimeRandom('quotes/character?name=' + name.toLowerCase().substring(4).trim().split(" ").join("+")).then((message) => {
+                            reply(message);
+                        }).catch((error) => {
+                            reply(error);
+                        });
+                        } else if (name.includes('title')) {
+                            mess = getAnimeRandom('quotes/anime?title=' + name.toLowerCase().substring(6).trim().split(" ").join("%20")).then((message) => {
+                            reply(message);
+                        }).catch((error) => {
+                            reply(error);
+                        });
+                        } else {
+                            getAnimeRandom('random').then((message) => {
+                                reply(message);
+                            }).catch((error) => {
+                                reply(error);
+                            })
+                        }
                         break;
 
                     case 'sticker':
