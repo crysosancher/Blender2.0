@@ -1,5 +1,4 @@
 const axios = require("axios");
-let url = '';
 const downloadholly = async (movie) => {
     const baseurl = "https://pronoob-movies.tk/wER?search=";
     let link = baseurl + movie.toUpperCase().split(" ").join("+");
@@ -14,7 +13,7 @@ const downloadholly = async (movie) => {
     for (let i = 0; i < word.length; i++) {
         if (word[i].startsWith("<a href")) {
             if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
-                url += " https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                let url += " https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
                 // console.log(url);
 
             }
@@ -41,7 +40,7 @@ const downloadbolly = async (movie) => {
     for (let i = 0; i < word.length; i++) {
         if (word[i].startsWith("<a href")) {
             if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
-                url += " https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                let url += " https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
                 // console.log(url);
 
             }
@@ -68,7 +67,7 @@ module.exports.downloadAll = async (movie) => {
     for (let i = 0; i < word.length; i++) {
         if (word[i].startsWith("<a href")) {
             if (word[i].endsWith('mkv"') || (word[i].endsWith('mp4"'))) {
-                url += " https://pronoob-aio.cf/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                let url += " https://pronoob-aio.cf/" + word[i].substr(9, word[i].length - 10) + "\n\n";
                 // console.log(url);
             }
         }
