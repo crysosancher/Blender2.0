@@ -1033,7 +1033,7 @@ async function main() {
                         if (!isGroup) return;
                         if(!args[0]) return reply(`Provide Movie name.`);
                         let movie = body.trim().split(/ +/).slice(1).join('+');
-                        let url = '';
+                        let Movieurl = '';
                         let k = 1;
                         const downloadholly = async (movie) => {
                             const baseurl = "https://pronoob-movies.tk/wER?search=";
@@ -1049,18 +1049,18 @@ async function main() {
                             for (let i = 0; i < word.length; i++) {
                                 if (word[i].startsWith("<a href")) {
                                     if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
-                                        url += k + " 🎬 https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                                        Movieurl += k + " 🎬 https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
                                         k++;
                                     }
                                 }
                             }
-                            if (url == '') {
+                            if (Movieurl == '') {
                                 console.log("Not Found");
                                 reply(`No Movie found. Try Write correct name or other moive.`);
                             }
                             else {
-                                reply(url);
-                                console.log(url.trim());
+                                reply(Movieurl);
+                                console.log(Movieurl.trim());
                             }
                         }
                         const downloadbolly = async (movie) => {
@@ -1077,7 +1077,7 @@ async function main() {
                             for (let i = 0; i < word.length; i++) {
                                 if (word[i].startsWith("<a href")) {
                                     if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
-                                        url += k + " 🎬 https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                                        Movieurl += k + " 🎬 https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
                                         k++;
                                     }
                                 }
@@ -1098,7 +1098,7 @@ async function main() {
                             for (let i = 0; i < word.length; i++) {
                                 if (word[i].startsWith("<a href")) {
                                     if (word[i].endsWith('mkv"') || (word[i].endsWith('mp4"'))) {
-                                        url += k + " 🎬 https://pronoob-aio.cf/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                                        Movieurl += k + " 🎬 https://pronoob-aio.cf/" + word[i].substr(9, word[i].length - 10) + "\n\n";
                                         k++;
                                     }
                                 }
