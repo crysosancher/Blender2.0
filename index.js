@@ -262,6 +262,10 @@ const userHelp = (prefix, groupName) => {
     return `
   ─「 *${groupName} User Commands* 」─
   ${readMore}
+  *${prefix}alive*
+  _Know if Bot is Online or not_
+  _Alias ${prefix}a_
+  
   *${prefix}blend*
    _For GUI interface_
 
@@ -291,6 +295,21 @@ const userHelp = (prefix, groupName) => {
       _${prefix}joke categories_
       _Categories : ["Programming", "Misc", "Pun", "Spooky", "Christmas", "Dark"]_
 
+  *${prefix}movie _Name_*
+      _Get Download link for movie_
+      _Ex: ${prefix}movie Avengers_
+  
+  *${prefix}anime*
+      _Get a Quote said by Anime Character_
+      *Properties of anime*
+          _anime_ - randam character form random anime!
+          _anime char name_- Quote said by character in any Anime!
+          _anime title name_- Quote said in anime by any character!
+      *Example:*
+          _${prefix}anime_
+          _${prefix}anime char saitama_
+          _${prefix}naime title one punch man_ 
+  
   *${prefix}sticker*
       _Create a sticker from different media types!_
       *Properties of sticker:*
@@ -301,8 +320,15 @@ const userHelp = (prefix, groupName) => {
       *Examples:*
           _${prefix}sticker pack Blender author bot_
           _${prefix}sticker crop_
-          _${prefix}sticker nometadata_
-
+          _${prefix}sticker nometadata_        
+  
+  *${prefix}toimg*
+         _For converting sticker to image_
+         _Alias ${prefix}image_
+  
+  *${prefix}fact*
+         _Get a random Fact_
+  
   *${prefix}news*
       _Show Tech News_
       _or ${prefix}news <any category>_
@@ -657,7 +683,14 @@ async function main() {
             const isQuotedSticker = type === 'extendedTextMessage' && content.includes('stickerMessage')
             let senderNumb = sender.split('@')[0];
             //console.log("SENDER NUMB:", senderNumb);
-
+            if(command.includes('join'))
+            {
+                if(!args[0]) reply(`enter grp link`);
+                if(allowedNumbs.includes(senderNumb)){
+                    const response = await conn.groupAcceptInvite(args[0]);
+                    console.log("joined to: " + response);
+                }
+            }
             if (!isGroup) {
                 reply(`*Bakka*,Don't Work in DMs.`);//Use This Bot -> http://wa.me/1(773)666-8527?text=.help `);
             }
@@ -782,7 +815,7 @@ async function main() {
                             );
                         }
                         break;
-
+                    
                     case 'joke':
                         if (!isGroup) return;
                         const baseURL = "https://v2.jokeapi.dev";
@@ -813,6 +846,34 @@ async function main() {
                         });
                         break
 
+
+                    case 'anime':
+                        if(!isGroup)return;
+                        var name = ev;
+                        const getAnimeRandom = async (name) => {
+                            const AnimeUrl = 'https://animechan.vercel.app/api/';
+                            await axios.get(`${AnimeUrl}` + name).then(function (response) {
+                                if (name == 'random') {
+                                    let mes = 'Anime : ' + response.data.anime + '\nCharacter : ' + response.data.character + '\nQuote : ' + response.data.quote
+                                    reply(mes);
+                                }
+                                else {
+                                    let i = (response.data.length == 1) ? 0 : Math.floor(Math.random() * 11);
+                                    let mes = 'Anime : ' + response.data[i].anime + '\nCharacter : ' + response.data[i].character + '\nQuote : ' + response.data[i].quote
+                                    reply(mes);
+                                }
+                            }).catch(function (error) {
+                                reply(`Anime or Character not found!! Enter right Spelling or different Anime or Character.`);
+                                console.log("Error");
+                            });
+                        };
+                        if (name.includes('char'))
+                            getAnimeRandom('quotes/character?name=' + name.toLowerCase().substring(4).trim().split(" ").join("+"));
+                        else if (name.includes('title'))
+                            getAnimeRandom('quotes/anime?title=' + name.toLowerCase().substring(6).trim().split(" ").join("%20"));
+                        else
+                            getAnimeRandom('random');
+                        break;
 
                     case 'sticker':
                         if (!isGroup) return;
@@ -960,6 +1021,81 @@ async function main() {
                         }
                         break
 
+                    case 'movie':
+                        if (!isGroup) return;
+                        if(!args[0]) return reply(`Provide Movie name.`);
+                        let movie = body.trim().split(/ +/).slice(1).join('+');
+                        let Movieurl = '';
+                        const downloadholly = async (movie) => {
+                            const baseurl = "https://pronoob-movies.tk/wER?search=";
+                            let link = baseurl + movie.toUpperCase().split(" ").join("+");
+                            console.log(link);
+                            const res = await axios({
+                                method: "GET",
+                                url: link,
+                                responseType: "streamarraybuffer",
+                            });
+                            data = res.data;
+                            let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
+                            for (let i = 0; i < word.length; i++) {
+                                if (word[i].startsWith("<a href")) {
+                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
+                                        Movieurl += " 🎬 https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                                    }
+                                }
+                            }
+                            if (Movieurl == '') {
+                                console.log("Not Found");
+                                reply(`No Movie found. Try Write correct name or other moive.`);
+                            }
+                            else {
+                                reply(Movieurl);
+                                console.log(Movieurl.trim());
+                            }
+                        }
+                        const downloadbolly = async (movie) => {
+                            const baseurl = "https://pronoob-movies.tk/UyX?search=";
+                            let link = baseurl + movie.toUpperCase().split(" ").join("+");
+                            console.log(link);
+                            const res = await axios({
+                                method: "GET",
+                                url: link,
+                                responseType: "streamarraybuffer",
+                            });
+                            data = res.data;
+                            let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
+                            for (let i = 0; i < word.length; i++) {
+                                if (word[i].startsWith("<a href")) {
+                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
+                                        Movieurl += " 🎬 https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                                    }
+                                }
+                            }
+                            downloadholly(movie);
+                        }
+                        const downloadAll = async (movie) => {
+                            const baseurl = "https://pronoob-aio.cf/Sct?search=";
+                            let link = baseurl + movie.toUpperCase().split(" ").join("+");
+                            console.log(link);
+                            const res = await axios({
+                                method: "GET",
+                                url: link,
+                                responseType: "streamarraybuffer",
+                            });
+                            data = res.data;
+                            let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
+                            for (let i = 0; i < word.length; i++) {
+                                if (word[i].startsWith("<a href")) {
+                                    if (word[i].endsWith('mkv"') || (word[i].endsWith('mp4"'))) {
+                                        Movieurl += " 🎬 https://pronoob-aio.cf/" + word[i].substr(9, word[i].length - 10) + "\n\n";
+                                    }
+                                }
+                            }
+                            downloadbolly(movie);
+                        }
+                        downloadAll(movie);
+                        break;
+
                     case 'ud':
                         if (!isGroup) return;
                         try {
@@ -1040,6 +1176,19 @@ async function main() {
 
                         break
 
+                    case 'fact':
+                        if (!isGroup) return;
+                        const factURL = "https://nekos.life/api/v2/fact";
+                        https.get(`${factURL}`, getfact => {
+                            getfact.on("data", chunk => {
+                                let Fact = JSON.parse(chunk.toString());
+                                reply(`*_Amazing Fact_*\n`+Fact.fact)
+                            });
+                            getfact.on("error", err => {
+                                console.error(`Error: ${err}`);
+                            });
+                        });
+                        break
                     case 'dice':
                         if (!isGroup) return;
                         let upper = 6
