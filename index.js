@@ -18,7 +18,8 @@ server.listen(port, () => {
 //loading plugins
 const { getGender } = require('./plugins/gender') //gender module
 const { getAnimeRandom } = require('./plugins/anime') //anime module
-const { getFact } = require('./fact') //fact module
+const { getFact } = require('./plugins/fact') //fact module
+const { downloadAll } = require('./plugins/movie') //movie module
 
 // LOAD Baileys
 const {
@@ -1022,75 +1023,11 @@ async function main() {
                         if (!isGroup) return;
                         if(!args[0]) return reply(`Provide Movie name.`);
                         let movie = body.trim().split(/ +/).slice(1).join('+');
-                        let Movieurl = '';
-                        const downloadholly = async (movie) => {
-                            const baseurl = "https://pronoob-movies.tk/wER?search=";
-                            let link = baseurl + movie.toUpperCase().split(" ").join("+");
-                            console.log(link);
-                            const res = await axios({
-                                method: "GET",
-                                url: link,
-                                responseType: "streamarraybuffer",
-                            });
-                            data = res.data;
-                            let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
-                            for (let i = 0; i < word.length; i++) {
-                                if (word[i].startsWith("<a href")) {
-                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
-                                        Movieurl += " 🎬 https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
-                                    }
-                                }
-                            }
-                            if (Movieurl == '') {
-                                console.log("Not Found");
-                                reply(`No Movie found. Try Write correct name or other moive.`);
-                            }
-                            else {
-                                reply(Movieurl);
-                                console.log(Movieurl.trim());
-                            }
-                        }
-                        const downloadbolly = async (movie) => {
-                            const baseurl = "https://pronoob-movies.tk/UyX?search=";
-                            let link = baseurl + movie.toUpperCase().split(" ").join("+");
-                            console.log(link);
-                            const res = await axios({
-                                method: "GET",
-                                url: link,
-                                responseType: "streamarraybuffer",
-                            });
-                            data = res.data;
-                            let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
-                            for (let i = 0; i < word.length; i++) {
-                                if (word[i].startsWith("<a href")) {
-                                    if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
-                                        Movieurl += " 🎬 https://pronoob-movies.tk/" + word[i].substr(9, word[i].length - 10) + "\n\n";
-                                    }
-                                }
-                            }
-                            downloadholly(movie);
-                        }
-                        const downloadAll = async (movie) => {
-                            const baseurl = "https://pronoob-aio.cf/Sct?search=";
-                            let link = baseurl + movie.toUpperCase().split(" ").join("+");
-                            console.log(link);
-                            const res = await axios({
-                                method: "GET",
-                                url: link,
-                                responseType: "streamarraybuffer",
-                            });
-                            data = res.data;
-                            let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
-                            for (let i = 0; i < word.length; i++) {
-                                if (word[i].startsWith("<a href")) {
-                                    if (word[i].endsWith('mkv"') || (word[i].endsWith('mp4"'))) {
-                                        Movieurl += " 🎬 https://pronoob-aio.cf/" + word[i].substr(9, word[i].length - 10) + "\n\n";
-                                    }
-                                }
-                            }
-                            downloadbolly(movie);
-                        }
-                        downloadAll(movie);
+                        downloadAll(movie).then((Message) => {
+                            reply(Message);
+                        }).catch((Error) => {
+                            reply(Error);
+                        })
                         break;
 
                     case 'ud':
