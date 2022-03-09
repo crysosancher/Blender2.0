@@ -20,7 +20,7 @@ const { getGender } = require('./plugins/gender') //gender module
 const { getAnimeRandom } = require('./plugins/anime') //anime module
 const { getFact } = require('./plugins/fact') //fact module
 const { downloadAll } = require('./plugins/movie') //movie module
-const { setCountWarning, getCountWarning } = require("./DB/warningDB") // warning module
+const { setCountWarning, getCountWarning } = require("./plugins/warningDB") // warning module
 
 // LOAD Baileys
 const {
