@@ -720,7 +720,7 @@ async function main() {
           //   reply(`❌ PVX admin only command!`);
           //   return;
           // }
-          if (!isGroupAdmins) {
+          if (!isGroupAdmins || allowedNumbs.includes(senderNumb)) {
             reply("❌ Admin command!");
             return;
           }
