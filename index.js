@@ -696,6 +696,7 @@ async function main() {
                             if (mentioned) {
                                 //when member are mentioned with command
                                 if (mentioned == botNumber) return reply(`Can't warn Bot`);
+                                if(mentioned== (allowedNumbs.includes.(mentioned[0].split("@s.whatsapp.net")[0]))) return reply(`Lmao U can't warn Mod or Owner`);
                                 if (mentioned.length === 1) {
                                     let warnCount = await getCountWarning(mentioned[0], from);
                                     let num_split = mentioned[0].split("@s.whatsapp.net")[0];
@@ -727,14 +728,15 @@ async function main() {
                                     mek.message.extendedTextMessage.contextInfo.participant,
                                 ];
                                 if (taggedMessageUser == botNumber) return reply(`Can't warn Bot`);
+                                if(taggedMessageUser== (allowedNumbs.includes.(taggedMessageUser[0].split("@s.whatsapp.net")[0]))) return reply(`Lmao U can't warn Mod or Owner`);
                                 let warnCount = await getCountWarning(taggedMessageUser[0], from);
                                 let num_split = taggedMessageUser[0].split("@s.whatsapp.net")[0];
+                                await setCountWarning(taggedMessageUser[0], from);
                                 let warnMsg = `@${num_split} ,Your have been warned. Warning status (${warnCount + 1
                                     }/3). Don't repeat this type of behaviour again or you'll be banned from group!`;
                                 conn.sendMessage(from, warnMsg, MessageType.extendedText, {
                                     contextInfo: { mentionedJid: taggedMessageUser },
                                 });
-                                await setCountWarning(taggedMessageUser[0], from);
                                 if (warnCount >= 2) {
                                     if (!isBotGroupAdmins) {
                                         reply("❌ I'm not Admin here!");
@@ -769,14 +771,14 @@ async function main() {
                             if (mentioned) {
                                 //when member are mentioned with command
                                 if (mentioned == botNumber) return reply(`Can't Block Bot`);
+                                if(mentioned== (allowedNumbs.includes.(mentioned[0].split("@s.whatsapp.net")[0]))) return reply(`Lmao U can't block Mod or Owner`);
                                 if (mentioned.length === 1) {
-                                    // let warnCount = await getBlockWarning(mentioned[0]);
                                     let num_split = mentioned[0].split("@s.whatsapp.net")[0];
+                                    await setBlockWarning(mentioned[0]);
                                     let warnMsg = `@${num_split} ,You have been Blocked To Use the Bot. Ask Owner or Mod to remove.`;
                                     conn.sendMessage(from, warnMsg, MessageType.extendedText, {
                                         contextInfo: { mentionedJid: mentioned },
                                     });
-                                    await setBlockWarning(mentioned[0]);
                                     reply(`Blocked`);
                                 } else {
                                     //if multiple members are tagged
@@ -788,13 +790,13 @@ async function main() {
                                     mek.message.extendedTextMessage.contextInfo.participant,
                                 ];
                                 if (taggedMessageUser == botNumber) return reply(`Can't Block Bot`);
-                                // let warnCount = await getBlockWarning(mentioned[0]);
+                                if(taggedMessageUser== (allowedNumbs.includes.(taggedMessageUser[0].split("@s.whatsapp.net")[0]))) return reply(`Lmao U can't block Mod or Owner`);
                                 let num_split = taggedMessageUser[0].split("@s.whatsapp.net")[0];
+                                await setCountWarning(taggedMessageUser[0]);
                                 let warnMsg = `@${num_split} ,You have been Blocked To Use the Bot. Ask Owner or Mod to remove.`;
                                 conn.sendMessage(from, warnMsg, MessageType.extendedText, {
                                     contextInfo: { mentionedJid: taggedMessageUser },
                                 });
-                                await setCountWarning(taggedMessageUser[0]);
                                 reply(`Blocked`);
                             }
                         } catch (err) {
