@@ -11,7 +11,7 @@ const yahooStockPrices = require('yahoo-stock-prices');
 const port = process.env.PORT || 8000;
 server.get('/', (req, res) => { res.send('V-Bot server running...') })
 server.listen(port, () => {
-    console.clear()
+//     console.clear()
     console.log('\nWeb-server running!\n')
 })
 
