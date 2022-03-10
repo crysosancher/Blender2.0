@@ -166,7 +166,7 @@ const saveInstaVideo = async (randomName, videoDirectLink) => {
 // BASIC SETTINGS
 prefix = '-';
 source_link = '```Base Link => https://github.com/crysosancher/Blender2.0```';
-Source_link_mod= '```Updated Link => https://github.com/jacktheboss220/Blender2.0```';
+source_link_mod = '```Updated Link => https://github.com/jacktheboss220/Blender2.0```';
 
 // LOAD CUSTOM FUNCTIONS
 const getGroupAdmins = (participants) => {
