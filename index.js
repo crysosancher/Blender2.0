@@ -206,6 +206,10 @@ const adminList = (prefix, groupName) => {
 
   *${prefix}removebot*
       _Remove bot from group!_
+  
+  *${prefix}warn _tag_*
+      _Give Waring to a person_
+      _Bot Will kick if person got 3 warning_
 
   *${prefix}tagall*
       _For attendance alert_(Testing phase)
@@ -637,14 +641,16 @@ async function main() {
             const isQuotedSticker = type === 'extendedTextMessage' && content.includes('stickerMessage')
             let senderNumb = sender.split('@')[0];
             //console.log("SENDER NUMB:", senderNumb);
-            if(command.includes('join'))
-            {
-                if(!args[0]) reply(`enter grp link`);
-                if(allowedNumbs.includes(senderNumb)){
-                    const response = await conn.groupAcceptInvite(args[0]);
-                    console.log("joined to: " + response);
-                }
+            let blockCommandsInDesc = []; //commands to be blocked
+            if (groupDesc) {
+                let firstLineDesc = groupDesc.split("\n")[0];
+                blockCommandsInDesc = firstLineDesc.split(",");
             }
+
+             if (blockCommandsInDesc.includes(command)) {
+                reply("❌ Command blocked for this group!");
+                return;
+             }
             if (!isGroup) {
                 reply(`*Bakka*,Don't Work in DMs.`);//Use This Bot -> http://wa.me/1(773)666-8527?text=.help `);
             }
@@ -671,7 +677,7 @@ async function main() {
           //   reply(`❌ PVX admin only command!`);
           //   return;
           // }
-          if (!isGroupAdmins || allowedNumbs.includes(senderNumb)) {
+          if (!isGroupAdmins || !(allowedNumbs.includes(senderNumb))) {
             reply("❌ Admin command!");
             return;
           }
@@ -684,6 +690,7 @@ async function main() {
               mek.message.extendedTextMessage.contextInfo.mentionedJid;
             if (mentioned) {
               //when member are mentioned with command
+                if( mentioned== botNumber) return reply(`Can't warn Bot`);
               if (mentioned.length === 1) {
                 let warnCount = await getCountWarning(mentioned[0], from);
                 let num_split = mentioned[0].split("@s.whatsapp.net")[0];
@@ -715,6 +722,7 @@ async function main() {
               let taggedMessageUser = [
                 mek.message.extendedTextMessage.contextInfo.participant,
               ];
+                if( taggedMessageUser == botNumber) return reply(`Can't warn Bot`);
               let warnCount = await getCountWarning(taggedMessageUser[0], from);
               let num_split = taggedMessageUser[0].split("@s.whatsapp.net")[0];
               let warnMsg = `@${num_split} ,Your have been warned. Warning status (${
