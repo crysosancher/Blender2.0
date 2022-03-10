@@ -651,11 +651,6 @@ async function main() {
 
             let blockCount = await getBlockWarning(sender);
             if (blockCount == 1) return reply(`You cann't use the bot as u are blocked.`);
-            
-            if (blockCommandsInDesc.includes(command)) {
-                reply("❌ Command blocked for this group!");
-                return;
-            }
             if (!isGroup) {
                 reply(`*Bakka*,Don't Work in DMs.`);//Use This Bot -> http://wa.me/1(773)666-8527?text=.help `);
             }
