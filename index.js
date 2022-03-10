@@ -641,6 +641,7 @@ async function main() {
             const isQuotedSticker = type === 'extendedTextMessage' && content.includes('stickerMessage')
             let senderNumb = sender.split('@')[0];
             //console.log("SENDER NUMB:", senderNumb);
+            let groupDesc = groupMetadata.desc;
             let blockCommandsInDesc = []; //commands to be blocked
             if (groupDesc) {
                 let firstLineDesc = groupDesc.split("\n")[0];
