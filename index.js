@@ -1347,7 +1347,7 @@ async function main() {
   automobile`)
                         break
                     case 'source':
-                        reply(`${source_link}`+`${source_link_mod}`)
+                        reply(`${source_link}\n\n${source_link_mod}`)
                         break
                     case 'list':
                         if (!isGroup) return;
