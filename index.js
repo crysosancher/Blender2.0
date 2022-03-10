@@ -651,7 +651,7 @@ async function main() {
 
             let blockCount = await getBlockWarning(sender);
             if (blockCount == 1) return reply(`You cann't use the bot as u are blocked.`);
-
+            
             if (blockCommandsInDesc.includes(command)) {
                 reply("❌ Command blocked for this group!");
                 return;
@@ -661,6 +661,10 @@ async function main() {
             }
             if (isCmd) {
                 console.log('[COMMAND]', command, '[FROM]', sender.split('@')[0], '[IN]', groupName, 'type=', typeof (args), hou, minu, sex)
+            if (blockCommandsInDesc.includes(command)) {
+                reply("❌ Command blocked for this group!");
+                return;
+            }
 
                 /////////////// COMMANDS \\\\\\\\\\\\\\\
                 switch (command) {
