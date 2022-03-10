@@ -21,7 +21,7 @@ const { getAnimeRandom } = require('./plugins/anime') //anime module
 const { getFact } = require('./plugins/fact') //fact module
 const { downloadAll } = require('./plugins/movie') //movie module
 const { setCountWarning, getCountWarning } = require("./plugins/warningDB") // warning module
-const { getInstaVideo } = require('./pugins/insta'); // insta module
+const { getInstaVideo } = require('./plugins/insta'); // insta module
 
 // LOAD Baileys
 const {
