@@ -844,7 +844,7 @@ async function main() {
                     case 'a':
                     case 'alive':
                         if (!isGroup) return;
-                        reply("```Yes vro!!!```\n Zinda hu Bas Kaam bol");
+                        reply("```🤖 Yes Vro 🤖```\n（づ￣3￣）づ╭❤️～\nZinda hu Bas Kaam bol");
                         break
                     case 'link':
                     case 'getlink':
