@@ -71,7 +71,7 @@ module.exports.userHelp = (prefix, groupName) => {
 
 *${prefix}news*
     _Show Tech News_
-    _or ${prefix}news < any category > _
+    _or ${prefix}news < any category >_
     _Use ${prefix}list for whole valid list_
     _category could be sports, business or anything_
 
