@@ -6,8 +6,8 @@
   "env": {
     "REMOVE_BG_KEY": {
       "description": "A Remove.bg api key.",
-      "generator": "secret"
-    },
+    }
+  },
   "buildpacks": [
     {
       "url": "https://github.com/heroku/heroku-buildpack-nodejs.git"
