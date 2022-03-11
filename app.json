@@ -5,7 +5,7 @@
   "keywords": ["whatsapp-bot", "blender-2.0"],
   "env": {
     "REMOVE_BG_KEY": {
-      "description": "A Remove.bg api key.",
+      "description": "A Remove.bg api key."
     },
   "buildpacks": [
     {
