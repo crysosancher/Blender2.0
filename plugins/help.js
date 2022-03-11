@@ -3,7 +3,7 @@ const readMore = more.repeat(4001);
 
 module.exports.userHelp = (prefix, groupName) => {
     return `
-    ─「 *${groupName} User Commands * 」─
+    ─「 *${groupName} User Commands* 」─
   ${readMore}
 
 *${prefix}alive*
@@ -102,7 +102,7 @@ module.exports.userHelp = (prefix, groupName) => {
     _show horoscope_
     eg:${prefix}horo pisces
 
-* ${prefix}tts*
+*${prefix}tts*
     _Changes Text to Sticker_
     eg:${prefix}tts we Love Dev
 
@@ -168,7 +168,7 @@ ${readMore}
 *${prefix}removebot*
     _Remove bot from group!_
   
-*${prefix}warn <@menrion>*
+*${prefix}warn <@mention>*
     _Give Waring to a person_
     _Bot Will kick if person got 3 warning_
 
