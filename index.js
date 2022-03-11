@@ -843,6 +843,7 @@ async function main() {
 
                     case 'a':
                     case 'alive':
+                        if(botNumber == sender.split('@')[0])reply(`Self`);
                         if (!isGroup) return;
                         reply("```🤖 Yes Vro 🤖```\n（づ￣3￣）づ╭❤️～\nZinda hu Bas Kaam bol");
                         break
