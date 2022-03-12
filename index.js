@@ -967,7 +967,7 @@ async function main() {
                         if (!args[0]) return reply(`Provide Movie name.`);
                         let movie = body.trim().split(/ +/).slice(1).join('+');
                         await downloadAll(movie).then((message) => {
-                            reply(`Here You Go =>\n\n`)
+                            reply(`Here You Go =>\n\n`+message);
                         }).catch(() => {
                             downloadbolly(movie).then((message) => {
                                 reply(`Here You Go => \n\n`+message);
@@ -976,7 +976,7 @@ async function main() {
                                     reply(`Here You Go => \n\n`+message);
                                 }).catch(() => {
                                     console.log("Not found!!");
-                                    reply(`Sorry No Movie Found`);
+                                    reply(`Sorry No Movie Found\nCheck your spelling or try another movie.`);
                                 })
                             })
                         })
