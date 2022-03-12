@@ -21,8 +21,3 @@
     }
   ]
 }
-  //"env": {
-    //"REMOVE_BG_KEY": {
-      //"description": "A Remove.bg api key."
-    //}
-  //},
