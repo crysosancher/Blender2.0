@@ -966,14 +966,14 @@ async function main() {
                         if (!isGroup) return;
                         if (!args[0]) return reply(`Provide Movie name.`);
                         let movie = body.trim().split(/ +/).slice(1).join('+');
-                        downloadAll(movie).then((message) => {
-                            console.log(message);
+                        await downloadAll(movie).then((message) => {
+                            reply(`Here You Go =>\n\n`)
                         }).catch(() => {
                             downloadbolly(movie).then((message) => {
-                                reply(`Here You Go => \n`+message);
+                                reply(`Here You Go => \n\n`+message);
                             }).catch(() => {
                                 downloadholly(movie).then((message) => {
-                                    reply(`Here You Go => \n`+message);
+                                    reply(`Here You Go => \n\n`+message);
                                 }).catch(() => {
                                     console.log("Not found!!");
                                     reply(`Sorry No Movie Found`);
