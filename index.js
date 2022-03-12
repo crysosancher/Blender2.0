@@ -23,7 +23,7 @@ const { downloadAll } = require('./plugins/movie') //movie module
 const { setCountWarning, getCountWarning } = require("./plugins/warningDB") // warning module
 const { getInstaVideo } = require('./plugins/insta') // insta module
 const { getBlockWarning, setBlockWarning, removeBlockWarning } = require('./plugins/blockDB') //block module 
-const { userHelp, StockList, adminList} = require('./plugins/help') //help module
+const { userHelp, StockList, adminList } = require('./plugins/help') //help module
 
 // LOAD Baileys
 const {
@@ -476,10 +476,10 @@ async function main() {
             }
             if (isCmd) {
                 console.log('[COMMAND]', command, '[FROM]', sender.split('@')[0], '[IN]', groupName, 'type=', typeof (args), hou, minu, sex)
-            if (blockCommandsInDesc.includes(command)) {
-                reply("❌ Command blocked for this group!");
-                return;
-            }
+                if (blockCommandsInDesc.includes(command)) {
+                    reply("❌ Command blocked for this group!");
+                    return;
+                }
 
                 /////////////// COMMANDS \\\\\\\\\\\\\\\
                 switch (command) {
@@ -511,7 +511,7 @@ async function main() {
                             if (mentioned) {
                                 //when member are mentioned with command
                                 if (mentioned == botNumber) return reply(`*Bakka* How I can _Warn_ Myself.😂`);
-                                if(mentioned == (allowedNumbs.includes(mentioned[0].split("@s.whatsapp.net")[0]))) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Warn Owner or Moderator 😊 *Bakka*`);
+                                if (mentioned == (allowedNumbs.includes(mentioned[0].split("@s.whatsapp.net")[0]))) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Warn Owner or Moderator 😊 *Bakka*`);
                                 if (mentioned.length === 1) {
                                     let warnCount = await getCountWarning(mentioned[0], from);
                                     let num_split = mentioned[0].split("@s.whatsapp.net")[0];
@@ -543,7 +543,7 @@ async function main() {
                                     mek.message.extendedTextMessage.contextInfo.participant,
                                 ];
                                 if (taggedMessageUser == botNumber) return reply(`*Bakka* How I can _Warn_ Myself.😂`);
-                                if(taggedMessageUser== (allowedNumbs.includes(taggedMessageUser[0].split("@s.whatsapp.net")[0]))) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Warn Owner or Moderator 😊 *Bakka*`);
+                                if (taggedMessageUser == (allowedNumbs.includes(taggedMessageUser[0].split("@s.whatsapp.net")[0]))) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Warn Owner or Moderator 😊 *Bakka*`);
                                 let warnCount = await getCountWarning(taggedMessageUser[0], from);
                                 let num_split = taggedMessageUser[0].split("@s.whatsapp.net")[0];
                                 await setCountWarning(taggedMessageUser[0], from);
@@ -586,7 +586,7 @@ async function main() {
                             if (mentioned) {
                                 //when member are mentioned with command
                                 if (mentioned == botNumber) return reply(`*Bakka* How I can _Block_ Myself.😂`);
-                                if(mentioned== (allowedNumbs.includes(mentioned[0].split("@s.whatsapp.net")[0]))) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Block Owner or Moderator 😊 *Bakka*`);
+                                if (mentioned == (allowedNumbs.includes(mentioned[0].split("@s.whatsapp.net")[0]))) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Block Owner or Moderator 😊 *Bakka*`);
                                 if (mentioned.length === 1) {
                                     let num_split = mentioned[0].split("@s.whatsapp.net")[0];
                                     await setBlockWarning(mentioned[0]);
@@ -605,7 +605,7 @@ async function main() {
                                     mek.message.extendedTextMessage.contextInfo.participant,
                                 ];
                                 if (taggedMessageUser == botNumber) return reply(`*Bakka* How I can _Block_ Myself.😂`);
-                                if(taggedMessageUser== (allowedNumbs.includes(taggedMessageUser[0].split("@s.whatsapp.net")[0]))) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Block Owner or Moderator 😊 *Bakka*`);
+                                if (taggedMessageUser == (allowedNumbs.includes(taggedMessageUser[0].split("@s.whatsapp.net")[0]))) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Block Owner or Moderator 😊 *Bakka*`);
                                 let num_split = taggedMessageUser[0].split("@s.whatsapp.net")[0];
                                 await setCountWarning(taggedMessageUser[0]);
                                 let warnMsg = `@${num_split} ,You have been Blocked To Use the Bot. Ask Owner or Mod to remove.`;
@@ -967,7 +967,7 @@ async function main() {
                         if (!args[0]) return reply(`Provide Movie name.`);
                         let movie = body.trim().split(/ +/).slice(1).join('+');
                         downloadAll(movie).then((Message) => {
-                            reply(` Here you go =>\n`+Message);
+                            reply(` Here you go =>\n` + Message);
                         }).catch((Error) => {
                             reply(Error);
                         })
