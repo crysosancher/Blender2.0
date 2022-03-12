@@ -1,12 +1,14 @@
 {
   "name": "BLENDER 2.0",
   "description": "nodejs baileys based whatsapp bot",
+  "logo": "https://i.ibb.co/8BMKcTQ/blender20.jpg",
   "repository": "https://github.com/jacktheboss220/Blender2.0",
   "keywords": ["whatsapp-bot", "blender-2.0"],
   "env": {
     "REMOVE_BG_KEY": {
-      "description": "A Remove.bg api key.",
-    },
+      "description": "A Remove.bg api key."
+    }
+  },
   "buildpacks": [
     {
       "url": "https://github.com/heroku/heroku-buildpack-nodejs.git"
