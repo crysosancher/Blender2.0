@@ -4,14 +4,14 @@ module.exports.downloadholly = async (movie) => {
     let link = baseurl + movie.toUpperCase().split(" ").join("+");
     let url = '';
     console.log(link);
+    const res = await axios({
+        method: "GET",
+        url: link,
+        responseType: "streamarraybuffer",
+    });
+    data = res.data;
+    let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
     try {
-        const res = await axios({
-            method: "GET",
-            url: link,
-            responseType: "streamarraybuffer",
-        });
-        data = res.data;
-        let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
         for (let i = 0; i < word.length; i++) {
             if (word[i].startsWith("<a href")) {
                 if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
@@ -21,31 +21,31 @@ module.exports.downloadholly = async (movie) => {
                 }
             }
         }
-        return new Promise((resolve, reject) => {
-            if (url == '')
-                reject('');
-            else
-                resolve(url);
-        })
     }
     catch (error) {
-        // url = '';
-        console.log('error');
+        console.log("Error");
     }
+    return new Promise((resolve, reject) => {
+        if (url == '')
+            reject('');
+        else
+            resolve(url);
+    })
+
 }
 module.exports.downloadbolly = async (movie) => {
     const baseurl = "https://pronoob-movies.tk/UyX?search=";
     let link = baseurl + movie.toUpperCase().split(" ").join("+");
     let url = '';
     console.log(link);
+    const res = await axios({
+        method: "GET",
+        url: link,
+        responseType: "streamarraybuffer",
+    });
+    data = res.data;
+    let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
     try {
-        const res = await axios({
-            method: "GET",
-            url: link,
-            responseType: "streamarraybuffer",
-        });
-        data = res.data;
-        let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
         for (let i = 0; i < word.length; i++) {
             if (word[i].startsWith("<a href")) {
                 if (word[i].endsWith('mkv"') || word[i].endsWith('mp4"')) {
@@ -54,32 +54,30 @@ module.exports.downloadbolly = async (movie) => {
                 }
             }
         }
-
-        return new Promise((resolve, reject) => {
-            if (url == '')
-                reject('');
-            else
-                resolve(url);
-        })
     }
     catch (error) {
-        // url = '';
-        console.log('error');
+        console.log("Error");
     }
+    return new Promise((resolve, reject) => {
+        if (url == '')
+            reject('');
+        else
+            resolve(url);
+    })
 }
 module.exports.downloadAll = async (movie) => {
     const baseurl = "https://pronoob-aio.cf/Sct?search=";
     let link = baseurl + movie.toUpperCase().split(" ").join("+");
     console.log(link);
     let url = '';
+    const res = await axios({
+        method: "GET",
+        url: link,
+        responseType: "streamarraybuffer",
+    });
+    data = res.data;
+    let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
     try {
-        const res = await axios({
-            method: "GET",
-            url: link,
-            responseType: "streamarraybuffer",
-        });
-        data = res.data;
-        let word = data.trim().replace(/^\s+|\s+$/gm, '').split("\n");
         for (let i = 0; i < word.length; i++) {
             if (word[i].startsWith("<a href")) {
                 if (word[i].endsWith('mkv"') || (word[i].endsWith('mp4"'))) {
@@ -88,15 +86,14 @@ module.exports.downloadAll = async (movie) => {
                 }
             }
         }
-        return new Promise((resolve, reject) => {
-            if (url == '')
-                reject('');
-            else
-                resolve(url);
-        })
     }
     catch (error) {
-        // url = '';
-        console.log('Error');
+        console.log("error");
     }
+    return new Promise((resolve, reject) => {
+        if (url == '')
+            reject('');
+        else
+            resolve(url);
+    })
 }
