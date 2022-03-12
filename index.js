@@ -19,7 +19,7 @@ server.listen(port, () => {
 const { getGender } = require('./plugins/gender') //gender module
 const { getAnimeRandom } = require('./plugins/anime') //anime module
 const { getFact } = require('./plugins/fact') //fact module
-const { downloadAll } = require('./plugins/movie') //movie module
+const { downloadAll, downloadholly, downloadbolly } = require("../plugins/movie") //movie module
 const { setCountWarning, getCountWarning } = require("./plugins/warningDB") // warning module
 const { getInstaVideo } = require('./plugins/insta') // insta module
 const { getBlockWarning, setBlockWarning, removeBlockWarning } = require('./plugins/blockDB') //block module 
@@ -966,10 +966,19 @@ async function main() {
                         if (!isGroup) return;
                         if (!args[0]) return reply(`Provide Movie name.`);
                         let movie = body.trim().split(/ +/).slice(1).join('+');
-                        downloadAll(movie).then((Message) => {
-                            reply(` Here you go =>\n`+Message);
-                        }).catch((Error) => {
-                            reply(Error);
+                        downloadAll(movie).then((message) => {
+                            console.log(message);
+                        }).catch(() => {
+                            downloadbolly(movie).then((message) => {
+                                reply(`Here You Go => \n`+message);
+                            }).catch(() => {
+                                downloadholly(movie).then((message) => {
+                                    reply(`Here You Go => \n`+message);
+                                }).catch(() => {
+                                    console.log("Not found!!");
+                                    reply(`Sorry No Movie Found`);
+                                })
+                            })
                         })
                         break;
 
