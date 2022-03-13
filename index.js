@@ -1178,24 +1178,25 @@ async function main() {
                         var url = args[0];
                         console.log(`${url}`)
                         try {
+                            let rany = getRandom(".mp4");
                             let info = await ytdl.getInfo(url)
-                            let videotitle = info.videoDetails.title;
                             const stream = ytdl(url, { filter: info => info.itag == 22 || info.itag == 18 })
-                                .pipe(fs.createWriteStream('./down.mp4'));
+                                .pipe(fs.createWriteStream(rany));
                             console.log("Video downloaded");
                             reply(`*Downloading Video.....*\n_This may take upto 1 to 2 min.._`);
                             await new Promise((resolve, reject) => {
                                 stream.on('error', reject)
                                 stream.on('finish', resolve)
-                            })
+                            });
+                            let videotitle = info.videoDetails.title;
                             await conn.sendMessage(
                                 from,
-                                fs.readFileSync('./down.mp4'),
+                                fs.readFileSync(rany),
                                 MessageType.video,
                                 { mimetype: Mimetype.mp4, caption: `${videotitle}`, quoted: mek }
-                            )
+                            );
                             console.log("Sent ")
-                            fs.unlinkSync('./down.mp4')
+                            fs.unlinkSync(rany)
                         } catch (error) {
                             reply(`Unable to download,contact dev.`);
                         }
