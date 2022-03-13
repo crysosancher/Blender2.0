@@ -1104,7 +1104,7 @@ async function main() {
                     case 'fact':
                         if (!isGroup) return;
                         getFact().then((message) => {
-                            reply(message);
+                            reply(`✍️(◔◡◔)*Amazing Fact\n*` + message);
                         }).catch((Error) => {
                             reply("Error");
                         })
@@ -1174,32 +1174,31 @@ async function main() {
 
                     case 'yt':
                         if (!isGroup) return;
+                        if (!args[0]) return reply(`Type url after ${prefix}yt`);
                         var url = args[0];
                         console.log(`${url}`)
-                        const dm = async (url) => {
-                            let info = ytdl.getInfo(url)
-                            let rany = getRandom('.mp4')
+                        try {
+                            let info = await ytdl.getInfo(url)
+                            let videotitle = info.videoDetails.title;
+                            reply(`*Downloading Video.....*\n_This may take upto 1 to 2 min.._`)
                             const stream = ytdl(url, { filter: info => info.itag == 22 || info.itag == 18 })
-                                .pipe(fs.createWriteStream(rany));
+                                .pipe(fs.createWriteStream('./down.mp4'));
                             console.log("Video downloaded")
                             await new Promise((resolve, reject) => {
                                 stream.on('error', reject)
                                 stream.on('finish', resolve)
-                            }).then(async (res) => {
-                                await conn.sendMessage(
-                                    from,
-                                    fs.readFileSync(rany),
-                                    MessageType.video,
-                                    { mimetype: Mimetype.mp4, caption: `😪😪`, quoted: mek }
-                                )
-                                console.log("Sent ")
-                                fs.unlinkSync(rany)
-                            }).catch((err) => {
-                                reply('Unable to download,contact dev.');
-                            });
-
+                            })
+                            await conn.sendMessage(
+                                from,
+                                fs.readFileSync('./down.mp4'),
+                                MessageType.video,
+                                { mimetype: Mimetype.mp4, caption: `${videotitle}`, quoted: mek }
+                            )
+                            console.log("Sent ")
+                            fs.unlinkSync('./down.mp4')
+                        } catch (error) {
+                            reply(`Unable to download,contact dev.`);
                         }
-                        dm(url)
                         break
                     case 'category':
                         if (!isGroup) return;
@@ -1218,7 +1217,7 @@ async function main() {
   automobile`)
                         break
                     case 'source':
-                        reply(`${source_link}\n\n${source_link_mod}`)
+                        reply(`${source_link}\n\n${source_link_mod}\nGive a _Star_ if you like the bot.❤️`)
                         break
                     case 'list':
                         if (!isGroup) return;
@@ -1254,7 +1253,7 @@ async function main() {
 
                         const button = {
                             buttonText: 'Blenders Magic ✨',
-                            description: "Enter inside my World 👽",
+                            description: "      Enter inside my World 👽",
                             sections: sections,
                             listType: 1
                         }
