@@ -9,17 +9,17 @@ const proConfig = {
 
 const pool = new Pool(proConfig);
 
-//create createCountWarningTable table if not there
+//create countblock table if not there
 const createBlockTable = async () => {
     await pool.query(
-        "CREATE TABLE IF NOT EXISTS countwarning(memberjid text , count integer);"
+        "CREATE TABLE IF NOT EXISTS countblock(memberjid text , count integer);"
     );
 };
 
 module.exports.getBlockWarning = async (memberjid) => {
     await createBlockTable();
     let result = await pool.query(
-        "SELECT count FROM countwarning WHERE memberjid=$1;",
+        "SELECT count FROM countblock WHERE memberjid=$1;",
         [memberjid]
     );
     if (result.rowCount) {
@@ -30,12 +30,12 @@ module.exports.getBlockWarning = async (memberjid) => {
 };
 
 module.exports.setBlockWarning = async (memberJid) => {
-    // if (!groupJid.endsWith("@g.us")) return;
+    if (!memberJid.endsWith("@g.us")) return;
     await createBlockTable();
 
     //check if groupjid is present in DB or not
     let result = await pool.query(
-        "select * from countwarning WHERE memberjid=$1;",
+        "select * from countblock WHERE memberjid=$1;",
         [memberJid]
     );
 
@@ -44,13 +44,13 @@ module.exports.setBlockWarning = async (memberJid) => {
         let count = result.rows[0].count;
 
         await pool.query(
-            "UPDATE countwarning SET count = 1 WHERE memberjid=$1;",
+            "UPDATE countblock SET count = 1 WHERE memberjid=$1;",
             [memberJid]
         );
         await pool.query("commit;");
         return count;
     } else {
-        await pool.query("INSERT INTO countwarning VALUES($1,$2);", [
+        await pool.query("INSERT INTO countblock VALUES($1,$2);", [
             memberJid,
             1,
         ]);
@@ -65,7 +65,7 @@ module.exports.removeBlockWarning = async (memberJid) => {
 
     //check if groupjid is present in DB or not
     let result = await pool.query(
-        "select * from countwarning WHERE memberjid=$1;",
+        "select * from countblock WHERE memberjid=$1;",
         [memberJid]
     );
 
@@ -74,13 +74,13 @@ module.exports.removeBlockWarning = async (memberJid) => {
         let count = result.rows[0].count;
 
         await pool.query(
-            "UPDATE countwarning SET count = 0 WHERE memberjid=$1;",
+            "UPDATE countblock SET count = 0 WHERE memberjid=$1;",
             [memberJid]
         );
         await pool.query("commit;");
         return count;
     } else {
-        await pool.query("INSERT INTO countwarning VALUES($1,$2);", [
+        await pool.query("INSERT INTO countblock VALUES($1,$2);", [
             memberJid,
             0,
         ]);
