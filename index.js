@@ -1193,7 +1193,7 @@ async function main() {
                                     from,
                                     fs.readFileSync(rany),
                                     MessageType.video,
-                                    { mimetype: Mimetype.mp4, caption: `${videotitle}`, quoted: mek }
+                                    { mimetype: Mimetype.mp4, caption: videotitle, quoted: mek }
                                 )
                                 console.log("Sent ")
                                 fs.unlinkSync(rany)
