@@ -1,4 +1,4 @@
-const {Pool} = require('pg');
+const { Pool } = require('pg');
 
 const proConfig = {
     connectionString: process.env.DATABASE_URL,

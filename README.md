@@ -76,10 +76,11 @@ Your bot will be deployed on heroku but still you need to install heroku locally
 | `-yt <YOutube Link>`  |       -                      | Download youtube videos|
 | `-yta <YOutube Link>` |       -                      | Download youtube audios|
 | `-idp <InstaHandle>`  |       -                      | Download Insta profile picture of your crush 😜 |
-|`-insta <InstapostUrl>`|       -                      | Download Insta media |
+|`-insta <InstapostUrl>`|       -`-i`                  | Download Insta media |
 |`-song <song name>`    |       -                      | Download song by just name! |
 |`-stock <stock name>`  |       -                      | Get latest stock price |
 |`-delete`              |       -                      | Delete the bot message |
+|`-warn`                |       -                      | Warn the user          |
 
 Explore more by using it eg:Get to know your Horoscope,news and a lot more fun.
 # Note:-
