@@ -1189,11 +1189,11 @@ async function main() {
                                 stream.on('error', reject)
                                 stream.on('finish', resolve)
                             }).then(async (res) => {
-                                await conn.sendMessage(
+                                conn.sendMessage(
                                     from,
                                     fs.readFileSync(rany),
                                     MessageType.video,
-                                    { mimetype: Mimetype.mp4, caption: videotitle, quoted: mek }
+                                    { mimetype: Mimetype.mp4, caption: `${videotitle}`, quoted: mek }
                                 )
                                 console.log("Sent ")
                                 fs.unlinkSync(rany)
