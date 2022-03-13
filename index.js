@@ -1199,7 +1199,6 @@ async function main() {
                         } catch (error) {
                             reply(`Unable to download,contact dev.`);
                         }
-                        dm(url)
                         break
                     case 'category':
                         if (!isGroup) return;
