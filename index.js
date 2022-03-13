@@ -20,7 +20,7 @@ const { getGender } = require('./plugins/gender') //gender module
 const { getAnimeRandom } = require('./plugins/anime') //anime module
 const { getFact } = require('./plugins/fact') //fact module
 const { downloadAll, downloadholly, downloadbolly } = require('./plugins/movie') //movie module
-const { setCountWarning, getCountWarning } = require('./plugins/warningDB') // warning module
+const { setCountWarning, getCountWarning, removeWarnCount } = require('./plugins/warningDB') // warning module
 const { getInstaVideo } = require('./plugins/insta') // insta module
 const { getBlockWarning, setBlockWarning, removeBlockWarning } = require('./plugins/blockDB') //block module 
 const { userHelp, StockList, adminList } = require('./plugins/help') //help module
@@ -570,6 +570,41 @@ async function main() {
                             reply(`❌ Error!`);
                         }
                         break;
+                    case 'unwarn':
+                        if (!(allowedNumbs.includes(senderNumb))) {
+                            reply("❌ Owner command!");
+                            return;
+                        }
+                        if (!mek.message.extendedTextMessage) {
+                            reply("❌ Tag someone!");
+                            return;
+                        }
+                        try {
+                            let mentioned =
+                                mek.message.extendedTextMessage.contextInfo.mentionedJid;
+                            if (mentioned) {
+                                //when member are mentioned with command
+                                if (mentioned.length === 1) {
+                                    await removeWarnCount(mentioned[0], from);
+                                    reply(`Set Warn Count to 0 for this user.`);
+                                }
+                                else {
+                                    //if multiple members are tagged
+                                    reply("❌ Mention only 1 member!");
+                                }
+                            } else {
+                                //when message is tagged with command
+                                let taggedMessageUser = [
+                                    mek.message.extendedTextMessage.contextInfo.participant,
+                                ];
+                                await removeWarnCount(taggedMessageUser[0], from);
+                                reply(`Set Warn Count to 0 for this user.`);
+                            }
+                        } catch (err) {
+                            console.log(err);
+                            reply(`❌ Error!`);
+                        }
+                        break;
 
                     case 'block':
                         if (!(allowedNumbs.includes(senderNumb))) {
@@ -967,13 +1002,13 @@ async function main() {
                         if (!args[0]) return reply(`Provide Movie name.`);
                         let movie = body.trim().split(/ +/).slice(1).join('+');
                         await downloadAll(movie).then((message) => {
-                            reply(`Here You Go =>\n\n`+message);
+                            reply(`Here You Go =>\n\n` + message);
                         }).catch(() => {
                             downloadbolly(movie).then((message) => {
-                                reply(`Here You Go => \n\n`+message);
+                                reply(`Here You Go => \n\n` + message);
                             }).catch(() => {
                                 downloadholly(movie).then((message) => {
-                                    reply(`Here You Go => \n\n`+message);
+                                    reply(`Here You Go => \n\n` + message);
                                 }).catch(() => {
                                     console.log("Not found!!");
                                     reply(`Sorry No Movie Found\nCheck your spelling or try another movie.`);
