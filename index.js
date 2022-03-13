@@ -1174,23 +1174,20 @@ async function main() {
 
                     case 'yt':
                         if (!isGroup) return;
-                        if (!args[0]) return reply(`type url after ${prefix}yt`);
+                        if (!args[0]) return reply(`Type url after ${prefix}yt`);
                         var url = args[0];
                         console.log(`${url}`)
-                        const dm = async (url) => {
+                        try {
+                            let info = await ytdl.getInfo(url)
+                            let videotitle = info.videoDetails.title;
                             const stream = ytdl(url, { filter: info => info.itag == 22 || info.itag == 18 })
                                 .pipe(fs.createWriteStream('./down.mp4'));
                             console.log("Video downloaded")
-                            reply(`*Downloading Video.....*\n_This may take upto 1 to 2 min.._`)
-                            return new Promise((resolve, reject) => {
+                            await new Promise((resolve, reject) => {
                                 stream.on('error', reject)
                                 stream.on('finish', resolve)
                             })
-                        }
-                        dm(url).then(async (res) => {
-                            let info = await ytdl.getInfo(url)
-                            let videotitle = info.videoDetails.title;
-                            console.log('inside send message');
+                            reply(`*Downloading Video.....*\n_This may take upto 1 to 2 min.._`)
                             await conn.sendMessage(
                                 from,
                                 fs.readFileSync('./down.mp4'),
@@ -1198,10 +1195,11 @@ async function main() {
                                 { mimetype: Mimetype.mp4, caption: `${videotitle}`, quoted: mek }
                             )
                             console.log("Sent ")
-                            fs.unlinkSync(rany)
-                        }).catch((err) => {
-                            reply('Unable to download,contact dev.');
-                        });
+                            fs.unlinkSync('./down.mp4')
+                        } catch (error) {
+                            reply(`Unable to download,contact dev.`);
+                        }
+                        dm(url)
                         break
                     case 'category':
                         if (!isGroup) return;
