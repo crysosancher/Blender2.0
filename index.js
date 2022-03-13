@@ -543,7 +543,7 @@ async function main() {
                                     mek.message.extendedTextMessage.contextInfo.participant,
                                 ];
                                 if (taggedMessageUser == botNumber) return reply(`*Bakka* How I can _Warn_ Myself.😂`);
-                                if (taggedMessageUser == (allowedNumbs.includes(taggedMessageUser[0].split('@')[0]))) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Warn Owner or Moderator 😊 *Bakka*`);
+                                if (allowedNumbs.includes(taggedMessageUser[0].split('@')[0])) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Warn Owner or Moderator 😊 *Bakka*`);
                                 if (!isGroupAdmins || !(allowedNumbs.includes(senderNumb))) {
                                     reply("❌ Admin command!");
                                     return;
@@ -621,7 +621,7 @@ async function main() {
                             if (mentioned) {
                                 //when member are mentioned with command
                                 if (mentioned == botNumber) return reply(`*Bakka* How I can _Block_ Myself.😂`);
-                                if (mentioned == (allowedNumbs.includes(mentioned[0].split('@')[0]))) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Block Owner or Moderator 😊 *Bakka*`);
+                                if (allowedNumbs.includes(mentioned[0].split('@')[0])) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Block Owner or Moderator 😊 *Bakka*`);
                                 if (!(allowedNumbs.includes(senderNumb))) {
                                     reply("❌ Owner command!");
                                     return;
@@ -644,7 +644,7 @@ async function main() {
                                     mek.message.extendedTextMessage.contextInfo.participant,
                                 ];
                                 if (taggedMessageUser == botNumber) return reply(`*Bakka* How I can _Block_ Myself.😂`);
-                                if (taggedMessageUser == (allowedNumbs.includes(taggedMessageUser[0].split('@')[0]))) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Block Owner or Moderator 😊 *Bakka*`);
+                                if (allowedNumbs.includes(taggedMessageUser[0].split('@')[0])) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Block Owner or Moderator 😊 *Bakka*`);
                                 if (!(allowedNumbs.includes(senderNumb))) {
                                     reply("❌ Owner command!");
                                     return;
