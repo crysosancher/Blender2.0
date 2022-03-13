@@ -7,7 +7,7 @@ module.exports.userHelp = (prefix, groupName) => {
   ${readMore}
 
 *${prefix}alive*
-    Know if Bot is Online or not_
+    _Know if Bot is Online or not_
     _Alias ${prefix}a_
 
 *${prefix}blend*

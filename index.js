@@ -1183,6 +1183,7 @@ async function main() {
                             const stream = ytdl(url, { filter: info => info.itag == 22 || info.itag == 18 })
                                 .pipe(fs.createWriteStream(rany));
                             console.log("Video downloaded")
+                            reply(`*Video Downloading .....*\n_This may take upto 1 to 2 min.._`)
                             await new Promise((resolve, reject) => {
                                 stream.on('error', reject)
                                 stream.on('finish', resolve)
