@@ -1104,7 +1104,7 @@ async function main() {
                     case 'fact':
                         if (!isGroup) return;
                         getFact().then((message) => {
-                            reply(`✍️(◔◡◔)*Amazing Fact\n*`+message);
+                            reply(`✍️(◔◡◔)*Amazing Fact\n*` + message);
                         }).catch((Error) => {
                             reply("Error");
                         })
@@ -1174,6 +1174,7 @@ async function main() {
 
                     case 'yt':
                         if (!isGroup) return;
+                        if (!args[0]) return reply(`type url after ${prefix}yt`);
                         var url = args[0];
                         console.log(`${url}`)
                         const dm = async (url) => {
