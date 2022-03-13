@@ -1177,26 +1177,28 @@ async function main() {
                         if (!args[0]) return reply(`Type url after ${prefix}yt`);
                         var url = args[0];
                         console.log(`${url}`)
-                        let rany = getRandom(".mp4");
-                        let info = await ytdl.getInfo(url)
-                        const stream = ytdl(url, { filter: info => info.itag == 22 || info.itag == 18 })
-                            .pipe(fs.createWriteStream(rany));
-                        console.log("Video downloaded");
-                        reply(`*Downloading Video.....*\n_This may take upto 1 to 2 min.._`);
-                        await new Promise((resolve, reject) => {
-                            stream.on('error', reject)
-                            stream.on('finish', resolve)
-                        });
-                        let videotitle = info.videoDetails.title;
-                        await conn.sendMessage(
-                            from,
-                            fs.readFileSync(rany),
-                            MessageType.video,
-                            { mimetype: Mimetype.mp4, caption: `${videotitle}`, quoted: mek }
-                        );
-                        console.log("Sent ")
-                        fs.unlinkSync(rany)
-                        // reply(`Unable to download,contact dev.`);
+                        try {
+                            let info = await ytdl.getInfo(url)
+                            let videotitle = info.videoDetails.title;
+                            reply(`*Downloading Video.....*\n_This may take upto 1 to 2 min.._`)
+                            const stream = ytdl(url, { filter: info => info.itag == 22 || info.itag == 18 })
+                                .pipe(fs.createWriteStream('./down.mp4'));
+                            console.log("Video downloaded")
+                            await new Promise((resolve, reject) => {
+                                stream.on('error', reject)
+                                stream.on('finish', resolve)
+                            })
+                            await conn.sendMessage(
+                                from,
+                                fs.readFileSync('./down.mp4'),
+                                MessageType.video,
+                                { mimetype: Mimetype.mp4, caption: `${videotitle}`, quoted: mek }
+                            )
+                            console.log("Sent ")
+                            fs.unlinkSync('./down.mp4')
+                        } catch (error) {
+                            reply(`Unable to download,contact dev.`);
+                        }
                         break
                     case 'category':
                         if (!isGroup) return;
