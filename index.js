@@ -1104,7 +1104,7 @@ async function main() {
                     case 'fact':
                         if (!isGroup) return;
                         getFact().then((message) => {
-                            reply(message);
+                            reply(`✍️(◔◡◔)*Amazing Fact\n*`+message);
                         }).catch((Error) => {
                             reply("Error");
                         })
@@ -1218,7 +1218,7 @@ async function main() {
   automobile`)
                         break
                     case 'source':
-                        reply(`${source_link}\n\n${source_link_mod}`)
+                        reply(`${source_link}\n\n${source_link_mod}\nGive a _Star_ if you like the bot.❤️`)
                         break
                     case 'list':
                         if (!isGroup) return;
@@ -1254,7 +1254,7 @@ async function main() {
 
                         const button = {
                             buttonText: 'Blenders Magic ✨',
-                            description: "Enter inside my World 👽",
+                            description: "      Enter inside my World 👽",
                             sections: sections,
                             listType: 1
                         }
