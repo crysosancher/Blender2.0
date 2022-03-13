@@ -497,6 +497,10 @@ async function main() {
                         break
 
                     case "warn":
+                        if (!mek.message.extendedTextMessage) {
+                            reply("❌ Tag someone!");
+                            return;
+                        }
                         try {
                             let mentioned =
                                 mek.message.extendedTextMessage.contextInfo.mentionedJid;
@@ -506,10 +510,6 @@ async function main() {
                                 if (mentioned == (allowedNumbs.includes(mentioned[0].split("@s.whatsapp.net")[0]))) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Warn Owner or Moderator 😊 *Bakka*`);
                                 if (!isGroupAdmins || !(allowedNumbs.includes(senderNumb))) {
                                     reply("❌ Admin command!");
-                                    return;
-                                }
-                                if (!mek.message.extendedTextMessage) {
-                                    reply("❌ Tag someone!");
                                     return;
                                 }
                                 if (mentioned.length === 1) {
@@ -546,10 +546,6 @@ async function main() {
                                 if (taggedMessageUser == (allowedNumbs.includes(taggedMessageUser[0].split("@s.whatsapp.net")[0]))) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Warn Owner or Moderator 😊 *Bakka*`);
                                 if (!isGroupAdmins || !(allowedNumbs.includes(senderNumb))) {
                                     reply("❌ Admin command!");
-                                    return;
-                                }
-                                if (!mek.message.extendedTextMessage) {
-                                    reply("❌ Tag someone!");
                                     return;
                                 }
                                 let warnCount = await getCountWarning(taggedMessageUser[0], from);
@@ -615,6 +611,10 @@ async function main() {
                         break;
 
                     case 'block':
+                        if (!mek.message.extendedTextMessage) {
+                            reply("❌ Tag someone!");
+                            return;
+                        }
                         try {
                             let mentioned =
                                 mek.message.extendedTextMessage.contextInfo.mentionedJid;
@@ -624,10 +624,6 @@ async function main() {
                                 if (mentioned == (allowedNumbs.includes(mentioned[0].split("@s.whatsapp.net")[0]))) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Block Owner or Moderator 😊 *Bakka*`);
                                 if (!(allowedNumbs.includes(senderNumb))) {
                                     reply("❌ Owner command!");
-                                    return;
-                                }
-                                if (!mek.message.extendedTextMessage) {
-                                    reply("❌ Tag someone!");
                                     return;
                                 }
                                 if (mentioned.length === 1) {
@@ -651,10 +647,6 @@ async function main() {
                                 if (taggedMessageUser == (allowedNumbs.includes(taggedMessageUser[0].split("@s.whatsapp.net")[0]))) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Block Owner or Moderator 😊 *Bakka*`);
                                 if (!(allowedNumbs.includes(senderNumb))) {
                                     reply("❌ Owner command!");
-                                    return;
-                                }
-                                if (!mek.message.extendedTextMessage) {
-                                    reply("❌ Tag someone!");
                                     return;
                                 }
                                 let num_split = taggedMessageUser[0].split("@s.whatsapp.net")[0];
