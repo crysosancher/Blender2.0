@@ -1178,12 +1178,13 @@ async function main() {
                         var url = args[0];
                         console.log(`${url}`)
                         const dm = async (url) => {
-                            let info = ytdl.getInfo(url)
+                            let info = await ytdl.getInfo(url)
+                            let videotitle = info.videoDetails.title;
                             let rany = getRandom('.mp4')
                             const stream = ytdl(url, { filter: info => info.itag == 22 || info.itag == 18 })
                                 .pipe(fs.createWriteStream(rany));
                             console.log("Video downloaded")
-                            reply(`*Video Downloading .....*\n_This may take upto 1 to 2 min.._`)
+                            reply(`*Downloading Video.....*\n_This may take upto 1 to 2 min.._`)
                             await new Promise((resolve, reject) => {
                                 stream.on('error', reject)
                                 stream.on('finish', resolve)
@@ -1192,7 +1193,7 @@ async function main() {
                                     from,
                                     fs.readFileSync(rany),
                                     MessageType.video,
-                                    { mimetype: Mimetype.mp4, caption: `😪😪`, quoted: mek }
+                                    { mimetype: Mimetype.mp4, caption: `${videotitle}`, quoted: mek }
                                 )
                                 console.log("Sent ")
                                 fs.unlinkSync(rany)
