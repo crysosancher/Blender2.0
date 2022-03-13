@@ -1182,12 +1182,12 @@ async function main() {
                             let videotitle = info.videoDetails.title;
                             const stream = ytdl(url, { filter: info => info.itag == 22 || info.itag == 18 })
                                 .pipe(fs.createWriteStream('./down.mp4'));
-                            console.log("Video downloaded")
+                            console.log("Video downloaded");
+                            reply(`*Downloading Video.....*\n_This may take upto 1 to 2 min.._`);
                             await new Promise((resolve, reject) => {
                                 stream.on('error', reject)
                                 stream.on('finish', resolve)
                             })
-                            reply(`*Downloading Video.....*\n_This may take upto 1 to 2 min.._`)
                             await conn.sendMessage(
                                 from,
                                 fs.readFileSync('./down.mp4'),
