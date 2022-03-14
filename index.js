@@ -743,28 +743,26 @@ async function main() {
                         );
                         break;
 
-                    // case 'meme':
-                    //     if (!isGroup) return;
-                    //     const memeURL = 'https://some-random-api.ml/meme';
-                    //     axios.get(`${memeURL}`).then((res) => {
-                    //         getMeme(res.data.image).then(() => {
-                    //             await conn.sendMessage(
-                    //                 from,
-                    //                 fs.readFileSync("./meme.jpg"),
-                    //                 MessageType.image,
-                    //                 {
-                    //                     mimetype: Mimetype.jpg,
-                    //                     caption: `Here.`,
-                    //                     quoted: mek,
-                    //                 }
-                    //             );
-                    //             fs.unlinkSync("./meme.jpg");
-                    //         })
-                    //     }).catch(() => {
-                    //         console.log('Error');
-                    //         reply(`Error`);
-                    //     });
-                    //     break;
+                    case 'meme':
+                        if (!isGroup) return;
+                        const memeURL = 'https://some-random-api.ml/meme';
+                        axios.get(`${memeURL}`).then((res) => {
+                            await conn.sendMessage(
+                                from,
+                                { url: res.data.image },
+                                MessageType.image,
+                                {
+                                    mimetype: Mimetype.jpg,
+                                    caption: `${res.data.caption}`,
+                                    quoted: mek,
+                                }
+                            );
+                            fs.unlinkSync("./meme.jpg");
+                        }).catch(() => {
+                            console.log('Error');
+                            reply(`Error`);
+                        });
+                        break;
 
                     case 'tagall':
                         if (!isGroup) return;
