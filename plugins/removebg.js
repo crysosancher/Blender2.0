@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const removebgAPI = process.env.REMOVE_BG_KEY; //'e8PFSTbSXCzHDLnaByartPSU';
 module.exports.getRemoveBg = async (Path) => {
-    const inputPath = `./${Path}.jpg`;
+    const inputPath = `./${Path}`;
     const formData = new FormData();
     formData.append('size', 'auto');
     formData.append('image_file', fs.createReadStream(inputPath), path.basename(inputPath));
@@ -19,9 +19,9 @@ module.exports.getRemoveBg = async (Path) => {
         },
         encoding: null
     }).then((response) => {
-        if (response.status != 200) return console.error('Error:', response.status, response.statusText);
+        if (response.status != 200) return console.log("error");
         fs.writeFileSync("./no-bg.png", response.data);
     }).catch((error) => {
-        return console.error('Request failed:', error);
+        return console.log("error");
     });
 }
