@@ -747,6 +747,8 @@ async function main() {
                         if (!isGroup) return;
                         const memeURL = 'https://some-random-api.ml/meme';
                         axios.get(`${memeURL}`).then((res) => {
+                            let title = 'Here.';
+                            if (res.data.caption) title = res.data.caption;
                             getMeme(res.data).then(() => {
                                 conn.sendMessage(
                                     from,
@@ -754,7 +756,7 @@ async function main() {
                                     MessageType.image,
                                     {
                                         mimetype: Mimetype.jpg,
-                                        caption: `${res.data.caption}`,
+                                        caption: `${title}`,
                                         quoted: mek,
                                     }
                                 );

@@ -6,7 +6,6 @@ module.exports.getMeme = async (url) => {
         url: url.image,
         responseType: 'stream'
     })
-    let name = url.caption;
     response.data.pipe(fs.createWriteStream("./meme.jpg"))
     return new Promise((resolve, reject) => {
         response.data.on('end', () => {
