@@ -492,9 +492,13 @@ async function main() {
                     case 'admin':
                         if (!isGroup) return;
                         await costum(adminList(prefix, groupName), text);
-                        break
+                        break;
 
-                    case "warn":
+                    case 'removebg':
+                        console.log(process.env.REMOVE_BG_KEY);
+                        break;
+
+                    case 'warn':
                         if (!mek.message.extendedTextMessage) {
                             reply("❌ Tag someone!");
                             return;
