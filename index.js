@@ -500,12 +500,13 @@ async function main() {
                         if ((isMedia && !mek.message.videoMessage || isQuotedImage)) {
                             const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(mek).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : mek
                             const media = await conn.downloadAndSaveMediaMessage(encmedia)
-                            console.log('enc ', encmedia);
                             console.log('media ', media);
                             getRemoveBg(media);
                             conn.sendMessage(
                                 from,
-                                fs.readFileSync("./bg.png"),
+                                {
+                                    url: "./bg.png"
+                                },
                                 MessageType.image,
                                 {
                                     mimetype: Mimetype.png,
