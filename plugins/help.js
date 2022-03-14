@@ -39,6 +39,9 @@ module.exports.userHelp = (prefix, groupName) => {
     _${prefix}joke categories_
     _Categories: Programming, Misc, Pun, Spooky, Christmas, Dark_
 
+*${prefix}meme*
+    _Get a random meme_
+
 *${prefix}movie _Name_*
     _Get Download link for movie_
     _Eg: ${prefix}movie Avengers_
