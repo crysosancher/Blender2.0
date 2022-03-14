@@ -20,9 +20,9 @@ const { getGender } = require('./plugins/gender') //gender module
 const { getAnimeRandom } = require('./plugins/anime') //anime module
 const { getFact } = require('./plugins/fact') //fact module
 const { downloadAll, downloadholly, downloadbolly } = require('./plugins/movie') //movie module
-const { setCountWarning, getCountWarning, removeWarnCount } = require('./plugins/warningDB') // warning module
+const { setCountWarning, getCountWarning, removeWarnCount } = require('./DB/warningDB') // warning module
 const { getInstaVideo } = require('./plugins/insta') // insta module
-const { getBlockWarning, setBlockWarning, removeBlockWarning } = require('./plugins/blockDB') //block module 
+const { getBlockWarning, setBlockWarning, removeBlockWarning } = require('./DB/blockDB') //block module 
 const { userHelp, StockList, adminList } = require('./plugins/help') //help module
 // const { getMeme } = require('./plugins/meme') //meme module
 
