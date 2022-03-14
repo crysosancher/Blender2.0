@@ -759,8 +759,7 @@ async function main() {
                             );
                             fs.unlinkSync("./meme.jpg");
                         }).catch(() => {
-                            console.log('Error');
-                            reply(`Error`);
+                            console.log('Error but meme send');
                         });
                         break;
 
