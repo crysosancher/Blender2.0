@@ -502,10 +502,10 @@ async function main() {
                             const media = await conn.downloadAndSaveMediaMessage(encmedia)
                             console.log('enc ', encmedia);
                             console.log('media ', media);
-                            // getRemoveBg(media);
+                            getRemoveBg(media);
                             conn.sendMessage(
                                 from,
-                                { url: media },
+                                fs.readFileSync("./bg.png"),
                                 MessageType.image,
                                 {
                                     mimetype: Mimetype.png,

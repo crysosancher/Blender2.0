@@ -20,7 +20,7 @@ module.exports.getRemoveBg = async (Path) => {
         encoding: null
     }).then((response) => {
         if (response.status != 200) return console.log("error");
-        fs.writeFileSync("./no-bg.png", response.data);
+        fs.writeFileSync("./bg.png", response.data);
     }).catch((error) => {
         return console.log("error");
     });
