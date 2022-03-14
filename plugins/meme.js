@@ -1,9 +1,9 @@
 const axios = require('axios');
 const fs = require('fs');
 module.exports.getMeme = async (url) => {
-    const response = await axios({
+    const response = await axios.get({
         method: 'GET',
-        url: url.image,
+        url: url,
         responseType: 'stream'
     })
     response.data.pipe(fs.createWriteStream("./meme.jpg"))
