@@ -501,7 +501,7 @@ async function main() {
                             const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(mek).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : mek
                             const media = await conn.downloadAndSaveMediaMessage(encmedia)
                             console.log('media ', media);
-                            getRemoveBg((media).then(() => {
+                            getRemoveBg(media).then(() => {
                                 conn.sendMessage(
                                     from,
                                     fs.readFileSync("./bg.png"),
@@ -512,8 +512,7 @@ async function main() {
                                         quoted: mek,
                                     }
                                 )
-                            })
-                            );
+                            });
 
                         }
                         else {
