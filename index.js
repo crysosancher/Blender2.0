@@ -747,7 +747,7 @@ async function main() {
                         if (!isGroup) return;
                         const memeURL = 'https://some-random-api.ml/meme';
                         axios.get(`${memeURL}`).then((res) => {
-                            getMeme(res.data).then(() => {
+                            getMeme(res.data.image).then(() => {
                                 await conn.sendMessage(
                                     from,
                                     fs.readFileSync("./meme.jpg"),
