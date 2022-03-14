@@ -24,7 +24,7 @@ const { setCountWarning, getCountWarning, removeWarnCount } = require('./plugins
 const { getInstaVideo } = require('./plugins/insta') // insta module
 const { getBlockWarning, setBlockWarning, removeBlockWarning } = require('./plugins/blockDB') //block module 
 const { userHelp, StockList, adminList } = require('./plugins/help') //help module
-const { getMeme } = require('./plugins/meme') //meme module
+// const { getMeme } = require('./plugins/meme') //meme module
 
 // LOAD Baileys
 const {
@@ -743,28 +743,28 @@ async function main() {
                         );
                         break;
 
-                    case 'meme':
-                        if (!isGroup) return;
-                        const memeURL = 'https://some-random-api.ml/meme';
-                        axios.get(`${memeURL}`).then((res) => {
-                            getMeme(res.data.image).then(() => {
-                                conn.sendMessage(
-                                    from,
-                                    fs.readFileSync("./meme.jpg"),
-                                    MessageType.image,
-                                    {
-                                        mimetype: Mimetype.jpg,
-                                        caption: `Here.`,
-                                        quoted: mek,
-                                    }
-                                );
-                                fs.unlinkSync("./meme.jpg");
-                            })
-                        }).catch(() => {
-                            console.log('Error');
-                            reply(`Error`);
-                        });
-                        break;
+                    // case 'meme':
+                    //     if (!isGroup) return;
+                    //     const memeURL = 'https://some-random-api.ml/meme';
+                    //     axios.get(`${memeURL}`).then((res) => {
+                    //         getMeme(res.data.image).then(() => {
+                    //             await conn.sendMessage(
+                    //                 from,
+                    //                 fs.readFileSync("./meme.jpg"),
+                    //                 MessageType.image,
+                    //                 {
+                    //                     mimetype: Mimetype.jpg,
+                    //                     caption: `Here.`,
+                    //                     quoted: mek,
+                    //                 }
+                    //             );
+                    //             fs.unlinkSync("./meme.jpg");
+                    //         })
+                    //     }).catch(() => {
+                    //         console.log('Error');
+                    //         reply(`Error`);
+                    //     });
+                    //     break;
 
                     case 'tagall':
                         if (!isGroup) return;

@@ -1,7 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 module.exports.getMeme = async (url) => {
-    const response = await axios.get({
+    const response = await axios({
         method: 'GET',
         url: url,
         responseType: 'stream'
