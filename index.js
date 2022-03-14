@@ -1024,16 +1024,16 @@ async function main() {
                         console.log("Movie : ", movie);
                         let MovieUrl = '';
                         await downloadAll(movie).then((message) => {
-                            MovieUrl += '🎬 ' + message + "\n";
+                            MovieUrl += '🎬 ' + message + "\n\n";
                         }).catch(() => { });
                         await downloadbolly(movie).then((message) => {
-                            MovieUrl += '🎬 ' + message + "\n";
+                            MovieUrl += '🎬 ' + message + "\n\n";
                         }).catch(() => { });
                         await downloadholly(movie).then((message) => {
-                            MovieUrl += '🎬 ' + message + "\n";
+                            MovieUrl += '🎬 ' + message + "\n\n";
                         }).catch(() => { });
                         if (MovieUrl != '')
-                            reply(`*Here are the direct link*😊\n\n` + MovieUrl);
+                            reply(`*Direct link for*😊 ${movie.split("+").join(" ")}\n\n` + MovieUrl);
                         else
                             reply(`*Sorry* No Movie Found\nCheck your _spelling or try another movie_.`);
                         break;
