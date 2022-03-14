@@ -1025,19 +1025,17 @@ async function main() {
                         let MovieUrl = '';
                         await downloadAll(movie).then((message) => {
                             MovieUrl += message;
+                        }).catch(() => { });
+                        await downloadbolly(movie).then((message) => {
+                            MovieUrl += message;
+                        }).catch(() => { });
+                        await downloadholly(movie).then((message) => {
+                            MovieUrl += message;
                         }).catch(() => {
-                            downloadbolly(movie).then((message) => {
-                                MovieUrl += message;
-                            }).catch(() => {
-                                downloadholly(movie).then((message) => {
-                                    MovieUrl += message;
-                                }).catch(() => {
-                                    console.log("Not found!!");
-                                    reply(`Sorry No Movie Found\nCheck your spelling or try another movie.`);
-                                })
-                            })
+                            console.log("Not found!!");
+                            reply(`Sorry No Movie Found\nCheck your spelling or try another movie.`);
                         })
-                        reply(`*Here are the direct link*😊` + MovieUrl);
+                        reply(`*Here are the direct link*\n\n😊` + MovieUrl);
                         break;
 
                     case 'ud':
