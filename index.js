@@ -748,7 +748,9 @@ async function main() {
                         const memeURL = 'https://some-random-api.ml/meme';
                         axios.get(`${memeURL}`).then((res) => {
                             let title = 'Here.';
-                            if (res.data.caption) title = res.data.caption;
+                            try {
+                                title = res.data.caption;
+                            } catch (error) { console.log(error); }
                             getMeme(res.data).then(() => {
                                 conn.sendMessage(
                                     from,
