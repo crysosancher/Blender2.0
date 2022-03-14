@@ -747,6 +747,7 @@ async function main() {
                         if (!isGroup) return;
                         const memeURL = 'https://some-random-api.ml/meme';
                         axios.get(`${memeURL}`).then((res) => {
+                            reply(`*Sending...*`);
                             conn.sendMessage(
                                 from,
                                 { url: res.data.image },
@@ -757,10 +758,9 @@ async function main() {
                                     quoted: mek,
                                 }
                             );
-                            fs.unlinkSync("./meme.jpg");
                         }).catch(() => {
                             console.log('Error');
-                            reply(`*Sending...*`);
+                            reply(`Eror. Contect Dev.`);
                         });
                         break;
 
