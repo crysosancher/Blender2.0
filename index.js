@@ -24,7 +24,8 @@ const { setCountWarning, getCountWarning, removeWarnCount } = require('./DB/warn
 const { getInstaVideo } = require('./plugins/insta') // insta module
 const { getBlockWarning, setBlockWarning, removeBlockWarning } = require('./DB/blockDB') //block module 
 const { userHelp, StockList, adminList } = require('./plugins/help') //help module
-// const { getMeme } = require('./plugins/meme') //meme module
+const { getRemoveBg } = require('./removebg'); // removebg module
+
 
 // LOAD Baileys
 const {
@@ -495,7 +496,25 @@ async function main() {
                         break;
 
                     case 'removebg':
-                        console.log(process.env.REMOVE_BG_KEY);
+                        if (!isGroup) return;
+                        if ((isMedia && !mek.message.videoMessage || isQuotedImage)) {
+                            const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(mek).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : mek
+                            const media = await conn.downloadAndSaveMediaMessage(encmedia)
+                            getRemoveBg(media);
+                            conn.sendMessage(
+                                from,
+                                { url: "./no-bg.png" },
+                                MessageType.image,
+                                {
+                                    mimetype: Mimetype.png,
+                                    caption: `Here.`,
+                                    quoted: mek,
+                                }
+                            )
+                        }
+                        else {
+                            reply(`reply to image only.`);
+                        }
                         break;
 
                     case 'warn':
