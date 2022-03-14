@@ -746,25 +746,22 @@ async function main() {
                     case 'meme':
                         if (!isGroup) return;
                         const memeURL = 'https://some-random-api.ml/meme';
-                        const meme = async () => {
-                            axios.get(`${memeURL}`).then((res) => {
-                                await conn.sendMessage(
-                                    from,
-                                    { url: res.data.image },
-                                    MessageType.image,
-                                    {
-                                        mimetype: Mimetype.jpg,
-                                        caption: `${res.data.caption}`,
-                                        quoted: mek,
-                                    }
-                                );
-                                fs.unlinkSync("./meme.jpg");
-                            }).catch(() => {
-                                console.log('Error');
-                                reply(`Error`);
-                            });
-                        }
-                        meme();
+                        axios.get(`${memeURL}`).then((res) => {
+                            conn.sendMessage(
+                                from,
+                                { url: res.data.image },
+                                MessageType.image,
+                                {
+                                    mimetype: Mimetype.jpg,
+                                    caption: `${res.data.caption}`,
+                                    quoted: mek,
+                                }
+                            );
+                            fs.unlinkSync("./meme.jpg");
+                        }).catch(() => {
+                            console.log('Error');
+                            reply(`Error`);
+                        });
                         break;
 
                     case 'tagall':
