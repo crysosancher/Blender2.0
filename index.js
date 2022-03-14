@@ -501,17 +501,20 @@ async function main() {
                             const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(mek).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : mek
                             const media = await conn.downloadAndSaveMediaMessage(encmedia)
                             console.log('media ', media);
-                            getRemoveBg(media);
-                            conn.sendMessage(
-                                from,
-                                fs.readFileSync("./bg.png"),
-                                MessageType.image,
-                                {
-                                    mimetype: Mimetype.png,
-                                    caption: `Here.`,
-                                    quoted: mek,
-                                }
-                            )
+                            getRemoveBg((media).then(() => {
+                                conn.sendMessage(
+                                    from,
+                                    fs.readFileSync("./bg.png"),
+                                    MessageType.image,
+                                    {
+                                        mimetype: Mimetype.png,
+                                        caption: `Here.`,
+                                        quoted: mek,
+                                    }
+                                )
+                            })
+                            );
+
                         }
                         else {
                             reply(`reply to image only.`);
