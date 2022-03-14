@@ -503,16 +503,16 @@ async function main() {
                             console.log('enc ', encmedia);
                             console.log('media ', media);
                             // getRemoveBg(media);
-                            // conn.sendMessage(
-                            //     from,
-                            //     { url: "./no-bg.png" },
-                            //     MessageType.image,
-                            //     {
-                            //         mimetype: Mimetype.png,
-                            //         caption: `Here.`,
-                            //         quoted: mek,
-                            //     }
-                            // )
+                            conn.sendMessage(
+                                from,
+                                { url: media },
+                                MessageType.image,
+                                {
+                                    mimetype: Mimetype.png,
+                                    caption: `Here.`,
+                                    quoted: mek,
+                                }
+                            )
                         }
                         else {
                             reply(`reply to image only.`);
