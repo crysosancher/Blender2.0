@@ -1022,20 +1022,22 @@ async function main() {
                         if (!args[0]) return reply(`Provide Movie name.`);
                         let movie = body.trim().split(/ +/).slice(1).join('+');
                         console.log("Movie : ", movie);
+                        let MovieUrl = '';
                         await downloadAll(movie).then((message) => {
-                            reply(`Here You Go =>\n\n` + message);
+                            MovieUrl += message;
                         }).catch(() => {
                             downloadbolly(movie).then((message) => {
-                                reply(`Here You Go => \n\n` + message);
+                                MovieUrl += message;
                             }).catch(() => {
                                 downloadholly(movie).then((message) => {
-                                    reply(`Here You Go => \n\n` + message);
+                                    MovieUrl += message;
                                 }).catch(() => {
                                     console.log("Not found!!");
                                     reply(`Sorry No Movie Found\nCheck your spelling or try another movie.`);
                                 })
                             })
                         })
+                        reply(`*Here are the direct link*😊` + MovieUrl);
                         break;
 
                     case 'ud':
