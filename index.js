@@ -504,9 +504,7 @@ async function main() {
                             getRemoveBg(media);
                             conn.sendMessage(
                                 from,
-                                {
-                                    url: "./bg.png"
-                                },
+                                fs.readFileSync("./bg.png"),
                                 MessageType.image,
                                 {
                                     mimetype: Mimetype.png,

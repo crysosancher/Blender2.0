@@ -8,7 +8,7 @@ module.exports.getRemoveBg = async (Path) => {
     const formData = new FormData();
     formData.append('size', 'auto');
     formData.append('image_file', fs.createReadStream(inputPath), path.basename(inputPath));
-    axios({
+    await axios({
         method: 'post',
         url: 'https://api.remove.bg/v1.0/removebg',
         data: formData,
