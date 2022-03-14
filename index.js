@@ -1024,13 +1024,13 @@ async function main() {
                         console.log("Movie : ", movie);
                         let MovieUrl = '';
                         await downloadAll(movie).then((message) => {
-                            MovieUrl += message + '\n';
+                            MovieUrl += '🎬 ' + message + "\n";
                         }).catch(() => { });
                         await downloadbolly(movie).then((message) => {
-                            MovieUrl += message + '\n';
+                            MovieUrl += '🎬 ' + message + "\n";
                         }).catch(() => { });
                         await downloadholly(movie).then((message) => {
-                            MovieUrl += message + '\n';
+                            MovieUrl += '🎬 ' + message + "\n";
                         }).catch(() => { });
                         if (MovieUrl != '')
                             reply(`*Here are the direct link*😊\n\n` + MovieUrl);
