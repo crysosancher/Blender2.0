@@ -1492,6 +1492,7 @@ async function main() {
                         try {
                             let randomName = getRandom(".mp3");
                             let query = args.join("%20");
+                            reply(`*Downloading song.....*\nThis may take upto 1 to 2 min.`);
                             let response = await downloadSong(randomName, query);
                             if (response == "NOT") {
                                 reply(
