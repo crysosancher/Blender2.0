@@ -748,7 +748,7 @@ async function main() {
                         const memeURL = 'https://some-random-api.ml/meme';
                         axios.get(`${memeURL}`).then((res) => {
                             getMeme(res.data).then(() => {
-                                conn.sendMessage(
+                                await conn.sendMessage(
                                     from,
                                     fs.readFileSync("./meme.jpg"),
                                     MessageType.image,
