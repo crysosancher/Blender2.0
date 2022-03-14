@@ -500,7 +500,7 @@ async function main() {
                         if ((isMedia && !mek.message.videoMessage || isQuotedImage)) {
                             const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(mek).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : mek
                             const media = await conn.downloadAndSaveMediaMessage(encmedia)
-                            console.log('media ', media);
+                            reply(`*Removing Backgroung....*`);
                             getRemoveBg(media).then(() => {
                                 conn.sendMessage(
                                     from,
@@ -508,7 +508,7 @@ async function main() {
                                     MessageType.image,
                                     {
                                         mimetype: Mimetype.png,
-                                        caption: `Here.`,
+                                        caption: `*Removed!!*`,
                                         quoted: mek,
                                     }
                                 )
