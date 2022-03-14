@@ -1351,6 +1351,7 @@ async function main() {
 
                         try {
                             console.log("Video downloading ->", urlInsta);
+                            reply(`*Downloading...*`);
                             // console.log("Trying saving", urlInsta);
                             let { imgDirectLink, videoDirectLink } = await getInstaVideo(
                                 urlInsta
@@ -1363,7 +1364,6 @@ async function main() {
                                 // Convert the file size to megabytes (optional)
                                 let fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
                                 console.log("Video downloaded ! Size: " + fileSizeInMegabytes);
-                                reply(`*Downloading...*`);
                                 //  { caption: "hello there!", mimetype: Mimetype.mp4 }
                                 // quoted: mek for tagged
                                 if (fileSizeInMegabytes <= 40) {
