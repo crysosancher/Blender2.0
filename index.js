@@ -1024,18 +1024,18 @@ async function main() {
                         console.log("Movie : ", movie);
                         let MovieUrl = '';
                         await downloadAll(movie).then((message) => {
-                            MovieUrl += message;
+                            MovieUrl += message + '\n';
                         }).catch(() => { });
                         await downloadbolly(movie).then((message) => {
-                            MovieUrl += message;
+                            MovieUrl += message + '\n';
                         }).catch(() => { });
                         await downloadholly(movie).then((message) => {
-                            MovieUrl += message;
-                        }).catch(() => {
-                            console.log("Not found!!");
-                            reply(`Sorry No Movie Found\nCheck your spelling or try another movie.`);
-                        })
-                        reply(`*Here are the direct link*\n\n😊` + MovieUrl);
+                            MovieUrl += message + '\n';
+                        }).catch(() => { });
+                        if (MovieUrl != '')
+                            reply(`*Here are the direct link*😊\n\n` + MovieUrl);
+                        else
+                            reply(`*Sorry* No Movie Found\nCheck your _spelling or try another movie_.`);
                         break;
 
                     case 'ud':
