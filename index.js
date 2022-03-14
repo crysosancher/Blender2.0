@@ -480,12 +480,9 @@ async function main() {
                     reply("❌ Command blocked for this group!");
                     return;
                 }
-
                 /////////////// COMMANDS \\\\\\\\\\\\\\\
                 switch (command) {
-
                     /////////////// HELP \\\\\\\\\\\\\\\
-
                     case 'help':
                     case 'acmd':
                         if (!isGroup) return;
@@ -506,6 +503,7 @@ async function main() {
                                 mek.message.extendedTextMessage.contextInfo.mentionedJid;
                             if (mentioned) {
                                 //when member are mentioned with command
+                                console.log("Target : ", mentioned);
                                 if (mentioned == botNumber) return reply(`*Bakka* How I can _Warn_ Myself.😂`);
                                 if (allowedNumbs.includes(mentioned[0].split('@')[0])) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Warn Owner or Moderator 😊 *Bakka*`);
                                 if (!isGroupAdmins || !(allowedNumbs.includes(senderNumb))) {
@@ -542,6 +540,7 @@ async function main() {
                                 let taggedMessageUser = [
                                     mek.message.extendedTextMessage.contextInfo.participant,
                                 ];
+                                console.log("Target : ", taggedMessageUser);
                                 if (taggedMessageUser == botNumber) return reply(`*Bakka* How I can _Warn_ Myself.😂`);
                                 if (allowedNumbs.includes(taggedMessageUser[0].split('@')[0])) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Warn Owner or Moderator 😊 *Bakka*`);
                                 if (!isGroupAdmins || !(allowedNumbs.includes(senderNumb))) {
@@ -620,6 +619,7 @@ async function main() {
                                 mek.message.extendedTextMessage.contextInfo.mentionedJid;
                             if (mentioned) {
                                 //when member are mentioned with command
+                                console.log("Target : ", mentioned);
                                 if (mentioned == botNumber) return reply(`*Bakka* How I can _Block_ Myself.😂`);
                                 if (allowedNumbs.includes(mentioned[0].split('@')[0])) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Block Owner or Moderator 😊 *Bakka*`);
                                 if (!(allowedNumbs.includes(senderNumb))) {
@@ -643,6 +643,7 @@ async function main() {
                                 let taggedMessageUser = [
                                     mek.message.extendedTextMessage.contextInfo.participant,
                                 ];
+                                console.log("Target : ", taggedMessageUser);
                                 if (taggedMessageUser == botNumber) return reply(`*Bakka* How I can _Block_ Myself.😂`);
                                 if (allowedNumbs.includes(taggedMessageUser[0].split('@')[0])) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Block Owner or Moderator 😊 *Bakka*`);
                                 if (!(allowedNumbs.includes(senderNumb))) {
@@ -744,12 +745,10 @@ async function main() {
                     case 'tagall':
                         if (!isGroup) return;
                         console.log("SENDER NUMB:", senderNumb);
-
                         if (allowedNumbs.includes(senderNumb) || isGroupAdmins) {
                             let jids = [];
                             let mesaj = (!args[0]) ? '' : ev + '\n\n';
                             var id;
-
                             for (let i of groupMembers) {
                                 mesaj += '⟪ @' + i.id.split('@')[0] + ' \n';
                                 jids.push(i.id.replace('c.us', 's.whatsapp.net'));
@@ -808,6 +807,7 @@ async function main() {
                         const baseURL = "https://v2.jokeapi.dev";
                         const categories = (!args[0]) ? "Any" : args[0];
                         const params = "blacklistFlags=religious,racist";
+                        console.log("Cate : ", categories);
                         https.get(`${baseURL}/joke/${categories}?${params}`, res => {
                             console.log("\n");
                             res.on("data", chunk => {
@@ -831,12 +831,12 @@ async function main() {
                                 console.error(`Error: ${err}`);
                             });
                         });
-                        break
-
+                        break;
 
                     case 'anime':
                         if (!isGroup) return;
                         var name = ev;
+                        console.log("Args : ", name);
                         if (name.includes('name')) {
                             getAnimeRandom('quotes/character?name=' + name.toLowerCase().substring(4).trim().split(" ").join("+")).then((message) => {
                                 reply(message);
@@ -861,11 +861,9 @@ async function main() {
                     case 'sticker':
                     case 's':
                         if (!isGroup) return;
-
                         // Format should be <prefix>sticker pack <pack_name> author <author_name>
                         var packName = ""
                         var authorName = ""
-
                         // Check if pack keyword is found in args!
                         if (args.includes('pack') == true) {
                             packNameDataCollection = false;
@@ -887,8 +885,6 @@ async function main() {
                                 packName = `${packName.split('pack ')[1]}`
                             }
                         }
-
-
                         // Check if author keyword is found in args!
                         if (args.includes('author') == true) {
                             authorNameDataCollection = false;
@@ -907,7 +903,6 @@ async function main() {
                                 }
                             }
                         }
-
                         // Check if packName and authorName is empty it will pass default values!
                         if (packName == "") {
                             packName = "Blender"
@@ -915,7 +910,6 @@ async function main() {
                         if (authorName == "") {
                             authorName = "2.0"
                         }
-
                         outputOptions = [`-vcodec`, `libwebp`, `-vf`, `scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse`];
                         if ((args.includes('crop') == true) || (args.includes('c') == true)) {
                             outputOptions = [
@@ -938,7 +932,6 @@ async function main() {
                                 `512:512`
                             ];
                         }
-
                         if ((isMedia && !mek.message.videoMessage || isQuotedImage)) {
                             const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(mek).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : mek
                             const media = await conn.downloadAndSaveMediaMessage(encmedia)
@@ -957,7 +950,6 @@ async function main() {
                                 .addOutputOptions(outputOptions)
                                 .toFormat('webp')
                                 .save(ran)
-
                             async function buildSticker() {
                                 if (args.includes('nometadata') == true) {
                                     conn.sendMessage(from, fs.readFileSync(ran), sticker, { quoted: mek })
@@ -970,7 +962,6 @@ async function main() {
                                     fs.unlinkSync(ran)
                                 }
                             }
-
                         } else if ((isMedia && mek.message.videoMessage.seconds < 11 || isQuotedVideo && mek.message.extendedTextMessage.contextInfo.quotedMessage.videoMessage.seconds < 11)) {
                             const encmedia = isQuotedVideo ? JSON.parse(JSON.stringify(mek).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : mek
                             const media = await conn.downloadAndSaveMediaMessage(encmedia)
@@ -989,7 +980,6 @@ async function main() {
                                 .addOutputOptions(outputOptions)
                                 .toFormat('webp')
                                 .save(ran)
-
                             async function buildSticker() {
                                 if (args.includes('nometadata') == true) {
                                     conn.sendMessage(from, fs.readFileSync(ran), sticker, { quoted: mek })
@@ -1003,12 +993,13 @@ async function main() {
                                 }
                             }
                         }
-                        break
+                        break;
 
                     case 'movie':
                         if (!isGroup) return;
                         if (!args[0]) return reply(`Provide Movie name.`);
                         let movie = body.trim().split(/ +/).slice(1).join('+');
+                        console.log("Movie : ", movie);
                         await downloadAll(movie).then((message) => {
                             reply(`Here You Go =>\n\n` + message);
                         }).catch(() => {
@@ -1032,7 +1023,6 @@ async function main() {
                             let term = result[0].word;
                             let def = result[0].definition;
                             let example = result[0].example;
-
                             reply(`*Term*: ${term} 
   *Definition*: ${def}
   *Example*: ${example}`);
@@ -1040,8 +1030,8 @@ async function main() {
                         catch {
                             reply("🙇‍♂️ Sorry to say but this word/creature does not exist")
                         }
+                        break;
 
-                        break
                     case 'idp':
                         let prof = args[0];
                         axios.get(`https://www.instagram.com/${prof}/?__a=1`, {
@@ -1098,8 +1088,7 @@ async function main() {
                                 reply(`Unexpected Downfall,can Retry after 5 sec..`);
                             });
                         }
-
-                        break
+                        break;
 
                     case 'fact':
                         if (!isGroup) return;
@@ -1108,14 +1097,15 @@ async function main() {
                         }).catch((Error) => {
                             reply("Error");
                         })
-                        break
+                        break;
+
                     case 'dice':
                         if (!isGroup) return;
                         let upper = 6
                         let lower = 1
                         let myRandom = Math.floor(Math.random() * (upper - lower + 1) + lower)
                         reply(`Hey,Your luck gives you:\n🎲${myRandom}🎲`)
-                        break
+                        break;
 
                     case 'horo':
                         if (!isGroup) return;
@@ -1135,7 +1125,7 @@ async function main() {
  *Lucky Number*:-${callhoro.lucky_number}
  *Lucky time*:-${callhoro.lucky_time}                       `)
                         }
-                        break
+                        break;
 
                     case 'dic':
                         if (!isGroup) return;
@@ -1147,8 +1137,7 @@ async function main() {
   *Pronounciation*:- ${dick.phonetic}
   *Meaning*: ${dick.meanings[0].definitions[0].definition}
   *Example*: ${dick.meanings[0].definitions[0].example}`)
-                        break
-
+                        break;
 
                     /* ------------------------------- CASE: GENDER ------------------------------ */
                     case "gender":
@@ -1165,6 +1154,7 @@ async function main() {
                             reply(`❌ Don't tag! \nSend ${prefix}gender firstname`);
                             return;
                         }
+                        console.log('Name : ', name);
                         getGender(namePerson).then((message) => {
                             reply(message);
                         }).catch((error) => {
@@ -1276,8 +1266,6 @@ async function main() {
                         }
 
                         const sendBMsg = await conn.sendMessage(from, buttonMessage, MessageType.buttonsMessage)
-
-
                         break;
 
                     case 'yta':
@@ -1290,6 +1278,7 @@ async function main() {
                             const stream = ytdl(url1, { filter: info => info.audioBitrate == 160 || info.audioBitrate == 128 })
                                 .pipe(fs.createWriteStream(sany));
                             console.log("audio downloaded")
+                            reply('*Downloading Audio.....*\nThis may take upto 1 or 2 min.');
                             await new Promise((resolve, reject) => {
                                 stream.on('error', reject)
                                 stream.on('finish', resolve)
@@ -1302,20 +1291,15 @@ async function main() {
                                 ).then((resolved) => {
                                     console.log("Sent ")
                                     fs.unlinkSync(sany)
+                                }).catch((reject) => {
+                                    reply('Audio Not Found or unable to download.')
                                 })
-
-                                    .catch((reject) => {
-                                        reply`Enable to download send a valid req`
-                                    })
-
                             }).catch((err) => {
                                 reply`Unable to download,contact dev.`;
                             });
-
                         }
                         am(url1)
-                        break
-
+                        break;
 
                     /* ------------------------------- CASE: INSTA ------------------------------ */
                     case "insta":
@@ -1357,7 +1341,7 @@ async function main() {
                                 // Convert the file size to megabytes (optional)
                                 let fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
                                 console.log("Video downloaded ! Size: " + fileSizeInMegabytes);
-
+                                reply(`*Downloading...*`);
                                 //  { caption: "hello there!", mimetype: Mimetype.mp4 }
                                 // quoted: mek for tagged
                                 if (fileSizeInMegabytes <= 40) {
@@ -1388,7 +1372,7 @@ async function main() {
                             console.log(err);
                             reply(`❌ There is some problem.`);
                         }
-                        break
+                        break;
 
                     //Eval Try to avoid this function 
                     case 'devil':
@@ -1403,8 +1387,6 @@ async function main() {
                         console.log(store);
                         var store2 = JSON.stringify(store);
                         reply(`${store2}`);
-
-
                         break;
 
                     case 'price':
@@ -1430,14 +1412,15 @@ async function main() {
                         }).catch((err) => {
                             console.log(err);
                         });
+                        break;
 
-                        break
                     case 'stocks':
                     case 'stock': {
                         const s3 = await daaa(args[0].toUpperCase());
                         reply(`${s3}`)
                         break;
                     }
+
                     case 'mmi':
                         await conn.sendMessage(
                             from,
@@ -1469,9 +1452,8 @@ async function main() {
                         }).catch((err) => {
                             reply("nahi chala");
                         })
+                        break;
 
-
-                        break
                     /* ------------------------------- CASE: DELETE ------------------------------ */
                     case "delete":
                     case "d":
@@ -1495,9 +1477,7 @@ async function main() {
                             console.log(err);
                             reply(`❌ Error!`);
                         }
-                        break
-
-
+                        break;
 
                     /* ------------------------------- CASE: SONG ------------------------------ */
                     case "song":
@@ -1520,7 +1500,6 @@ async function main() {
                                 return;
                             }
                             console.log(`song saved-> ./${randomName}`, response);
-
                             await conn.sendMessage(
                                 from,
                                 fs.readFileSync(`./${randomName}`),
@@ -1536,8 +1515,7 @@ async function main() {
                             console.log(err);
                             reply(`❌ There is some problem.`);
                         }
-                        break
-
+                        break;
 
                     /////////////// ADMIN COMMANDS \\\\\\\\\\\\\\\
                     //reply = reply with tag 
@@ -1550,14 +1528,11 @@ async function main() {
                             break
                         }
                         console.log("SENDER NUMB:", senderNumb);
-
                         if (allowedNumbs.includes(senderNumb)) {
-
                             let count = Number(args[0]);
                             let msgToSpam = args[1];
                             let i = 0;
                             for (i = 2; i < args.length; ++i) msgToSpam += " " + args[i];
-
                             console.log("MSG TO SPAM: ", msgToSpam);
                             i = 0
                             while (i < count && i < 100) {
@@ -1569,7 +1544,7 @@ async function main() {
                         else {
                             await reply("*Baka* NOT ALLOWED TO SPAM,Contact Developers!");
                         }
-                        break
+                        break;
 
                     case 'news':
                         if (!isGroup) return;
@@ -1582,7 +1557,7 @@ async function main() {
                             let news = await getNews();
                             reply(news);
                         }
-                        break
+                        break;
 
                     case 'add':
                         if (!isGroup) return;
@@ -1643,12 +1618,12 @@ async function main() {
                             return;
                         } else {
                             conn.groupRemove(from, mentioned)
+                            reply(`✔️ *Removed*`);
                         }
                         break;
 
                     case 'promote':
                         if (!isGroup) return;
-
                         if (!isGroupAdmins) {
                             reply("Saale khud ko admin samjhta hai kya?😂");
                             return;
@@ -1661,6 +1636,7 @@ async function main() {
                             return;
                         } else {
                             conn.groupMakeAdmin(from, mentioned)
+                            reply(`✔️ *Promoted*`)
                         }
                         break;
 
@@ -1678,6 +1654,7 @@ async function main() {
                             return;
                         } else {
                             conn.groupDemoteAdmin(from, mentioned)
+                            reply(`✔️ *Demoted*`)
                         }
                         break;
 
@@ -1691,8 +1668,10 @@ async function main() {
                         if (args.length < 1) return;
                         if (args[0] == 'on') {
                             conn.groupSettingChange(from, GroupSettingChange.messageSend, false);
+                            reply(`✔️ *Only Admin can send Message*`);
                         } else if (args[0] == 'off') {
                             conn.groupSettingChange(from, GroupSettingChange.messageSend, true);
+                            reply(`✔️ *Allowed all member can send Message*`);
                         } else {
                             return;
                         }
@@ -1719,9 +1698,9 @@ async function main() {
                             reply("Saale khud ko admin samjhta hai kya?😂");
                             return;
                         }
+                        reply(`_Bye_ *Mera Time Aa gya*`);
                         conn.groupLeave(from)
                         break;
-
                     default:
                         if (isGroup)
                             reply(`*Bakka*,Grow Up,I'll not always be there for you.Use *-blend* for Assistance`)//Please Enter the valid commands,Like */blend*
