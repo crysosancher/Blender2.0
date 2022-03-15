@@ -25,6 +25,7 @@ const { getInstaVideo } = require('./plugins/insta') // insta module
 const { getBlockWarning, setBlockWarning, removeBlockWarning } = require('./DB/blockDB') //block module 
 const { userHelp, StockList, adminList } = require('./plugins/help') //help module
 const { getRemoveBg } = require('./plugins/removebg'); // removebg module
+const { downloadmeme } = require('./getmeme') // meme module
 
 
 // LOAD Baileys
@@ -774,14 +775,32 @@ async function main() {
                         const memeURL = 'https://meme-api.herokuapp.com/gimme';
                         axios.get(`${memeURL}`).then((res) => {
                             reply(`*Sending...*`);
-                            conn.sendMessage(
-                                from,
-                                {
-                                    video: res.data.url,
-                                    caption: `${res.data.title}`,
-                                    gifPlayback: true
-                                }
-                            );
+                            let url = res.data.url;
+                            if (url.includes("jpg") || url.includes("jpeg") || url.includes("png")) {
+                                conn.sendMessage(
+                                    from,
+                                    { url: res.data.url },
+                                    MessageType.image,
+                                    {
+                                        mimetype: Mimetype.jpg,
+                                        caption: `${res.data.title}`,
+                                        quoted: mek,
+                                    }
+                                );
+                            }
+                            else {
+                                downloadmeme(res.data.url).then(() => {
+                                    conn.sendMessage(
+                                        from,
+                                        {
+                                            video: fs.readFileSync("./pic.mp4"),
+                                            caption: `${res.data.title}`,
+                                            gifPlayback: true
+                                        }
+                                    )
+                                    fs.unlinkSync("./pic.mp4");
+                                });
+                            }
                         }).catch(() => {
                             console.log('Error');
                             reply(`Eror. Contect Dev.`);
