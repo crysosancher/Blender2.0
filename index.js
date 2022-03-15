@@ -779,7 +779,7 @@ async function main() {
                                 { url: res.data.url },
                                 MessageType.video,
                                 {
-                                    mimetype: Mimetype.gif,
+                                    mimetype: Mimetype.mp4,
                                     caption: `${res.data.title}`,
                                     quoted: mek,
                                 }
