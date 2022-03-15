@@ -512,11 +512,11 @@ async function main() {
                                         quoted: mek,
                                     }
                                 )
+                                fs.unlinkSync("./bg.png");
                             });
-
                         }
                         else {
-                            reply(`reply to image only.`);
+                            reply(`Reply to image only.`);
                         }
                         break;
 
@@ -1414,11 +1414,11 @@ async function main() {
                                     { quoted: mek }
                                 );
                             } else {
-                                reply(`❌ There is some problem!`);
+                                reply(`❌ There is some problem!\nOr you can try again.`);
                             }
                         } catch (err) {
                             console.log(err);
-                            reply(`❌ There is some problem.`);
+                            reply(`❌ There is some problem.\nOr you can try again.`);
                         }
                         break;
 
