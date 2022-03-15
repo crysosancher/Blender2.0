@@ -26,7 +26,7 @@ const { getBlockWarning, setBlockWarning, removeBlockWarning } = require('./DB/b
 const { userHelp, StockList, adminList } = require('./plugins/help') //help module
 const { getRemoveBg } = require('./plugins/removebg'); // removebg module
 const { downloadmeme } = require('./plugins/meme') // meme module
-const { downloadFB } = require('./plugins/downloadFB') // facebook module
+// const { downloadFB } = require('./plugins/downloadFB') // facebook module
 
 
 // LOAD Baileys
@@ -923,47 +923,22 @@ async function main() {
                         if (!isGroup) return;
                         if (!args[0]) return reply(`*Enter url after ${prefix}fb*`);
                         const faceURL = args[0];
-
                         axios(`https://api.neoxr.eu.org/api/fb?url=${faceURL}/&apikey=yourkey`).then((res) => {
-                            reply(`inside axios ` + res.data.data[1].url);
-                            async function fb() {
-                                await downloadFB(res.data.data[1].url).then(() => {
-                                    reply(`Downloading..`);
-                                    conn.sendMessage(
-                                        from,
-                                        fs.readFileSync("./fb.mp4"),
-                                        MessageType.video,
-                                        {
-                                            mimetype: Mimetype.mp4,
-                                            caption: "Here.",
-                                            quoted: mek
-                                        }
-                                    );
-                                }).catch(() => {
-                                    reply(`Error`);
-                                });
-                            }
-                            fb();
-                            // } catch {
-                            //     downloadFB(res.data.data[0].url).then(() => {
-                            //         reply(`catch Downloading..`);
-                            //         conn.sendMessage(
-                            //             from,
-                            //             fs.readFileSync("./fb.mp4"),
-                            //             MessageType.video,
-                            //             {
-                            //                 mimetype: Mimetype.mp4,
-                            //                 caption: "Here.",
-                            //                 quoted: mek
-                            //             }
-                            //         );
-                            //     });
-                            // }
+                            reply(`Downloading..`);
+                            conn.sendMessage(
+                                from,
+                                { url: res.data.data[1].url },
+                                MessageType.video,
+                                {
+                                    mimetype: Mimetype.mp4,
+                                    caption: "Here.",
+                                    quoted: mek
+                                }
+                            );
                         }).catch(() => {
                             console.log("ERROR");
                             reply(`*_Error_* Only Public post can be downloaded.`);
                         })
-
                         break;
 
                     case 'sticker':
