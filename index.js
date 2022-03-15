@@ -937,6 +937,8 @@ async function main() {
                                         quoted: mek
                                     }
                                 );
+                            }).catch(() => {
+                                reply(`Error`);
                             });
                             // } catch {
                             //     downloadFB(res.data.data[0].url).then(() => {
