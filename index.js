@@ -925,35 +925,34 @@ async function main() {
                         const faceURL = args[0];
                         axios(`https://api.neoxr.eu.org/api/fb?url=${faceURL}/&apikey=yourkey`).then((res) => {
                             reply(`inside axios`);
-                            try {
-                                downloadFB(res.data.data[1].url).then(() => {
-                                    reply(`try block Downloading..`);
-                                    conn.sendMessage(
-                                        from,
-                                        fs.readFileSync("./fb.mp4"),
-                                        MessageType.video,
-                                        {
-                                            mimetype: Mimetype.mp4,
-                                            caption: "Here.",
-                                            quoted: mek
-                                        }
-                                    );
-                                });
-                            } catch {
-                                downloadFB(res.data.data[0].url).then(() => {
-                                    reply(`catch Downloading..`);
-                                    conn.sendMessage(
-                                        from,
-                                        fs.readFileSync("./fb.mp4"),
-                                        MessageType.video,
-                                        {
-                                            mimetype: Mimetype.mp4,
-                                            caption: "Here.",
-                                            quoted: mek
-                                        }
-                                    );
-                                });
-                            }
+                            downloadFB(res.data.data[1].url).then(() => {
+                                reply(`Downloading..`);
+                                conn.sendMessage(
+                                    from,
+                                    fs.readFileSync("./fb.mp4"),
+                                    MessageType.video,
+                                    {
+                                        mimetype: Mimetype.mp4,
+                                        caption: "Here.",
+                                        quoted: mek
+                                    }
+                                );
+                            });
+                            // } catch {
+                            //     downloadFB(res.data.data[0].url).then(() => {
+                            //         reply(`catch Downloading..`);
+                            //         conn.sendMessage(
+                            //             from,
+                            //             fs.readFileSync("./fb.mp4"),
+                            //             MessageType.video,
+                            //             {
+                            //                 mimetype: Mimetype.mp4,
+                            //                 caption: "Here.",
+                            //                 quoted: mek
+                            //             }
+                            //         );
+                            //     });
+                            // }
                         }).catch(() => {
                             console.log("ERROR");
                             reply(`*_Error_* Only Public post can be downloaded.`);
