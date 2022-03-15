@@ -133,6 +133,15 @@ const downloadSong = async (randomName, query) => {
     }
 };
 
+/*****************|SONG|*****************/
+const findSong = async (sname) => {
+    const yts = require('yt-search')
+    const r = await yts(`${sname}`)
+    const videos = r.videos.slice(0, 3)
+    let st = videos[0].url;
+    return st;
+}
+
 /* ------------------------------------ INSTA -----------------------------------  */
 const saveInstaVideo = async (randomName, videoDirectLink) => {
     const response = await axios({
@@ -1572,33 +1581,62 @@ async function main() {
                             reply(`❌ Query is empty! \nSend ${prefix}song query`);
                             return;
                         }
-                        try {
-                            let randomName = getRandom(".mp3");
-                            let query = args.join("%20");
-                            reply(`*Downloading song.....*\nThis may take upto 1 to 2 min.`);
-                            let response = await downloadSong(randomName, query);
-                            if (response == "NOT") {
-                                reply(
-                                    `❌ Song not found!\nTry to put correct spelling of song along with singer name.\n[Better use ${prefix}yta command to download correct song from youtube]`
-                                );
-                                return;
-                            }
-                            console.log(`song saved-> ./${randomName}`, response);
-                            await conn.sendMessage(
-                                from,
-                                fs.readFileSync(`./${randomName}`),
-                                MessageType.document,
-                                {
-                                    mimetype: "audio/mpeg",
-                                    filename: response + ".mp3",
-                                    quoted: mek,
-                                }
-                            );
-                            fs.unlinkSync(`./${randomName}`);
-                        } catch (err) {
-                            console.log(err);
-                            reply(`❌ There is some problem.`);
+                        // try {
+                        //     let randomName = getRandom(".mp3");
+                        //     let query = args.join("%20");
+                        //     reply(`*Downloading song.....*\nThis may take upto 1 to 2 min.`);
+                        //     let response = await downloadSong(randomName, query);
+                        //     if (response == "NOT") {
+                        //         reply(
+                        //             `❌ Song not found!\nTry to put correct spelling of song along with singer name.\n[Better use ${prefix}yta command to download correct song from youtube]`
+                        //         );
+                        //         return;
+                        //     }
+                        //     console.log(`song saved-> ./${randomName}`, response);
+                        //     await conn.sendMessage(
+                        //         from,
+                        //         fs.readFileSync(`./${randomName}`),
+                        //         MessageType.document,
+                        //         {
+                        //             mimetype: "audio/mpeg",
+                        //             filename: response + ".mp3",
+                        //             quoted: mek,
+                        //         }
+                        //     );
+                        //     fs.unlinkSync(`./${randomName}`);
+                        // } catch (err) {
+                        //     console.log(err);
+                        //     reply(`❌ There is some problem.`);
+                        // }
+                        let uname = args;
+                        const sonurl = await findSong(uname);
+                        console.log(sonurl);
+                        const gm = async (url1) => {
+                            let info = ytdl.getInfo(url1)
+                            let sany = getRandom('.mp3')
+                            const stream = ytdl(url1, { filter: info => info.audioBitrate == 160 || info.audioBitrate == 128 })
+                                .pipe(fs.createWriteStream(sany));
+                            console.log("Audio downloaded")
+                            await new Promise((resolve, reject) => {
+                                stream.on('error', reject)
+                                stream.on('finish', resolve)
+                            }).then(async (res) => {
+                                await conn.sendMessage(
+                                    from,
+                                    fs.readFileSync(sany),
+                                    MessageType.audio,
+                                    { mimetype: Mimetype.mp4Audio, caption: 'Here.', quoted: mek }
+                                ).then((resolved) => {
+                                    console.log("Sent")
+                                    fs.unlinkSync(sany)
+                                }).catch((reject) => {
+                                    reply`Enable to download send a valid req`
+                                })
+                            }).catch((err) => {
+                                reply`Unable to download,contact dev.`;
+                            });
                         }
+                        gm(sonurl)
                         break;
 
                     /////////////// ADMIN COMMANDS \\\\\\\\\\\\\\\
