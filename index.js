@@ -771,16 +771,16 @@ async function main() {
 
                     case 'meme':
                         if (!isGroup) return;
-                        const memeURL = 'https://some-random-api.ml/meme';
+                        const memeURL = 'https://meme-api.herokuapp.com/gimme';
                         axios.get(`${memeURL}`).then((res) => {
                             reply(`*Sending...*`);
                             conn.sendMessage(
                                 from,
-                                { url: res.data.image },
-                                MessageType.image,
+                                { url: res.data.url },
+                                MessageType.video,
                                 {
-                                    mimetype: Mimetype.jpg,
-                                    caption: `${res.data.caption}`,
+                                    mimetype: Mimetype.gif,
+                                    caption: `${res.data.title}`,
                                     quoted: mek,
                                 }
                             );
