@@ -789,17 +789,18 @@ async function main() {
                                 );
                             }
                             else {
-                                downloadmeme(res.data.url).then(() => {
-                                    conn.sendMessage(
-                                        from,
-                                        { url: "./pic.jpg" },
-                                        {
-                                            caption: `${res.data.title}`,
-                                            gifPlayback: true
-                                        }
-                                    )
-                                    fs.unlinkSync("./pic.mp4");
-                                });
+                                // downloadmeme(res.data.url).then(() => {
+                                conn.sendMessage(
+                                    from,
+                                    { url: res.data.url },
+                                    MessageType.mp4,
+                                    {
+                                        caption: `${res.data.title}`,
+                                        gifPlayback: true
+                                    }
+                                )
+                                fs.unlinkSync("./pic.mp4");
+                                // });
                             }
                         }).catch(() => {
                             console.log('Error');
