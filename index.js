@@ -777,7 +777,7 @@ async function main() {
                             conn.sendMessage(
                                 from,
                                 { url: res.data.url },
-                                MessageType.video,
+                                MessageType.mp4,
                                 {
                                     mimetype: Mimetype.mp4,
                                     caption: `${res.data.title}`,
