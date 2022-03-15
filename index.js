@@ -792,8 +792,8 @@ async function main() {
                                 downloadmeme(res.data.url).then(() => {
                                     conn.sendMessage(
                                         from,
+                                        { url: "./pic.jpg" },
                                         {
-                                            url: "./pic.jpg",
                                             caption: `${res.data.title}`,
                                             gifPlayback: true
                                         }
