@@ -936,7 +936,7 @@ async function main() {
                             reply(`Downloading..`);
                             conn.sendMessage(
                                 from,
-                                { url: res.data.data[1].url },
+                                { url: res.data.data[0].url },
                                 MessageType.video,
                                 {
                                     mimetype: Mimetype.mp4,
