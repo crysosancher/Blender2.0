@@ -25,7 +25,7 @@ const { getInstaVideo } = require('./plugins/insta') // insta module
 const { getBlockWarning, setBlockWarning, removeBlockWarning } = require('./DB/blockDB') //block module 
 const { userHelp, StockList, adminList } = require('./plugins/help') //help module
 const { getRemoveBg } = require('./plugins/removebg'); // removebg module
-const { downloadmeme } = require('./getmeme') // meme module
+const { downloadmeme } = require('./plugins/meme') // meme module
 
 
 // LOAD Baileys
