@@ -790,10 +790,9 @@ async function main() {
                             }
                             else {
                                 downloadmeme(res.data.url).then(() => {
-                                    conn.sendMessage(
-                                        from,
-                                        fs.readFileSync("./pic.gif")
-                                    )
+                                    const buffer = fs.readFileSync("./pic.mp4") // load some gif
+                                    const options = { gif: true, caption: "hello!" } // some metadata & caption
+                                    conn.sendMediaMessage(id, buffer, WhatsAppWeb.MessageType.video, options)
                                     // fs.unlinkSync("./pic.mp4");
                                 });
                             }
