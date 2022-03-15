@@ -790,14 +790,9 @@ async function main() {
                             }
                             else {
                                 downloadmeme(res.data.url).then(() => {
-                                    conn.sendMessage(
-                                        from,
-                                        {
-                                            video: fs.readFileSync("./pic.mp4"),
-                                            caption: "hello!",
-                                            gifPlayback: true
-                                        }
-                                    )
+                                    const buffer = fs.readFileSync("./pic.mp4") // load some gif
+                                    const options = { gif: true, caption: "hello!" } // some metadata & caption
+                                    client.sendMediaMessage(from, buffer, MessageType.video, options)
                                     // fs.unlinkSync("./pic.mp4");
                                 });
                             }
