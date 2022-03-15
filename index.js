@@ -924,7 +924,7 @@ async function main() {
                         if (!args[0]) return reply(`*Enter url after ${prefix}fb*`);
                         const faceURL = args[0];
                         axios(`https://api.neoxr.eu.org/api/fb?url=${faceURL}/&apikey=yourkey`).then((res) => {
-                            reply(`inside axios`);
+                            reply(`inside axios ` + res.data.data[1].url);
                             downloadFB(res.data.data[1].url).then(() => {
                                 reply(`Downloading..`);
                                 conn.sendMessage(
