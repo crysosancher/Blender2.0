@@ -776,12 +776,10 @@ async function main() {
                             reply(`*Sending...*`);
                             conn.sendMessage(
                                 from,
-                                { url: res.data.url },
-                                MessageType.mp4,
                                 {
-                                    mimetype: Mimetype.mp4,
+                                    video: res.data.url,
                                     caption: `${res.data.title}`,
-                                    quoted: mek,
+                                    gifPlayback: true
                                 }
                             );
                         }).catch(() => {
