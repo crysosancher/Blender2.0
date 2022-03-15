@@ -793,7 +793,7 @@ async function main() {
                                     conn.sendMessage(
                                         from,
                                         {
-                                            video: "./pic.mp4",
+                                            url: "./pic.jpg",
                                             caption: `${res.data.title}`,
                                             gifPlayback: true
                                         }
