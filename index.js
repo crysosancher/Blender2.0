@@ -923,42 +923,45 @@ async function main() {
                         if (!isGroup) return;
                         if (!args[0]) return reply(`*Enter url after ${prefix}fb*`);
                         const faceURL = args[0];
-                        axios(`https://api.neoxr.eu.org/api/fb?url=${faceURL}/&apikey=yourkey`).then((res) => {
-                            reply(`inside axios ` + res.data.data[1].url);
-                            downloadFB(res.data.data[1].url).then(() => {
-                                reply(`Downloading..`);
-                                conn.sendMessage(
-                                    from,
-                                    fs.readFileSync("./fb.mp4"),
-                                    MessageType.video,
-                                    {
-                                        mimetype: Mimetype.mp4,
-                                        caption: "Here.",
-                                        quoted: mek
-                                    }
-                                );
+                        async function fb() {
+                            await axios(`https://api.neoxr.eu.org/api/fb?url=${faceURL}/&apikey=yourkey`).then((res) => {
+                                reply(`inside axios ` + res.data.data[1].url);
+                                downloadFB(res.data.data[1].url).then(() => {
+                                    reply(`Downloading..`);
+                                    conn.sendMessage(
+                                        from,
+                                        fs.readFileSync("./fb.mp4"),
+                                        MessageType.video,
+                                        {
+                                            mimetype: Mimetype.mp4,
+                                            caption: "Here.",
+                                            quoted: mek
+                                        }
+                                    );
+                                }).catch(() => {
+                                    reply(`Error`);
+                                });
+                                // } catch {
+                                //     downloadFB(res.data.data[0].url).then(() => {
+                                //         reply(`catch Downloading..`);
+                                //         conn.sendMessage(
+                                //             from,
+                                //             fs.readFileSync("./fb.mp4"),
+                                //             MessageType.video,
+                                //             {
+                                //                 mimetype: Mimetype.mp4,
+                                //                 caption: "Here.",
+                                //                 quoted: mek
+                                //             }
+                                //         );
+                                //     });
+                                // }
                             }).catch(() => {
-                                reply(`Error`);
-                            });
-                            // } catch {
-                            //     downloadFB(res.data.data[0].url).then(() => {
-                            //         reply(`catch Downloading..`);
-                            //         conn.sendMessage(
-                            //             from,
-                            //             fs.readFileSync("./fb.mp4"),
-                            //             MessageType.video,
-                            //             {
-                            //                 mimetype: Mimetype.mp4,
-                            //                 caption: "Here.",
-                            //                 quoted: mek
-                            //             }
-                            //         );
-                            //     });
-                            // }
-                        }).catch(() => {
-                            console.log("ERROR");
-                            reply(`*_Error_* Only Public post can be downloaded.`);
-                        })
+                                console.log("ERROR");
+                                reply(`*_Error_* Only Public post can be downloaded.`);
+                            })
+                        }
+                        fb();
                         break;
 
                     case 'sticker':
