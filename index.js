@@ -926,6 +926,7 @@ async function main() {
                         axios(`https://api.neoxr.eu.org/api/fb?url=${faceURL}/&apikey=yourkey`).then((res) => {
                             try {
                                 downloadFB(res.data.data[1].url).then(() => {
+                                    reply(`try block Downloading..`);
                                     conn.sendMessage(
                                         from,
                                         fs.readFileSync("./fb.mp4"),
@@ -939,6 +940,7 @@ async function main() {
                                 });
                             } catch {
                                 downloadFB(res.data.data[0].url).then(() => {
+                                    reply(`catch Downloading..`);
                                     conn.sendMessage(
                                         from,
                                         fs.readFileSync("./fb.mp4"),
