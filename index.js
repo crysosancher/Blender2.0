@@ -874,14 +874,15 @@ async function main() {
 
                     case 'fb':
                         if (!isGroup) return;
-                        if (!args[0]) return reply(```Enter url after ${prefix}fb```);
+                        if (!args[0]) return reply(`Enter url after ${prefix}fb`);
                         var faceURL = args[0];
                         if (faceURL.includes("?app"))
                             faceURL = faceURL.split("?app")[0];
                         if (!faceURL.endsWith("/"))
                             faceURL += "/";
+                        reply(faceURL);
                         axios(`https://api.neoxr.eu.org/api/fb?url=${faceURL}&apikey=yourkey`).then((res) => {
-                            reply(```Downloading..```);
+                            reply(`Downloading..`);
                             try {
                                 conn.sendMessage(
                                     from,
@@ -907,7 +908,7 @@ async function main() {
                             }
                         }).catch(() => {
                             console.log("ERROR");
-                            reply(```*_Error_* Enter valid url or Only Public post can be downloaded.```);
+                            reply(`*_Error_* Enter valid url or Only Public post can be downloaded.`);
                         })
                         break;
 
