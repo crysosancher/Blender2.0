@@ -510,7 +510,7 @@ async function main() {
                             "https://api.xteam.xyz/attp?file&text=" + uri,
                             { responseType: "arraybuffer" }
                         ).then(() => {
-                            await conn.sendMessage(
+                            conn.sendMessage(
                                 from,
                                 Buffer.from(ttinullimage.data),
                                 MessageType.sticker,
