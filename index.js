@@ -854,22 +854,19 @@ async function main() {
                         if (!args[0]) return reply(`_Enter User name after idp_`);
                         let prof = args[0];
                         const idp = async (prof) => {
-                            axios({
-                                url: `https://www.instagram.com/${prof}/?__a=1`,
-                                method: 'GET'
-                            }).then((res) => {
+                            axios.get(`https://www.instagram.com/${prof}/?__a=1`).then((res) => {
                                 reply(res.dat.graphql)
                                 reply(`_Searching User..._`);
-                                conn.sendMessage(
-                                    from,
-                                    { url: res.data.graphql.user.profile_pic_url_hd },
-                                    MessageType.image,
-                                    {
-                                        mimetype: Mimetype.jpg,
-                                        caption: `${prof}   ~Blender👽`,
-                                        quoted: mek
-                                    }
-                                )
+                                // conn.sendMessage(
+                                //     from,
+                                //     { url: res.data.graphql.user.profile_pic_url_hd },
+                                //     MessageType.image,
+                                //     {
+                                //         mimetype: Mimetype.jpg,
+                                //         caption: `${prof}   ~Blender👽`,
+                                //         quoted: mek
+                                //     }
+                                // )
                             }).catch((error) => {
                                 console.log(error);
                                 reply(`_Bad Luck_ :(\nUser name not found!!`);
