@@ -875,7 +875,7 @@ async function main() {
                     case 'fb':
                         if (!isGroup) return;
                         if (!args[0]) return reply(```Enter url after ${prefix}fb```);
-                        const faceURL = args[0];
+                        var faceURL = args[0];
                         if (faceURL.includes("?app"))
                             faceURL = faceURL.split("?app")[0];
                         if (!faceURL.endsWith("/"))
