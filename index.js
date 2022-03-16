@@ -876,36 +876,25 @@ async function main() {
                         if (!isGroup) return;
                         if (!args[0]) return reply(`Enter url after ${prefix}fb`);
                         var faceURL = args[0];
-                        // if (faceURL.includes("?app"))
-                        //     faceURL = faceURL.split("?app")[0];
-                        // if (!faceURL.endsWith("/"))
-                        //     faceURL += "/";
-                        reply(`https://api.neoxr.eu.org/api/fb?url=${faceURL}&apikey=yourkey`);
+                        if (faceURL.includes("?app"))
+                            faceURL = faceURL.split("?app")[0];
+                        if (!faceURL.endsWith("/"))
+                            faceURL += "/";
                         axios(`https://api.neoxr.eu.org/api/fb?url=${faceURL}&apikey=yourkey`).then((res) => {
                             reply(`Downloading..`);
-                            try {
-                                conn.sendMessage(
-                                    from,
-                                    { url: res.data.data[1].url },
-                                    MessageType.video,
-                                    {
-                                        mimetype: Mimetype.mp4,
-                                        caption: "Here.",
-                                        quoted: mek
-                                    }
-                                );
-                            } catch {
-                                conn.sendMessage(
-                                    from,
-                                    { url: res.data.data[0].url },
-                                    MessageType.video,
-                                    {
-                                        mimetype: Mimetype.mp4,
-                                        caption: "Here.",
-                                        quoted: mek
-                                    }
-                                );
-                            }
+                            let Url = res.data.data[1].url;
+                            if (Url == null || Url == '')
+                                Url = res.data.data[0].url;
+                            conn.sendMessage(
+                                from,
+                                { url: Url },
+                                MessageType.video,
+                                {
+                                    mimetype: Mimetype.mp4,
+                                    caption: "Here.",
+                                    quoted: mek
+                                }
+                            );
                         }).catch(() => {
                             console.log("ERROR");
                             reply(`*_Error_* Enter valid url or Only Public post can be downloaded.`);
