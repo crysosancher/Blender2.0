@@ -79,60 +79,6 @@ async function fetchauth() {
 
 }
 
-
-/* ---------------------------------- SONG ---------------------------------- */
-const downloadSong = async (randomName, query) => {
-    try {
-        const INFO_URL = "https://slider.kz/vk_auth.php?q=";
-        const DOWNLOAD_URL = "https://slider.kz/download/";
-        let { data } = await axios.get(INFO_URL + query);
-        if (data["audios"][""].length <= 1) {
-            console.log("==[ SONG NOT FOUND! ]==");
-            return "NOT";
-        }
-        //avoid remix,revisited,mix
-        let i = 0;
-        let track = data["audios"][""][i];
-        while (/remix|revisited|mix/i.test(track.tit_art)) {
-            i += 1;
-            track = data["audios"][""][i];
-        }
-        //if reach the end then select the first song
-        if (!track) {
-            track = data["audios"][""][0];
-        }
-        let link = DOWNLOAD_URL + track.id + "/";
-        link = link + track.duration + "/";
-        link = link + track.url + "/";
-        link = link + track.tit_art + ".mp3" + "?extra=";
-        link = link + track.extra;
-        link = encodeURI(link); //to replace unescaped characters from link
-        let songName = track.tit_art;
-        songName =
-            songName =
-            songName =
-            songName.replace(/\?|<|>|\*|"|:|\||\/|\\/g, ""); //removing special characters which are not allowed in file name
-        // console.log(link);
-        // download(songName, link);
-        const res = await axios({
-            method: "GET",
-            url: link,
-            responseType: "stream",
-        });
-        data = res.data;
-        const path = `./${randomName}`;
-        const writer = fs.createWriteStream(path);
-        data.pipe(writer);
-        return new Promise((resolve, reject) => {
-            writer.on("finish", () => resolve(songName));
-            writer.on("error", () => reject);
-        });
-    } catch (err) {
-        console.log(err);
-        return "ERROR";
-    }
-};
-
 /*****************|SONG|*****************/
 const findSong = async (sname) => {
     const yts = require('yt-search')
@@ -285,13 +231,12 @@ async function gethoro(sunsign) {
     let horo
     await axios.request(mainconfig).then((res) => {
         horo = res.data
-
     }).catch((error) => {
         return false;
     })
     return horo;
-
 }
+
 //classic Dictionary
 async function dictionary(word) {
     var config = {
@@ -301,38 +246,37 @@ async function dictionary(word) {
     let classic;
     await axios.request(config).then((res) => {
         classic = res.data[0];
-
     }).catch((error) => {
         return;
     })
     return classic;
 }
 
-const cric = async (Mid) => {
-    var confiq = {
-        method: 'GET',
-        url: `https://cricket-api.vercel.app/cri.php?url=https://www.cricbuzz.com/live-cricket-scores/${Mid}/33rd-match-indian-premier-league-2021`
-    }
-    let ms;
-    await axios.request(confiq).then((res) => {
-        ms = res.data.livescore;
-    }).catch((err) => {
-        return;
-    })
-    return ms;
-}
-const daaa = async (sto) => {
-    var s = '';
-    await yahooStockPrices.getCurrentData(`${sto}`).then((res) => {
-        console.log(res);
-        s = `*STOCK* :- _${sto}_
-  *Currency* :- _${res.currency}_                   
-  *Price*:- _${res.price}_`;
-    }).catch((err) => {
-        s = 'Not Found';
-    });
-    return s;
-};
+// const cric = async (Mid) => {
+//     var confiq = {
+//         method: 'GET',
+//         url: `https://cricket-api.vercel.app/cri.php?url=https://www.cricbuzz.com/live-cricket-scores/${Mid}/33rd-match-indian-premier-league-2021`
+//     }
+//     let ms;
+//     await axios.request(confiq).then((res) => {
+//         ms = res.data.livescore;
+//     }).catch((err) => {
+//         return;
+//     })
+//     return ms;
+// }
+// const daaa = async (sto) => {
+//     var s = '';
+//     await yahooStockPrices.getCurrentData(`${sto}`).then((res) => {
+//         console.log(res);
+//         s = `*STOCK* :- _${sto}_
+//   *Currency* :- _${res.currency}_                   
+//   *Price*:- _${res.price}_`;
+//     }).catch((err) => {
+//         s = 'Not Found';
+//     });
+//     return s;
+// };
 
 
 
@@ -930,23 +874,40 @@ async function main() {
 
                     case 'fb':
                         if (!isGroup) return;
-                        if (!args[0]) return reply(`*Enter url after ${prefix}fb*`);
+                        if (!args[0]) return reply(```Enter url after ${prefix}fb```);
                         const faceURL = args[0];
-                        axios(`https://api.neoxr.eu.org/api/fb?url=${faceURL}/&apikey=yourkey`).then((res) => {
-                            reply(`Downloading..`);
-                            conn.sendMessage(
-                                from,
-                                { url: res.data.data[1].url },
-                                MessageType.video,
-                                {
-                                    mimetype: Mimetype.mp4,
-                                    caption: "Here.",
-                                    quoted: mek
-                                }
-                            );
+                        if (faceURL.includes("?app"))
+                            faceURL = faceURL.split("?app")[0];
+                        if (!faceURL.endsWith("/"))
+                            faceURL += "/";
+                        axios(`https://api.neoxr.eu.org/api/fb?url=${faceURL}&apikey=yourkey`).then((res) => {
+                            reply(```Downloading..```);
+                            try {
+                                conn.sendMessage(
+                                    from,
+                                    { url: res.data.data[1].url },
+                                    MessageType.video,
+                                    {
+                                        mimetype: Mimetype.mp4,
+                                        caption: "Here.",
+                                        quoted: mek
+                                    }
+                                );
+                            } catch {
+                                conn.sendMessage(
+                                    from,
+                                    { url: res.data.data[0].url },
+                                    MessageType.video,
+                                    {
+                                        mimetype: Mimetype.mp4,
+                                        caption: "Here.",
+                                        quoted: mek
+                                    }
+                                );
+                            }
                         }).catch(() => {
                             console.log("ERROR");
-                            reply(`*_Error_* Only Public post can be downloaded.`);
+                            reply(```*_Error_* Enter valid url or Only Public post can be downloaded.```);
                         })
                         break;
 
@@ -1581,33 +1542,6 @@ async function main() {
                             reply(`❌ Query is empty! \nSend ${prefix}song query`);
                             return;
                         }
-                        // try {
-                        //     let randomName = getRandom(".mp3");
-                        //     let query = args.join("%20");
-                        //     reply(`*Downloading song.....*\nThis may take upto 1 to 2 min.`);
-                        //     let response = await downloadSong(randomName, query);
-                        //     if (response == "NOT") {
-                        //         reply(
-                        //             `❌ Song not found!\nTry to put correct spelling of song along with singer name.\n[Better use ${prefix}yta command to download correct song from youtube]`
-                        //         );
-                        //         return;
-                        //     }
-                        //     console.log(`song saved-> ./${randomName}`, response);
-                        //     await conn.sendMessage(
-                        //         from,
-                        //         fs.readFileSync(`./${randomName}`),
-                        //         MessageType.document,
-                        //         {
-                        //             mimetype: "audio/mpeg",
-                        //             filename: response + ".mp3",
-                        //             quoted: mek,
-                        //         }
-                        //     );
-                        //     fs.unlinkSync(`./${randomName}`);
-                        // } catch (err) {
-                        //     console.log(err);
-                        //     reply(`❌ There is some problem.`);
-                        // }
                         let uname = args;
                         const sonurl = await findSong(uname);
                         console.log(sonurl);

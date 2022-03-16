@@ -78,10 +78,6 @@ module.exports.userHelp = (prefix, groupName) => {
     _Use ${prefix}list for whole valid list_
     _category could be sports, business or anything_
 
-*${prefix}score*
-    _fetch live ipl scores_
-    eg:${prefix} score
-
 *${prefix}idp*
     _download Instagram private profile picture_
     eg:${prefix}idp username
@@ -179,3 +175,7 @@ ${readMore}
     _For attendance alert_
     _Eg: ${prefix}tagall message!_`
 }
+
+// *${prefix}score*
+//     _fetch live ipl scores_
+//     eg:${prefix} score
