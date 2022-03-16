@@ -876,11 +876,11 @@ async function main() {
                         if (!isGroup) return;
                         if (!args[0]) return reply(`Enter url after ${prefix}fb`);
                         var faceURL = args[0];
-                        if (faceURL.includes("?app"))
-                            faceURL = faceURL.split("?app")[0];
-                        if (!faceURL.endsWith("/"))
-                            faceURL += "/";
-                        reply(faceURL);
+                        // if (faceURL.includes("?app"))
+                        //     faceURL = faceURL.split("?app")[0];
+                        // if (!faceURL.endsWith("/"))
+                        //     faceURL += "/";
+                        reply(`https://api.neoxr.eu.org/api/fb?url=${faceURL}&apikey=yourkey`);
                         axios(`https://api.neoxr.eu.org/api/fb?url=${faceURL}&apikey=yourkey`).then((res) => {
                             reply(`Downloading..`);
                             try {
