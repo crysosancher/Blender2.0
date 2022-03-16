@@ -859,7 +859,7 @@ async function main() {
                                 method: 'GET'
                             }).then((res) => {
                                 reply(`_Searching User..._`);
-                                await conn.sendMessage(
+                                conn.sendMessage(
                                     from,
                                     { url: res.data.graphql.user.profile_pic_url_hd },
                                     MessageType.image,
