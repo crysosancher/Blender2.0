@@ -858,6 +858,7 @@ async function main() {
                                 url: `https://www.instagram.com/${prof}/?__a=1`,
                                 method: 'GET'
                             }).then((res) => {
+                                reply(res.dat.graphql)
                                 reply(`_Searching User..._`);
                                 conn.sendMessage(
                                     from,
