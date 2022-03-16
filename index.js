@@ -26,7 +26,6 @@ const { getBlockWarning, setBlockWarning, removeBlockWarning } = require('./DB/b
 const { userHelp, StockList, adminList } = require('./plugins/help') //help module
 const { getRemoveBg } = require('./plugins/removebg'); // removebg module
 const { downloadmeme } = require('./plugins/meme') // meme module
-// const { downloadFB } = require('./plugins/downloadFB') // facebook module
 
 
 // LOAD Baileys
