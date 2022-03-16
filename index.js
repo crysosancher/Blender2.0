@@ -855,7 +855,7 @@ async function main() {
                         let prof = args[0];
                         const idp = async (prof) => {
                             await axios.get(`https://www.instagram.com/${prof}/?__a=1`).then((res) => {
-                                reply(res.data.graphql)
+                                reply(`${res.data.graphql.user.profile_pic_url_hd}`)
                                 reply(`_Searching User..._`);
                                 // conn.sendMessage(
                                 //     from,
