@@ -854,8 +854,8 @@ async function main() {
                         if (!args[0]) return reply(`_Enter User name after idp_`);
                         let prof = args[0];
                         const idp = async (prof) => {
-                            axios.get(`https://www.instagram.com/${prof}/?__a=1`).then((res) => {
-                                reply(res.dat.graphql)
+                            await axios.get(`https://www.instagram.com/${prof}/?__a=1`).then((res) => {
+                                reply(res.data.graphql)
                                 reply(`_Searching User..._`);
                                 // conn.sendMessage(
                                 //     from,
