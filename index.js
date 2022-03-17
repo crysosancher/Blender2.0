@@ -20,11 +20,13 @@ const { getGender } = require('./plugins/gender') //gender module
 const { getAnimeRandom } = require('./plugins/anime') //anime module
 const { getFact } = require('./plugins/fact') //fact module
 const { downloadAll, downloadholly, downloadbolly } = require('./plugins/movie') //movie module
-const { setCountWarning, getCountWarning, removeWarnCount } = require('./plugins/warningDB') // warning module
+const { setCountWarning, getCountWarning, removeWarnCount } = require('./DB/warningDB') // warning module
 const { getInstaVideo } = require('./plugins/insta') // insta module
-const { getBlockWarning, setBlockWarning, removeBlockWarning } = require('./plugins/blockDB') //block module 
+const { getBlockWarning, setBlockWarning, removeBlockWarning } = require('./DB/blockDB') //block module 
 const { userHelp, StockList, adminList } = require('./plugins/help') //help module
-// const { getMeme } = require('./plugins/meme') //meme module
+const { getRemoveBg } = require('./plugins/removebg'); // removebg module
+const { downloadmeme } = require('./plugins/meme') // meme module
+
 
 // LOAD Baileys
 const {
@@ -76,59 +78,14 @@ async function fetchauth() {
 
 }
 
-
-/* ---------------------------------- SONG ---------------------------------- */
-const downloadSong = async (randomName, query) => {
-    try {
-        const INFO_URL = "https://slider.kz/vk_auth.php?q=";
-        const DOWNLOAD_URL = "https://slider.kz/download/";
-        let { data } = await axios.get(INFO_URL + query);
-        if (data["audios"][""].length <= 1) {
-            console.log("==[ SONG NOT FOUND! ]==");
-            return "NOT";
-        }
-        //avoid remix,revisited,mix
-        let i = 0;
-        let track = data["audios"][""][i];
-        while (/remix|revisited|mix/i.test(track.tit_art)) {
-            i += 1;
-            track = data["audios"][""][i];
-        }
-        //if reach the end then select the first song
-        if (!track) {
-            track = data["audios"][""][0];
-        }
-        let link = DOWNLOAD_URL + track.id + "/";
-        link = link + track.duration + "/";
-        link = link + track.url + "/";
-        link = link + track.tit_art + ".mp3" + "?extra=";
-        link = link + track.extra;
-        link = encodeURI(link); //to replace unescaped characters from link
-        let songName = track.tit_art;
-        songName =
-            songName =
-            songName =
-            songName.replace(/\?|<|>|\*|"|:|\||\/|\\/g, ""); //removing special characters which are not allowed in file name
-        // console.log(link);
-        // download(songName, link);
-        const res = await axios({
-            method: "GET",
-            url: link,
-            responseType: "stream",
-        });
-        data = res.data;
-        const path = `./${randomName}`;
-        const writer = fs.createWriteStream(path);
-        data.pipe(writer);
-        return new Promise((resolve, reject) => {
-            writer.on("finish", () => resolve(songName));
-            writer.on("error", () => reject);
-        });
-    } catch (err) {
-        console.log(err);
-        return "ERROR";
-    }
-};
+/*****************|SONG|*****************/
+const findSong = async (sname) => {
+    const yts = require('yt-search')
+    const r = await yts(`${sname}`)
+    const videos = r.videos.slice(0, 3)
+    let st = videos[0].url;
+    return st;
+}
 
 /* ------------------------------------ INSTA -----------------------------------  */
 const saveInstaVideo = async (randomName, videoDirectLink) => {
@@ -273,13 +230,12 @@ async function gethoro(sunsign) {
     let horo
     await axios.request(mainconfig).then((res) => {
         horo = res.data
-
     }).catch((error) => {
         return false;
     })
     return horo;
-
 }
+
 //classic Dictionary
 async function dictionary(word) {
     var config = {
@@ -289,38 +245,37 @@ async function dictionary(word) {
     let classic;
     await axios.request(config).then((res) => {
         classic = res.data[0];
-
     }).catch((error) => {
         return;
     })
     return classic;
 }
 
-const cric = async (Mid) => {
-    var confiq = {
-        method: 'GET',
-        url: `https://cricket-api.vercel.app/cri.php?url=https://www.cricbuzz.com/live-cricket-scores/${Mid}/33rd-match-indian-premier-league-2021`
-    }
-    let ms;
-    await axios.request(confiq).then((res) => {
-        ms = res.data.livescore;
-    }).catch((err) => {
-        return;
-    })
-    return ms;
-}
-const daaa = async (sto) => {
-    var s = '';
-    await yahooStockPrices.getCurrentData(`${sto}`).then((res) => {
-        console.log(res);
-        s = `*STOCK* :- _${sto}_
-  *Currency* :- _${res.currency}_                   
-  *Price*:- _${res.price}_`;
-    }).catch((err) => {
-        s = 'Not Found';
-    });
-    return s;
-};
+// const cric = async (Mid) => {
+//     var confiq = {
+//         method: 'GET',
+//         url: `https://cricket-api.vercel.app/cri.php?url=https://www.cricbuzz.com/live-cricket-scores/${Mid}/33rd-match-indian-premier-league-2021`
+//     }
+//     let ms;
+//     await axios.request(confiq).then((res) => {
+//         ms = res.data.livescore;
+//     }).catch((err) => {
+//         return;
+//     })
+//     return ms;
+// }
+// const daaa = async (sto) => {
+//     var s = '';
+//     await yahooStockPrices.getCurrentData(`${sto}`).then((res) => {
+//         console.log(res);
+//         s = `*STOCK* :- _${sto}_
+//   *Currency* :- _${res.currency}_                   
+//   *Price*:- _${res.price}_`;
+//     }).catch((err) => {
+//         s = 'Not Found';
+//     });
+//     return s;
+// };
 
 
 
@@ -492,211 +447,30 @@ async function main() {
                     case 'admin':
                         if (!isGroup) return;
                         await costum(adminList(prefix, groupName), text);
-                        break
-
-                    case "warn":
-                        if (!mek.message.extendedTextMessage) {
-                            reply("❌ Tag someone!");
-                            return;
-                        }
-                        try {
-                            let mentioned =
-                                mek.message.extendedTextMessage.contextInfo.mentionedJid;
-                            if (mentioned) {
-                                //when member are mentioned with command
-                                console.log("Target : ", mentioned);
-                                if (mentioned == botNumber) return reply(`*Bakka* How I can _Warn_ Myself.😂`);
-                                if (allowedNumbs.includes(mentioned[0].split('@')[0])) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Warn Owner or Moderator 😊 *Bakka*`);
-                                if (!isGroupAdmins || !(allowedNumbs.includes(senderNumb))) {
-                                    reply("❌ Admin command!");
-                                    return;
-                                }
-                                if (mentioned.length === 1) {
-                                    let warnCount = await getCountWarning(mentioned[0], from);
-                                    let num_split = mentioned[0].split("@s.whatsapp.net")[0];
-                                    let warnMsg = `@${num_split} 😒,You have been warned. Warning status (${warnCount + 1
-                                        }/3). Don't repeat this type of behaviour again or you'll be banned 😔 from the group!`;
-                                    conn.sendMessage(from, warnMsg, MessageType.extendedText, {
-                                        contextInfo: { mentionedJid: mentioned },
-                                    });
-                                    await setCountWarning(mentioned[0], from);
-                                    if (warnCount >= 2) {
-                                        if (!isBotGroupAdmins) {
-                                            reply("❌ I'm not Admin here!");
-                                            return;
-                                        }
-                                        if (groupAdmins.includes(mentioned[0])) {
-                                            reply("❌ Cannot remove admin!");
-                                            return;
-                                        }
-                                        conn.groupRemove(from, mentioned);
-                                        reply("✔ Number removed from group!");
-                                    }
-                                } else {
-                                    //if multiple members are tagged
-                                    reply("❌ Mention only 1 member!");
-                                }
-                            } else {
-                                //when message is tagged with command
-                                let taggedMessageUser = [
-                                    mek.message.extendedTextMessage.contextInfo.participant,
-                                ];
-                                console.log("Target : ", taggedMessageUser);
-                                if (taggedMessageUser == botNumber) return reply(`*Bakka* How I can _Warn_ Myself.😂`);
-                                if (allowedNumbs.includes(taggedMessageUser[0].split('@')[0])) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Warn Owner or Moderator 😊 *Bakka*`);
-                                if (!isGroupAdmins || !(allowedNumbs.includes(senderNumb))) {
-                                    reply("❌ Admin command!");
-                                    return;
-                                }
-                                let warnCount = await getCountWarning(taggedMessageUser[0], from);
-                                let num_split = taggedMessageUser[0].split("@s.whatsapp.net")[0];
-                                await setCountWarning(taggedMessageUser[0], from);
-                                let warnMsg = `@${num_split} 😒,Your have been warned. Warning status (${warnCount + 1
-                                    }/3). Don't repeat this type of behaviour again or you'll be banned 😔 from group!`;
-                                conn.sendMessage(from, warnMsg, MessageType.extendedText, {
-                                    contextInfo: { mentionedJid: taggedMessageUser },
-                                });
-                                if (warnCount >= 2) {
-                                    if (!isBotGroupAdmins) {
-                                        reply("❌ I'm not Admin here!");
-                                        return;
-                                    }
-                                    if (groupAdmins.includes(taggedMessageUser[0])) {
-                                        reply("❌ Cannot remove admin!");
-                                        return;
-                                    }
-                                    conn.groupRemove(from, taggedMessageUser);
-                                    reply("✔ Number removed from group!");
-                                }
-                            }
-                        } catch (err) {
-                            console.log(err);
-                            reply(`❌ Error!`);
-                        }
-                        break;
-                    case 'unwarn':
-                        if (!(allowedNumbs.includes(senderNumb))) {
-                            reply("❌ Owner command!");
-                            return;
-                        }
-                        if (!mek.message.extendedTextMessage) {
-                            reply("❌ Tag someone!");
-                            return;
-                        }
-                        try {
-                            let mentioned =
-                                mek.message.extendedTextMessage.contextInfo.mentionedJid;
-                            if (mentioned) {
-                                //when member are mentioned with command
-                                if (mentioned.length === 1) {
-                                    await removeWarnCount(mentioned[0], from);
-                                    reply(`Set Warn Count to 0 for this user.`);
-                                }
-                                else {
-                                    //if multiple members are tagged
-                                    reply("❌ Mention only 1 member!");
-                                }
-                            } else {
-                                //when message is tagged with command
-                                let taggedMessageUser = [
-                                    mek.message.extendedTextMessage.contextInfo.participant,
-                                ];
-                                await removeWarnCount(taggedMessageUser[0], from);
-                                reply(`Set Warn Count to 0 for this user.`);
-                            }
-                        } catch (err) {
-                            console.log(err);
-                            reply(`❌ Error!`);
-                        }
                         break;
 
-                    case 'block':
-                        if (!mek.message.extendedTextMessage) {
-                            reply("❌ Tag someone!");
-                            return;
+                    case 'removebg':
+                        if (!isGroup) return;
+                        if ((isMedia && !mek.message.videoMessage || isQuotedImage)) {
+                            const encmedia = isQuotedImage ? JSON.parse(JSON.stringify(mek).replace('quotedM', 'm')).message.extendedTextMessage.contextInfo : mek
+                            const media = await conn.downloadAndSaveMediaMessage(encmedia)
+                            reply(`*Removing Backgroung....*`);
+                            getRemoveBg(media).then(() => {
+                                conn.sendMessage(
+                                    from,
+                                    fs.readFileSync("./bg.png"),
+                                    MessageType.image,
+                                    {
+                                        mimetype: Mimetype.png,
+                                        caption: `*Removed!!*`,
+                                        quoted: mek,
+                                    }
+                                )
+                                fs.unlinkSync("./bg.png");
+                            });
                         }
-                        try {
-                            let mentioned =
-                                mek.message.extendedTextMessage.contextInfo.mentionedJid;
-                            if (mentioned) {
-                                //when member are mentioned with command
-                                console.log("Target : ", mentioned);
-                                if (mentioned == botNumber) return reply(`*Bakka* How I can _Block_ Myself.😂`);
-                                if (allowedNumbs.includes(mentioned[0].split('@')[0])) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Block Owner or Moderator 😊 *Bakka*`);
-                                if (!(allowedNumbs.includes(senderNumb))) {
-                                    reply("❌ Owner command!");
-                                    return;
-                                }
-                                if (mentioned.length === 1) {
-                                    let num_split = mentioned[0].split("@s.whatsapp.net")[0];
-                                    await setBlockWarning(mentioned[0]);
-                                    let warnMsg = `@${num_split} ,You have been Block To Use the Bot. Ask Owner or Mod to remove.`;
-                                    conn.sendMessage(from, warnMsg, MessageType.extendedText, {
-                                        contextInfo: { mentionedJid: mentioned },
-                                    });
-                                    reply(`*👍Done Commands Blocked For The Number.*`);
-                                } else {
-                                    //if multiple members are tagged
-                                    reply("❌ Mention only 1 member!");
-                                }
-                            } else {
-                                //when message is tagged with command
-                                let taggedMessageUser = [
-                                    mek.message.extendedTextMessage.contextInfo.participant,
-                                ];
-                                console.log("Target : ", taggedMessageUser);
-                                if (taggedMessageUser == botNumber) return reply(`*Bakka* How I can _Block_ Myself.😂`);
-                                if (allowedNumbs.includes(taggedMessageUser[0].split('@')[0])) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Block Owner or Moderator 😊 *Bakka*`);
-                                if (!(allowedNumbs.includes(senderNumb))) {
-                                    reply("❌ Owner command!");
-                                    return;
-                                }
-                                let num_split = taggedMessageUser[0].split("@s.whatsapp.net")[0];
-                                await setCountWarning(taggedMessageUser[0]);
-                                let warnMsg = `@${num_split} ,You have been Blocked To Use the Bot. Ask Owner or Mod to remove.`;
-                                conn.sendMessage(from, warnMsg, MessageType.extendedText, {
-                                    contextInfo: { mentionedJid: taggedMessageUser },
-                                });
-                                reply(`*👍Done Commands Blocked For The Number.*`);
-                            }
-                        } catch (err) {
-                            console.log(err);
-                            reply(`❌ Error!`);
-                        }
-                        break;
-
-                    case 'unblock':
-                        if (!(allowedNumbs.includes(senderNumb))) {
-                            reply("❌ Owner command!");
-                            return;
-                        }
-                        if (!mek.message.extendedTextMessage) {
-                            reply("❌ Tag someone!");
-                            return;
-                        }
-                        try {
-                            let mentioned =
-                                mek.message.extendedTextMessage.contextInfo.mentionedJid;
-                            if (mentioned) {
-                                //when member are mentioned with command
-                                if (mentioned.length === 1) {
-                                    await removeBlockWarning(mentioned[0]);
-                                    reply(`*👍Done Commands Unblocked For The Number.*`);
-                                } else {
-                                    //if multiple members are tagged
-                                    reply("❌ Mention only 1 member!");
-                                }
-                            } else {
-                                //when message is tagged with command
-                                let taggedMessageUser = [
-                                    mek.message.extendedTextMessage.contextInfo.participant,
-                                ];
-                                await removeCountWarning(taggedMessageUser[0]);
-                                reply(`*👍Done Commands Unblocked For The Number.*`);
-                            }
-                        } catch (err) {
-                            console.log(err);
-                            reply(`❌ Error!`);
+                        else {
+                            reply(`Reply to image only.`);
                         }
                         break;
 
@@ -734,54 +508,48 @@ async function main() {
                         let ttinullimage = await axios.get(
                             "https://api.xteam.xyz/attp?file&text=" + uri,
                             { responseType: "arraybuffer" }
-                        );
-                        await conn.sendMessage(
-                            from,
-                            Buffer.from(ttinullimage.data),
-                            MessageType.sticker,
-                            { mimetype: Mimetype.webp }
-                        );
+                        ).then(() => {
+                            conn.sendMessage(
+                                from,
+                                Buffer.from(ttinullimage.data),
+                                MessageType.sticker,
+                                { mimetype: Mimetype.webp }
+                            );
+                        }).catch(()=>{
+                            reply(`_Website is Down_\nWait for sometime`);
+                        });
                         break;
 
                     case 'meme':
                         if (!isGroup) return;
-                        const memeURL = 'https://some-random-api.ml/meme';
+                        const memeURL = 'https://meme-api.herokuapp.com/gimme';
                         axios.get(`${memeURL}`).then((res) => {
                             reply(`*Sending...*`);
-                            conn.sendMessage(
-                                from,
-                                { url: res.data.image },
-                                MessageType.image,
-                                {
-                                    mimetype: Mimetype.jpg,
-                                    caption: `${res.data.caption}`,
-                                    quoted: mek,
-                                }
-                            );
+                            let url = res.data.url;
+                            if (url.includes("jpg") || url.includes("jpeg") || url.includes("png")) {
+                                conn.sendMessage(
+                                    from,
+                                    { url: res.data.url },
+                                    MessageType.image,
+                                    {
+                                        mimetype: Mimetype.jpg,
+                                        caption: `${res.data.title}`,
+                                        quoted: mek,
+                                    }
+                                );
+                            }
+                            else {
+                                downloadmeme(res.data.url).then(() => {
+                                    const buffer = fs.readFileSync("./pic.mp4") // load some gif
+                                    const options = { gif: true, caption: "hello!" } // some metadata & caption
+                                    conn.sendMessage(from, buffer, MessageType.video, options)
+                                    // fs.unlinkSync("./pic.mp4");
+                                });
+                            }
                         }).catch(() => {
                             console.log('Error');
                             reply(`Eror. Contect Dev.`);
                         });
-                        break;
-
-                    case 'tagall':
-                        if (!isGroup) return;
-                        console.log("SENDER NUMB:", senderNumb);
-                        if (allowedNumbs.includes(senderNumb) || isGroupAdmins) {
-                            let jids = [];
-                            let mesaj = (!args[0]) ? '' : ev + '\n\n';
-                            var id;
-                            for (let i of groupMembers) {
-                                mesaj += '⟪ @' + i.id.split('@')[0] + ' \n';
-                                jids.push(i.id.replace('c.us', 's.whatsapp.net'));
-                            }
-                            let tx = "xyz"
-                            await conn.sendMessage(from, mesaj, MessageType.extendedText,
-                                { contextInfo: { mentionedJid: jids }, quoted: mek });
-                        }
-                        else {
-                            reply("No Permission!,Contact Developer!")
-                        }
                         break;
 
                     /* ------------------------------- CASE: TOIMG ------------------------------ */
@@ -878,6 +646,35 @@ async function main() {
                                 reply(error);
                             })
                         }
+                        break;
+
+                    case 'fb':
+                        if (!isGroup) return;
+                        if (!args[0]) return reply(`Enter url after ${prefix}fb`);
+                        var faceURL = args[0];
+                        if (faceURL.includes("?app"))
+                            faceURL = faceURL.split("?app")[0];
+                        if (!faceURL.endsWith("/"))
+                            faceURL += "/";
+                        axios(`https://api.neoxr.eu.org/api/fb?url=${faceURL}&apikey=yourkey`).then((res) => {
+                            reply(`Downloading..`);
+                            let Url = res.data.data[1].url;
+                            if (Url == null || Url == '')
+                                Url = res.data.data[0].url;
+                            conn.sendMessage(
+                                from,
+                                { url: Url },
+                                MessageType.video,
+                                {
+                                    mimetype: Mimetype.mp4,
+                                    caption: "Here.",
+                                    quoted: mek
+                                }
+                            );
+                        }).catch(() => {
+                            console.log("ERROR");
+                            reply(`*_Error_* Enter valid url or Only Public post can be downloaded.`);
+                        })
                         break;
 
                     case 'sticker':
@@ -1022,20 +819,20 @@ async function main() {
                         if (!args[0]) return reply(`Provide Movie name.`);
                         let movie = body.trim().split(/ +/).slice(1).join('+');
                         console.log("Movie : ", movie);
+                        let MovieUrl = '';
                         await downloadAll(movie).then((message) => {
-                            reply(`Here You Go =>\n\n` + message);
-                        }).catch(() => {
-                            downloadbolly(movie).then((message) => {
-                                reply(`Here You Go => \n\n` + message);
-                            }).catch(() => {
-                                downloadholly(movie).then((message) => {
-                                    reply(`Here You Go => \n\n` + message);
-                                }).catch(() => {
-                                    console.log("Not found!!");
-                                    reply(`Sorry No Movie Found\nCheck your spelling or try another movie.`);
-                                })
-                            })
-                        })
+                            MovieUrl += '🎬 ' + message + "\n\n";
+                        }).catch(() => { });
+                        await downloadbolly(movie).then((message) => {
+                            MovieUrl += '🎬 ' + message + "\n\n";
+                        }).catch(() => { });
+                        await downloadholly(movie).then((message) => {
+                            MovieUrl += '🎬 ' + message + "\n\n";
+                        }).catch(() => { });
+                        if (MovieUrl != '')
+                            reply(`*Direct link for*😊 ${movie.split("+").join(" ")}\n\n` + MovieUrl);
+                        else
+                            reply(`*Sorry* No Movie Found\nCheck your _spelling or try another movie_.`);
                         break;
 
                     case 'ud':
@@ -1055,61 +852,50 @@ async function main() {
                         break;
 
                     case 'idp':
+                        if (!isGroup) return;
+                        if (!args[0]) return reply(`_Enter User name after idp_`);
                         let prof = args[0];
-                        axios.get(`https://www.instagram.com/${prof}/?__a=1`, {
-                            headers: {
-                                accept:
-                                    'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9',
-                                'accept-language': 'en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7',
-                                'cache-control': 'max-age=0',
-                                'sec-ch-ua':
-                                    '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
-                                'sec-ch-ua-mobile': '?1',
-                                'sec-fetch-dest': 'document',
-                                'sec-fetch-mode': 'navigate',
-                                'sec-fetch-site': 'none',
-                                'sec-fetch-user': '?1',
-                                'upgrade-insecure-requests': '1',
-                                cookie:
-                                    'ig_did=305179C0-CE28-4DCD-847A-2F28A98B7DBF; ig_nrcb=1; mid=YQBN3wAEAAGfSSDsZYS9nf2a5MHO; csrftoken=KItbBYAsObQgmJU2CsfqfiRFtk8JXwgm; sessionid=29386738134%3A8NwzjrA3jruVB4%3A23; ds_user_id=29386738134; fbm_124024574287414=base_domain=.instagram.com; shbid="18377\05429386738134\0541674226938:01f7d2db0f9c512fc79336716e1cf02623129a7897f5ccb8d878999be86c0e010bb77920"; shbts="1642690938\05429386738134\0541674226938:01f73e613a6030436ef5f2cea6c7402b82a96c1a61f905b746d3951f49a7f2d2eab6d399"; fbsr_124024574287414=Ps5NinG2AjNMV4W927e_vwMrZVLCltfcbWGS3B5S3to.eyJ1c2VyX2lkIjoiMTAwMDA5NDY1ODIwODQyIiwiY29kZSI6IkFRQlZrOVljMF9DS24tVEpqZ21VWjdPT2dOelFVdkJyLXUzaENSOGR0RzZrbVQxdWszYUMtVDZJeV9QWjBCc1lCcTBmZkxNZmsyUVlMM0hMVGVhQ1pxb1RRQzdsOE9BYlZKdmlvTU5GZ0dncVdxZVQzNV9JM3ZOV0pCR3BsWXVQX0dGMDJMMEt2aTk4WXpxNFhrVWhaVUNRanpPcUthN01aOVdZaVc5SVFzZjRxU3FQTXUzVXlwRWVsMXQ4TjJkV2ZHSnNFYXRsNXBIRXBGMlJSSWljY0F1c3BTZHNPdWFZSThCeV9uRFpjQklUUFk0RzNJY0NiYnFtdXNFZXY5ZUlsMVlZQ0E0bE5ROWxyeGtZdU1IM05scWRFTmtlQjNwWVRjRGlsZDZtekNpNFgzcnZIZUtUMFVFNkJFYVlURFpCTmhaOTd5TmJWT1R1ZENWdk84UlFoYjV2Iiwib2F1dGhfdG9rZW4iOiJFQUFCd3pMaXhuallCQU0zaHBjU2lKUm50WWcyTm0xamhlUlFkd3VCeExaQ1V0UjV5endGSkdVQVpDbERGRThwdXdaQXRPMkxtQnMxNjNiVGQzZERhRVl3UGRiWHY1bE5PNEZaQVVoYUpBZDBIcTQyWkN5OVdicXh4blVnZml5MHBETm9rMXlQVzlUNHpaQVVsbHVGcmZ4OFFhRlRnZG9wRTBFMDBMaGg3OVhuWkN1QldteWZ0MlpBY1NYVUpMRjNWNzUwWkQiLCJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImlzc3VlZF9hdCI6MTY0MjY5NDAyM30; rur="VLL\05429386738134\0541674231548:01f7816fe2a5156acdb86c5eff76c0ae83ac053646c44ccc592f854fb9d24a18bfcfc3ac"',
-                            },
-                            referrerPolicy: 'strict-origin-when-cross-origin',
-                            body: null,
-                            method: 'GET',
-                            mode: 'cors',
-                        }).then((res) => {
-                            console.log(res.data.graphql.user.profile_pic_url_hd);
-                            const downurl = (res.data.graphql.user.profile_pic_url_hd);
-                            downImage(downurl);
-
-                        }).catch((err) => {
-                            reply("Bad Luck....");
-                        })
-                        const downImage = async (url) => {
-                            const ran = getRandom('.jpg');
-                            const writer = fs.createWriteStream(ran)
-                            const response = await axios({
-                                url,
-                                method: 'GET',
-                                responseType: 'stream'
-                            })
-
-                            response.data.pipe(writer)
-                            return new Promise((resolve, reject) => {
-                                writer.on('finish', resolve)
-                                writer.on('error', reject)
-                            }).then(async (res) => {
-                                await conn.sendMessage(
+                        const idp = async (prof) => {
+                            axios({
+                                url: `https://www.instagram.com/${prof}/?__a=1`,
+                                headers: {
+                                    accept:
+                                        'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9',
+                                    'accept-language': 'en-IN,en-GB;q=0.9,en-US;q=0.8,en;q=0.7',
+                                    'cache-control': 'max-age=0',
+                                    'sec-ch-ua':
+                                        '"Chromium";v="92", " Not A;Brand";v="99", "Google Chrome";v="92"',
+                                    'sec-ch-ua-mobile': '?1',
+                                    'sec-fetch-dest': 'document',
+                                    'sec-fetch-mode': 'navigate',
+                                    'sec-fetch-site': 'none',
+                                    'sec-fetch-user': '?1',
+                                    'upgrade-insecure-requests': '1',
+                                    cookie:
+                                        'ig_did=305179C0-CE28-4DCD-847A-2F28A98B7DBF; ig_nrcb=1; mid=YQBN3wAEAAGfSSDsZYS9nf2a5MHO; csrftoken=KItbBYAsObQgmJU2CsfqfiRFtk8JXwgm; sessionid=29386738134%3A8NwzjrA3jruVB4%3A23; ds_user_id=29386738134; fbm_124024574287414=base_domain=.instagram.com; shbid="18377\05429386738134\0541674226938:01f7d2db0f9c512fc79336716e1cf02623129a7897f5ccb8d878999be86c0e010bb77920"; shbts="1642690938\05429386738134\0541674226938:01f73e613a6030436ef5f2cea6c7402b82a96c1a61f905b746d3951f49a7f2d2eab6d399"; fbsr_124024574287414=Ps5NinG2AjNMV4W927e_vwMrZVLCltfcbWGS3B5S3to.eyJ1c2VyX2lkIjoiMTAwMDA5NDY1ODIwODQyIiwiY29kZSI6IkFRQlZrOVljMF9DS24tVEpqZ21VWjdPT2dOelFVdkJyLXUzaENSOGR0RzZrbVQxdWszYUMtVDZJeV9QWjBCc1lCcTBmZkxNZmsyUVlMM0hMVGVhQ1pxb1RRQzdsOE9BYlZKdmlvTU5GZ0dncVdxZVQzNV9JM3ZOV0pCR3BsWXVQX0dGMDJMMEt2aTk4WXpxNFhrVWhaVUNRanpPcUthN01aOVdZaVc5SVFzZjRxU3FQTXUzVXlwRWVsMXQ4TjJkV2ZHSnNFYXRsNXBIRXBGMlJSSWljY0F1c3BTZHNPdWFZSThCeV9uRFpjQklUUFk0RzNJY0NiYnFtdXNFZXY5ZUlsMVlZQ0E0bE5ROWxyeGtZdU1IM05scWRFTmtlQjNwWVRjRGlsZDZtekNpNFgzcnZIZUtUMFVFNkJFYVlURFpCTmhaOTd5TmJWT1R1ZENWdk84UlFoYjV2Iiwib2F1dGhfdG9rZW4iOiJFQUFCd3pMaXhuallCQU0zaHBjU2lKUm50WWcyTm0xamhlUlFkd3VCeExaQ1V0UjV5endGSkdVQVpDbERGRThwdXdaQXRPMkxtQnMxNjNiVGQzZERhRVl3UGRiWHY1bE5PNEZaQVVoYUpBZDBIcTQyWkN5OVdicXh4blVnZml5MHBETm9rMXlQVzlUNHpaQVVsbHVGcmZ4OFFhRlRnZG9wRTBFMDBMaGg3OVhuWkN1QldteWZ0MlpBY1NYVUpMRjNWNzUwWkQiLCJhbGdvcml0aG0iOiJITUFDLVNIQTI1NiIsImlzc3VlZF9hdCI6MTY0MjY5NDAyM30; rur="VLL\05429386738134\0541674231548:01f7816fe2a5156acdb86c5eff76c0ae83ac053646c44ccc592f854fb9d24a18bfcfc3ac"',
+                                },
+                                referrerPolicy: 'strict-origin-when-cross-origin',
+                                body: null,
+                                mode: 'cors',
+                                method: 'GET'
+                            }).then((res) => {
+                                reply(`_Searching User..._`);
+                                conn.sendMessage(
                                     from,
-                                    fs.readFileSync(ran), // send directly from remote url!
+                                    { url: res.data.graphql.user.profile_pic_url_hd },
                                     MessageType.image,
-                                    { mimetype: Mimetype.jpg, caption: `${prof}   ~Blender👽`, quoted: mek }
+                                    {
+                                        mimetype: Mimetype.jpg,
+                                        caption: `${prof}`,
+                                        quoted: mek
+                                    }
                                 )
-                                fs.unlinkSync(ran);
-                            }).catch(err => {
-                                reply(`Unexpected Downfall,can Retry after 5 sec..`);
-                            });
+                            }).catch((error) => {
+                                console.log(error);
+                                reply(`_Bad Luck_ :(\nGetting login page!!`);
+                            })
                         }
+                        idp(prof);
                         break;
 
                     case 'fact':
@@ -1292,6 +1078,7 @@ async function main() {
 
                     case 'yta':
                         if (!isGroup) return;
+                        if (!args[0]) return reply(`_Enter URl after yta_`);
                         var url1 = args[0];
                         console.log(`${url1}`)
                         const am = async (url1) => {
@@ -1335,7 +1122,6 @@ async function main() {
                             return;
                         }
                         let urlInsta = args[0];
-
                         if (
                             !(
                                 urlInsta.includes("instagram.com/p/") ||
@@ -1351,6 +1137,7 @@ async function main() {
 
                         try {
                             console.log("Video downloading ->", urlInsta);
+                            reply(`*Downloading...*`);
                             // console.log("Trying saving", urlInsta);
                             let { imgDirectLink, videoDirectLink } = await getInstaVideo(
                                 urlInsta
@@ -1363,7 +1150,6 @@ async function main() {
                                 // Convert the file size to megabytes (optional)
                                 let fileSizeInMegabytes = fileSizeInBytes / (1024 * 1024);
                                 console.log("Video downloaded ! Size: " + fileSizeInMegabytes);
-                                reply(`*Downloading...*`);
                                 //  { caption: "hello there!", mimetype: Mimetype.mp4 }
                                 // quoted: mek for tagged
                                 if (fileSizeInMegabytes <= 40) {
@@ -1388,11 +1174,11 @@ async function main() {
                                     { quoted: mek }
                                 );
                             } else {
-                                reply(`❌ There is some problem!`);
+                                reply(`❌ There is some problem!\nOr you can try again.`);
                             }
                         } catch (err) {
                             console.log(err);
-                            reply(`❌ There is some problem.`);
+                            reply(`❌ There is some problem.\nOr you can try again.`);
                         }
                         break;
 
@@ -1437,11 +1223,10 @@ async function main() {
                         break;
 
                     case 'stocks':
-                    case 'stock': {
                         const s3 = await daaa(args[0].toUpperCase());
                         reply(`${s3}`)
                         break;
-                    }
+
 
                     case 'mmi':
                         await conn.sendMessage(
@@ -1469,7 +1254,6 @@ async function main() {
   High extreme greed zone (>80) suggests to be cautious in opening fresh positions as markets are overbought and likely to turn downwards.`)
 
                                 }
-
                             }
                         }).catch((err) => {
                             reply("nahi chala");
@@ -1511,38 +1295,269 @@ async function main() {
                             reply(`❌ Query is empty! \nSend ${prefix}song query`);
                             return;
                         }
-                        try {
-                            let randomName = getRandom(".mp3");
-                            let query = args.join("%20");
-                            reply(`*Downloading song.....*\nThis may take upto 1 to 2 min.`);
-                            let response = await downloadSong(randomName, query);
-                            if (response == "NOT") {
-                                reply(
-                                    `❌ Song not found!\nTry to put correct spelling of song along with singer name.\n[Better use ${prefix}yta command to download correct song from youtube]`
-                                );
-                                return;
+                        let uname = args;
+                        const sonurl = await findSong(uname);
+                        console.log(sonurl);
+                        const gm = async (url1) => {
+                            let info = ytdl.getInfo(url1)
+                            let sany = getRandom('.mp3')
+                            reply(`_Downloading Song.._\nThis may take upto 1 to 2 min.`);
+                            const stream = ytdl(url1, { filter: info => info.audioBitrate == 160 || info.audioBitrate == 128 })
+                                .pipe(fs.createWriteStream(sany));
+                            console.log("Audio downloaded")
+                            await new Promise((resolve, reject) => {
+                                stream.on('error', reject)
+                                stream.on('finish', resolve)
+                            }).then(async (res) => {
+                                await conn.sendMessage(
+                                    from,
+                                    fs.readFileSync(sany),
+                                    MessageType.audio,
+                                    { mimetype: Mimetype.mp4Audio, caption: 'Here.', quoted: mek }
+                                ).then((resolved) => {
+                                    console.log("Sent")
+                                    fs.unlinkSync(sany)
+                                }).catch((reject) => {
+                                    reply(`_Enable to download send a valid req_`);
+                                })
+                            }).catch((err) => {
+                                reply(`_Unable to download,contact dev_.`);
+                            });
+                        }
+                        gm(sonurl)
+                        break;
+
+                    /////////////// ADMIN & OWNER COMMANDS \\\\\\\\\\\\\\\
+                    //reply = reply with tag 
+                    //costum("ourTEXT",text) = reply without tagging
+
+                    case 'tagall':
+                        if (!isGroup) return;
+                        console.log("SENDER NUMB:", senderNumb);
+                        if (allowedNumbs.includes(senderNumb) || isGroupAdmins) {
+                            let jids = [];
+                            let mesaj = (!args[0]) ? '' : ev + '\n\n';
+                            var id;
+                            for (let i of groupMembers) {
+                                mesaj += '⟪ @' + i.id.split('@')[0] + ' \n';
+                                jids.push(i.id.replace('c.us', 's.whatsapp.net'));
                             }
-                            console.log(`song saved-> ./${randomName}`, response);
-                            await conn.sendMessage(
-                                from,
-                                fs.readFileSync(`./${randomName}`),
-                                MessageType.document,
-                                {
-                                    mimetype: "audio/mpeg",
-                                    filename: response + ".mp3",
-                                    quoted: mek,
-                                }
-                            );
-                            fs.unlinkSync(`./${randomName}`);
-                        } catch (err) {
-                            console.log(err);
-                            reply(`❌ There is some problem.`);
+                            let tx = "xyz"
+                            await conn.sendMessage(from, mesaj, MessageType.extendedText,
+                                { contextInfo: { mentionedJid: jids }, quoted: mek });
+                        }
+                        else {
+                            reply("No Permission!,Contact Developer!")
                         }
                         break;
 
-                    /////////////// ADMIN COMMANDS \\\\\\\\\\\\\\\
-                    //reply = reply with tag 
-                    //costum("ourTEXT",text) = reply without tagging
+                    case 'warn':
+                        if (!mek.message.extendedTextMessage) {
+                            reply("❌ Tag someone!");
+                            return;
+                        }
+                        try {
+                            let mentioned =
+                                mek.message.extendedTextMessage.contextInfo.mentionedJid;
+                            if (mentioned) {
+                                //when member are mentioned with command
+                                console.log("Target : ", mentioned);
+                                if (mentioned == botNumber) return reply(`*Bakka* How I can _Warn_ Myself.😂`);
+                                if (allowedNumbs.includes(mentioned[0].split('@')[0])) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Warn Owner or Moderator 😊 *Bakka*`);
+                                if (!isGroupAdmins || !(allowedNumbs.includes(senderNumb))) {
+                                    reply("❌ Admin command!");
+                                    return;
+                                }
+                                if (mentioned.length === 1) {
+                                    let warnCount = await getCountWarning(mentioned[0], from);
+                                    let num_split = mentioned[0].split("@s.whatsapp.net")[0];
+                                    let warnMsg = `@${num_split} 😒,You have been warned. Warning status (${warnCount + 1
+                                        }/3). Don't repeat this type of behaviour again or you'll be banned 😔 from the group!`;
+                                    conn.sendMessage(from, warnMsg, MessageType.extendedText, {
+                                        contextInfo: { mentionedJid: mentioned },
+                                    });
+                                    await setCountWarning(mentioned[0], from);
+                                    if (warnCount >= 2) {
+                                        if (!isBotGroupAdmins) {
+                                            reply("❌ I'm not Admin here!");
+                                            return;
+                                        }
+                                        if (groupAdmins.includes(mentioned[0])) {
+                                            reply("❌ Cannot remove admin!");
+                                            return;
+                                        }
+                                        conn.groupRemove(from, mentioned);
+                                        reply("✔ Number removed from group!");
+                                    }
+                                } else {
+                                    //if multiple members are tagged
+                                    reply("❌ Mention only 1 member!");
+                                }
+                            } else {
+                                //when message is tagged with command
+                                let taggedMessageUser = [
+                                    mek.message.extendedTextMessage.contextInfo.participant,
+                                ];
+                                console.log("Target : ", taggedMessageUser);
+                                if (taggedMessageUser == botNumber) return reply(`*Bakka* How I can _Warn_ Myself.😂`);
+                                if (allowedNumbs.includes(taggedMessageUser[0].split('@')[0])) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Warn Owner or Moderator 😊 *Bakka*`);
+                                if (!isGroupAdmins || !(allowedNumbs.includes(senderNumb))) {
+                                    reply("❌ Admin command!");
+                                    return;
+                                }
+                                let warnCount = await getCountWarning(taggedMessageUser[0], from);
+                                let num_split = taggedMessageUser[0].split("@s.whatsapp.net")[0];
+                                await setCountWarning(taggedMessageUser[0], from);
+                                let warnMsg = `@${num_split} 😒,Your have been warned. Warning status (${warnCount + 1
+                                    }/3). Don't repeat this type of behaviour again or you'll be banned 😔 from group!`;
+                                conn.sendMessage(from, warnMsg, MessageType.extendedText, {
+                                    contextInfo: { mentionedJid: taggedMessageUser },
+                                });
+                                if (warnCount >= 2) {
+                                    if (!isBotGroupAdmins) {
+                                        reply("❌ I'm not Admin here!");
+                                        return;
+                                    }
+                                    if (groupAdmins.includes(taggedMessageUser[0])) {
+                                        reply("❌ Cannot remove admin!");
+                                        return;
+                                    }
+                                    conn.groupRemove(from, taggedMessageUser);
+                                    reply("✔ Number removed from group!");
+                                }
+                            }
+                        } catch (err) {
+                            console.log(err);
+                            reply(`❌ Error!`);
+                        }
+                        break;
+
+                    case 'unwarn':
+                        if (!(allowedNumbs.includes(senderNumb))) {
+                            reply("❌ Owner command!");
+                            return;
+                        }
+                        if (!mek.message.extendedTextMessage) {
+                            reply("❌ Tag someone!");
+                            return;
+                        }
+                        try {
+                            let mentioned =
+                                mek.message.extendedTextMessage.contextInfo.mentionedJid;
+                            if (mentioned) {
+                                //when member are mentioned with command
+                                if (mentioned.length === 1) {
+                                    await removeWarnCount(mentioned[0], from);
+                                    reply(`Set Warn Count to 0 for this user.`);
+                                }
+                                else {
+                                    //if multiple members are tagged
+                                    reply("❌ Mention only 1 member!");
+                                }
+                            } else {
+                                //when message is tagged with command
+                                let taggedMessageUser = [
+                                    mek.message.extendedTextMessage.contextInfo.participant,
+                                ];
+                                await removeWarnCount(taggedMessageUser[0], from);
+                                reply(`Set Warn Count to 0 for this user.`);
+                            }
+                        } catch (err) {
+                            console.log(err);
+                            reply(`❌ Error!`);
+                        }
+                        break;
+
+                    case 'block':
+                        if (!mek.message.extendedTextMessage) {
+                            reply("❌ Tag someone!");
+                            return;
+                        }
+                        try {
+                            let mentioned =
+                                mek.message.extendedTextMessage.contextInfo.mentionedJid;
+                            if (mentioned) {
+                                //when member are mentioned with command
+                                console.log("Target : ", mentioned);
+                                if (mentioned == botNumber) return reply(`*Bakka* How I can _Block_ Myself.😂`);
+                                if (allowedNumbs.includes(mentioned[0].split('@')[0])) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Block Owner or Moderator 😊 *Bakka*`);
+                                if (!(allowedNumbs.includes(senderNumb))) {
+                                    reply("❌ Owner command!");
+                                    return;
+                                }
+                                if (mentioned.length === 1) {
+                                    let num_split = mentioned[0].split("@s.whatsapp.net")[0];
+                                    await setBlockWarning(mentioned[0]);
+                                    let warnMsg = `@${num_split} ,You have been Block To Use the Bot. Ask Owner or Mod to remove.`;
+                                    conn.sendMessage(from, warnMsg, MessageType.extendedText, {
+                                        contextInfo: { mentionedJid: mentioned },
+                                    });
+                                    reply(`*👍Done Commands Blocked For The Number.*`);
+                                } else {
+                                    //if multiple members are tagged
+                                    reply("❌ Mention only 1 member!");
+                                }
+                            } else {
+                                //when message is tagged with command
+                                let taggedMessageUser = [
+                                    mek.message.extendedTextMessage.contextInfo.participant,
+                                ];
+                                console.log("Target : ", taggedMessageUser);
+                                if (taggedMessageUser == botNumber) return reply(`*Bakka* How I can _Block_ Myself.😂`);
+                                if (allowedNumbs.includes(taggedMessageUser[0].split('@')[0])) return reply(`🙄 *Something Not Right* 🙄=> \nOh Trying to Block Owner or Moderator 😊 *Bakka*`);
+                                if (!(allowedNumbs.includes(senderNumb))) {
+                                    reply("❌ Owner command!");
+                                    return;
+                                }
+                                let num_split = taggedMessageUser[0].split("@s.whatsapp.net")[0];
+                                await setCountWarning(taggedMessageUser[0]);
+                                let warnMsg = `@${num_split} ,You have been Blocked To Use the Bot. Ask Owner or Mod to remove.`;
+                                conn.sendMessage(from, warnMsg, MessageType.extendedText, {
+                                    contextInfo: { mentionedJid: taggedMessageUser },
+                                });
+                                reply(`*👍Done Commands Blocked For The Number.*`);
+                            }
+                        } catch (err) {
+                            console.log(err);
+                            reply(`❌ Error!`);
+                        }
+                        break;
+
+                    case 'unblock':
+                        if (!(allowedNumbs.includes(senderNumb))) {
+                            reply("❌ Owner command!");
+                            return;
+                        }
+                        if (!mek.message.extendedTextMessage) {
+                            reply("❌ Tag someone!");
+                            return;
+                        }
+                        try {
+                            let mentioned =
+                                mek.message.extendedTextMessage.contextInfo.mentionedJid;
+                            if (mentioned) {
+                                //when member are mentioned with command
+                                if (mentioned.length === 1) {
+                                    await removeBlockWarning(mentioned[0]);
+                                    reply(`*👍Done Commands Unblocked For The Number.*`);
+                                } else {
+                                    //if multiple members are tagged
+                                    reply("❌ Mention only 1 member!");
+                                }
+                            } else {
+                                //when message is tagged with command
+                                let taggedMessageUser = [
+                                    mek.message.extendedTextMessage.contextInfo.participant,
+                                ];
+                                await removeCountWarning(taggedMessageUser[0]);
+                                reply(`*👍Done Commands Unblocked For The Number.*`);
+                            }
+                        } catch (err) {
+                            console.log(err);
+                            reply(`❌ Error!`);
+                        }
+                        break;
+
                     case 'spam':
                         if (!isGroup) return;
                         console.log("SPAM ARGS:", args)
@@ -1689,10 +1704,10 @@ async function main() {
                         }
                         if (!isBotGroupAdmins) return reply(errors.admin_error);
                         if (args.length < 1) return;
-                        if (args[0] == 'on') {
+                        if (args[0] == 'off') {
                             conn.groupSettingChange(from, GroupSettingChange.messageSend, false);
                             reply(`✔️ *Only Admin can send Message*`);
-                        } else if (args[0] == 'off') {
+                        } else if (args[0] == 'on') {
                             conn.groupSettingChange(from, GroupSettingChange.messageSend, true);
                             reply(`✔️ *Allowed all member can send Message*`);
                         } else {
@@ -1721,12 +1736,13 @@ async function main() {
                             reply("Saale khud ko admin samjhta hai kya?😂");
                             return;
                         }
-                        reply(`_Bye_ *Mera Time Aa gya*`);
+                        reply(`_Bye_\n*Mera Time Aa gya*`);
                         conn.groupLeave(from)
                         break;
+
                     default:
                         if (isGroup)
-                            reply(`*Bakka*,Grow Up,I'll not always be there for you.Use *-blend* for Assistance`)//Please Enter the valid commands,Like */blend*
+                            reply(`*Bakka*,There is no Command like this.\nUse *-blend* for graphic interface. Or *-help* to for help list.`)//Please Enter the valid commands,Like */blend*
                         break;
                 }
             }
