@@ -508,16 +508,13 @@ async function main() {
                         let ttinullimage = await axios.get(
                             "https://api.xteam.xyz/attp?file&text=" + uri,
                             { responseType: "arraybuffer" }
-                        ).then(() => {
-                            conn.sendMessage(
-                                from,
-                                Buffer.from(ttinullimage.data),
-                                MessageType.sticker,
-                                { mimetype: Mimetype.webp }
-                            );
-                        }).catch(()=>{
-                            reply(`_Website is Down_\nWait for sometime`);
-                        });
+                        )
+                        conn.sendMessage(
+                            from,
+                            Buffer.from(ttinullimage.data),
+                            MessageType.sticker,
+                            { mimetype: Mimetype.webp }
+                        );
                         break;
 
                     case 'meme':
