@@ -505,19 +505,16 @@ async function main() {
                         }
                         console.log(take, " =tts message");
                         let uri = encodeURI(take);
-                        await axios.get(
+                        let ttinullimage = await axios.get(
                             "https://api.xteam.xyz/attp?file&text=" + uri,
                             { responseType: "arraybuffer" }
-                        ).then((ttinullimage) => {
-                            conn.sendMessage(
-                                from,
-                                Buffer.from(ttinullimage.data),
-                                MessageType.sticker,
-                                { mimetype: Mimetype.webp }
-                            );
-                        }).catch(() => {
-                            reply(`_Website is Down_\nWait for sometime`);
-                        });
+                        )
+                        conn.sendMessage(
+                            from,
+                            Buffer.from(ttinullimage.data),
+                            MessageType.sticker,
+                            { mimetype: Mimetype.webp }
+                        );
                         break;
 
                     case 'meme':
