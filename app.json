@@ -7,6 +7,11 @@
     "whatsapp-bot",
     "blender-2.0"
   ],
+  "env": {
+    "REMOVE_BG_KEY": {
+      "description": "Enter Removebg key"
+    }
+  },
   "buildpacks": [
     {
       "url": "https://github.com/heroku/heroku-buildpack-nodejs.git"

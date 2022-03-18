@@ -39,6 +39,9 @@ module.exports.userHelp = (prefix, groupName) => {
     _${prefix}joke categories_
     _Categories: Programming, Misc, Pun, Spooky, Christmas, Dark_
 
+*${prefix}meme*
+    _Get a random meme_
+
 *${prefix}movie _Name_*
     _Get Download link for movie_
     _Eg: ${prefix}movie Avengers_
@@ -74,10 +77,6 @@ module.exports.userHelp = (prefix, groupName) => {
     _or ${prefix}news < any category >_
     _Use ${prefix}list for whole valid list_
     _category could be sports, business or anything_
-
-*${prefix}score*
-    _fetch live ipl scores_
-    eg:${prefix} score
 
 *${prefix}idp*
     _download Instagram private profile picture_
@@ -176,3 +175,7 @@ ${readMore}
     _For attendance alert_
     _Eg: ${prefix}tagall message!_`
 }
+
+// *${prefix}score*
+//     _fetch live ipl scores_
+//     eg:${prefix} score
