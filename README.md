@@ -93,6 +93,17 @@ Explore more by using it eg:Get to know your Horoscope,news and a lot more fun.
 </a>
 
 
+# Run locally:- :rocket:
+
+Create a `.env` file for enviromental variables in local directory with following values without quote
+    
+    PORT=8000
+    DATABASE_URL = "get-from-heroku-dashboard"
+    DEEPAI_KEY= "get-form-deepai.com/api"
+    REMOVE_BG_KEY="get-from-remove.bg"
+
+Get value of database_url from Heroku dashboard > settings > reveal config vars
+
 # Tech stacks:-
 - ## [Baileys](https://github.com/adiwajshing/Baileys)
 - ## [Node js](https://github.com/nodejs/node)
