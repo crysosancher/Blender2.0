@@ -22,6 +22,7 @@
     "fs": "0.0.1-security",
     "inshorts-api": "^1.0.3",
     "pg": "^8.5.1",
+    "deepai": "^1.0.21",
     "urban-dictionary": "^3.0.2",
     "wa-sticker-formatter": "^3.6.0",
     "ytdl-core": "github:fent/node-ytdl-core#pull/1022/head",
