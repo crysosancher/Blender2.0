@@ -11,7 +11,7 @@
     "REMOVE_BG_KEY": {
       "description": "Enter Removebg key"
     },
-    "DEEPAI_KEY:": {
+    "DEEPAI_KEY": {
       "description": "Enter Removebg key. Get your api key from deepai.com"
     }
   },
